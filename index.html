@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TicketFussion | The Smarter Ticket Marketplace</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="header">
+
+   <div class="logo-container">
+    <a href="index.html" class="logo">
+        <img src="assets/logo.png" alt="TicketFussion Logo">
+    </a>
+</div>
+
+    <nav class="nav-links">
+
+        <select id="currencySelect" class="currency-select">
+    <option value="USD">$ USD</option>
+    <option value="EUR">€ EUR</option>
+    <option value="GBP">£ GBP</option>
+</select>
+    
+        <a href="matches.html" class="buy-tickets-btn">Buy Tickets</a>
+
+        <a href="sell.html" class="sell-btn">Sell Tickets</a>
+
+        <a href="login.html" class="login-btn">Login</a>
+
+        <a href="signup.html" class="signup-btn">Sign Up</a>
+
+    </nav>
+
+</header>
+
+<main>
+<section class="slider">
+
+    <div class="slide active">
+        <img src="assets/banner1.png" alt="Brazil vs Haiti">
+        <a href="match/brazil-vs-haiti.html" class="buy-btn">BUY TICKETS NOW</a>
+    </div>
+
+    <div class="slide">
+        <img src="assets/banner2.png" alt="Germany vs Ivory Coast">
+        <a href="match/germany-vs-ivory-coast.html" class="buy-btn">BUY TICKETS NOW</a>
+    </div>
+
+    <div class="slide">
+        <img src="assets/banner3.png" alt="Netherlands vs Sweden">
+        <a href="match/netherlands-vs-sweden.html" class="buy-btn">BUY TICKETS NOW</a>
+    </div>
+
+    <div class="slide">
+        <img src="assets/banner4.png" alt="Spain vs Saudi Arabia">
+        <a href="match/spain-vs-saudi-arabia.html" class="buy-btn">BUY TICKETS NOW</a>
+    </div>
+
+    <div class="slide">
+        <img src="assets/banner5.png" alt="Belgium vs Iran">
+        <a href="match/belgium-vs-iran.html" class="buy-btn">BUY TICKETS NOW</a>
+    </div>
+
+    <div class="slide">
+        <img src="assets/banner6.png" alt="Uruguay vs Cabo Verde">
+        <a href="match/uruguay-vs-cabo-verde.html" class="buy-btn">BUY TICKETS NOW</a>
+    </div>
+
+    <button class="prev">&#10094;</button>
+    <button class="next">&#10095;</button>
+
+    <div class="dots">
+        <span class="dot active-dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+
+</section>
+
+<section class="search-section">
+
+    <h2>Find Your Next Match</h2>
+
+    <div class="search-box">
+
+        <input
+            type="text"
+            placeholder="Search by team, stadium, city or competition..."
+        >
+
+        <a href="matches.html" class="search-btn">
+            SEARCH MATCHES
+        </a>
+
+    </div>
+
+</section>
+
+<section class="recommended">
+
+<div class="section-header">
+    <h2>Featured Matches</h2>
+
+    <div class="card-controls">
+        <button id="prevCard">&#10094;</button>
+        <button id="nextCard">&#10095;</button>
+    </div>
+</div>
+
+<div class="cards-container" id="cardsContainer">
+
+    <div class="match-card">
+        <h3>Egypt vs Iran</h3>
+        <p>27 June 2026 • Group G</p>
+        <span>From $79</span>
+        <a href="match/egypt-vs-iran.html">BUY TICKETS</a>
+    </div>
+
+    <div class="match-card">
+        <h3>Panama vs England</h3>
+        <p>28 June 2026 • Group L</p>
+        <span>From $89</span>
+        <a href="match/panama-vs-england.html">BUY TICKETS</a>
+    </div>
+
+    <div class="match-card">
+        <h3>Croatia vs Ghana</h3>
+        <p>28 June 2026 • Group L</p>
+        <span>From $119</span>
+        <a href="match/croatia-vs-ghana.html">BUY TICKETS</a>
+    </div>
+
+    <div class="match-card">
+        <h3>Colombia vs Portugal</h3>
+        <p>28 June 2026 • Group K</p>
+        <span>From $99</span>
+        <a href="match/colombia-vs-portugal.html">BUY TICKETS</a>
+    </div>
+
+    <div class="match-card">
+        <h3>Jordan vs Argentina</h3>
+        <p>28 June 2026 • Group J</p>
+        <span>From $89</span>
+        <a href="match/jordan-vs-argentina.html">BUY TICKETS</a>
+    </div>
+
+</div>
+
+</section>
+
+<section class="sell-banner">
+
+    <div class="sell-content">
+
+        <div class="sell-text">
+            <h2>Need to resell your tickets?</h2>
+
+            <p>
+                List your tickets on TicketFussion and reach buyers worldwide.
+            </p>
+        </div>
+
+        <a href="sell.html" class="sell-banner-btn">
+            SELL YOUR TICKETS
+        </a>
+
+    </div>
+
+</section>
+
+<section class="why-ticketfussion">
+
+    <h2>Why TicketFussion?</h2>
+
+    <div class="features-grid">
+
+        <div class="feature-card">
+            <h3>🔒 Secure Transactions</h3>
+            <p>Buy and sell tickets safely through a trusted marketplace.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>✓ Verified Listings</h3>
+            <p>Quality controls help ensure buyers get legitimate tickets.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>🌍 Global Match Coverage</h3>
+            <p>Access football matches and tournaments from around the world.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>🎟️ Easy Buying & Selling</h3>
+            <p>List tickets quickly or find the perfect seat in minutes.</p>
+        </div>
+
+    </div>
+
+    <div class="how-it-works-btn">
+        <a href="about.html">HOW IT WORKS</a>
+    </div>
+
+</section>
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div class="footer-brand">
+            <img src="assets/logo.png" alt="TicketFussion Logo" class="footer-logo">
+
+            <p>
+                Buy and sell football tickets securely worldwide.
+            </p>
+        </div>
+
+        <div class="footer-column">
+            <h3>Company</h3>
+
+            <a href="about.html">About Us</a>
+            <a href="faq.html">FAQ</a>
+            <a href="contact.html">Contact</a>
+        </div>
+
+        <div class="footer-column">
+            <h3>Marketplace</h3>
+
+            <a href="matches.html">Matches</a>
+            <a href="events.html">Events</a>
+            <a href="sell.html">Sell Tickets</a>
+        </div>
+
+        <div class="footer-column">
+            <h3>Legal</h3>
+
+            <a href="terms.html">Terms & Conditions</a>
+            <a href="privacy.html">Privacy Policy</a>
+        </div>
+
+    </div>
+
+    <div class="footer-social">
+
+        <a href="#">Facebook</a>
+        <a href="#">Instagram</a>
+        <a href="#">TikTok</a>
+        <a href="#">X</a>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2026 TicketFussion. All Rights Reserved.
+    </div>
+
+</footer>
+</main>
+<script src="script.js"></script>
+
+</body>
+</html>

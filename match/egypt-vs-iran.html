@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Egypt vs Iran | TicketFussion</title>
+
+    <link rel="icon" type="image/png" href="../assets/favicon.png">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="match-header">
+
+    <a href="../matches.html" class="back-btn">← Back to Matches</a>
+
+    <h1>Egypt vs Iran</h1>
+
+    <p class="match-meta">
+        FIFA World Cup 2026™ • 27 June 2026
+    </p>
+
+    <p class="venue">
+        Seattle Stadium – Seattle
+    </p>
+
+    <p class="kickoff-time">
+        Kickoff:
+        <span id="kickoff"
+        data-time="2026-06-27T06:00:00+03:00"></span>
+    </p>
+
+</header>
+
+<section class="category-filters">
+
+    <button class="cat-btn">Category 1</button>
+    <button class="cat-btn">Category 2</button>
+    <button class="cat-btn">Category 3</button>
+    <button class="cat-btn">Category 4</button>
+    <button class="cat-btn vip">VIP Hospitality</button>
+
+</section>
+
+<section class="ticket-layout">
+
+    <div class="stadium-side">
+
+        <img
+            src="../stadium/seattle stadium.png"
+            alt="Seattle Stadium Seating Map"
+            class="stadium-map"
+        >
+
+    </div>
+
+    <div class="ticket-side">
+
+        <div class="ticket-card">
+            <h3>Category 1</h3>
+            <p class="ticket-price">$250.00</p>
+
+            <div class="quantity-box">
+                <button onclick="changeQty('cat1',-1)">−</button>
+                <span id="cat1">1</span>
+                <button onclick="changeQty('cat1',1)">+</button>
+            </div>
+
+            <a href="../buy.html" class="buy-btn">Buy Now</a>
+        </div>
+
+        <div class="ticket-card">
+            <h3>Category 2</h3>
+            <p class="ticket-price">$450.00</p>
+
+            <div class="quantity-box">
+                <button onclick="changeQty('cat2',-1)">−</button>
+                <span id="cat2">1</span>
+                <button onclick="changeQty('cat2',1)">+</button>
+            </div>
+
+            <a href="../buy.html" class="buy-btn">Buy Now</a>
+        </div>
+
+        <div class="ticket-card">
+            <h3>Category 3</h3>
+            <p class="ticket-price">$700.00</p>
+
+            <div class="quantity-box">
+                <button onclick="changeQty('cat3',-1)">−</button>
+                <span id="cat3">1</span>
+                <button onclick="changeQty('cat3',1)">+</button>
+            </div>
+
+            <a href="../buy.html" class="buy-btn">Buy Now</a>
+        </div>
+
+        <div class="ticket-card">
+            <h3>Category 4</h3>
+            <p class="ticket-price">$1000.00</p>
+
+            <div class="quantity-box">
+                <button onclick="changeQty('cat4',-1)">−</button>
+                <span id="cat4">1</span>
+                <button onclick="changeQty('cat4',1)">+</button>
+            </div>
+
+            <a href="../buy.html" class="buy-btn">Buy Now</a>
+        </div>
+
+        <div class="ticket-card vip-card">
+            <h3>VIP Hospitality</h3>
+            <p class="ticket-price">$2500.00</p>
+
+            <div class="quantity-box">
+                <button onclick="changeQty('vip',-1)">−</button>
+                <span id="vip">1</span>
+                <button onclick="changeQty('vip',1)">+</button>
+            </div>
+
+            <a href="../buy.html" class="buy-btn">Buy Now</a>
+        </div>
+
+    </div>
+
+</section>
+
+<footer class="site-footer">
+    <p>© 2026 TicketFussion. All Rights Reserved.</p>
+</footer>
+
+<script src="../script.js"></script>
+
+</body>
+</html>
