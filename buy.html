@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Secure Checkout | TicketFussion</title>
+
+    <link rel="icon"
+          type="image/png"
+          href="assets/favicon.png">
+
+    <link rel="stylesheet"
+          href="cssbuy.css">
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+
+</head>
+
+<body>
+
+
+
+<!-- ================= HEADER ================= -->
+
+<header class="checkout-header">
+
+    <a href="matches.html"
+       class="back-btn">
+
+        <i class="fa-solid fa-arrow-left"></i>
+
+        Back to Matches
+
+    </a>
+
+    <div class="checkout-title">
+
+        <h1>
+
+            Secure Checkout
+
+        </h1>
+
+        <p>
+
+            Complete your purchase securely.
+
+        </p>
+
+    </div>
+
+</header>
+
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="checkout-container">
+
+
+
+<!-- ================= LEFT ================= -->
+
+<section class="checkout-left">
+
+<div class="section-card">
+
+<h2>
+
+<i class="fa-solid fa-user"></i>
+
+Customer Information
+
+</h2>
+
+
+
+<form id="checkoutForm">
+
+
+
+<div class="input-group">
+
+<label for="fullname">
+
+Full Name *
+
+</label>
+
+<input
+
+type="text"
+
+id="fullname"
+
+placeholder="Enter your full name"
+
+required
+
+>
+
+</div>
+
+
+
+<div class="input-group">
+
+<label for="email">
+
+Email Address *
+
+</label>
+
+<input
+
+type="email"
+
+id="email"
+
+placeholder="Enter your email"
+
+required
+
+>
+
+</div>
+
+
+
+<div class="input-group">
+
+<label for="phone">
+
+Phone Number
+
+</label>
+
+<input
+
+type="tel"
+
+id="phone"
+
+placeholder="Optional"
+
+>
+
+</div>
+
+
+
+<div class="input-group">
+
+<label for="country">
+
+Country
+
+</label>
+
+<select id="country">
+
+<option value="">
+
+Optional
+
+</option>
+
+<option>South Africa</option>
+
+<option>United Kingdom</option>
+
+<option>United States</option>
+
+<option>Canada</option>
+
+<option>Australia</option>
+
+<option>Other</option>
+
+</select>
+
+</div>
+
+</form>
+
+</div>
+
+
+
+<div class="section-card">
+
+<h2>
+
+<i class="fa-solid fa-circle-info"></i>
+
+Need Help?
+
+</h2>
+
+<p>
+
+If you experience any difficulty during checkout,
+please contact our support team.
+
+</p>
+
+<div class="support-box">
+
+<i class="fa-solid fa-envelope"></i>
+
+<span>
+
+support.team@ticketfussion.com
+
+</span>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ================= RIGHT ================= -->
+
+<aside class="checkout-right">
+
+<div class="summary-card">
+
+<h2>
+
+Order Summary
+
+</h2>
+
+
+
+<div class="summary-row">
+
+<span>
+
+Event
+
+</span>
+
+<strong id="eventName">
+
+</strong>
+
+</div>
+
+
+
+<div class="summary-row">
+
+<span>
+
+Category
+
+</span>
+
+<strong id="ticketCategory">
+
+</strong>
+
+</div>
+
+
+
+<div class="summary-row">
+
+<span>
+
+Ticket Price
+
+</span>
+
+<strong id="ticketPrice">
+
+</strong>
+
+</div>
+
+
+
+<div class="summary-row">
+
+<span>
+
+Subtotal
+
+</span>
+
+<strong id="subTotal">
+
+</strong>
+
+</div>
+
+<div class="summary-row">
+
+<span>
+
+Quantity
+
+</span>
+
+<div class="quantity-box">
+
+<button
+type="button"
+id="minus">
+
+<i class="fa-solid fa-minus"></i>
+
+</button>
+
+<input
+type="text"
+id="quantity"
+value="1"
+readonly>
+
+<button
+type="button"
+id="plus">
+
+<i class="fa-solid fa-plus"></i>
+
+</button>
+
+</div>
+
+</div>
+
+
+
+<div class="summary-row">
+
+<span>
+
+Service Fee
+
+</span>
+
+<strong id="serviceFee">
+
+</strong>
+
+</div>
+
+
+
+<hr>
+
+
+
+<div class="summary-total">
+
+<span>
+
+TOTAL
+
+</span>
+
+<strong id="totalPrice">
+
+</strong>
+
+</div>
+
+
+
+<div class="terms-box">
+
+<label>
+
+<input
+type="checkbox"
+id="agree">
+
+I agree to the
+
+<a href="terms.html">
+
+Terms & Conditions
+
+</a>
+
+and
+
+<a href="privacy.html">
+
+Privacy Policy
+
+</a>
+
+</label>
+
+</div>
+
+
+
+<div class="security-box">
+
+<div>
+
+<i class="fa-solid fa-shield-halved"></i>
+
+<span>
+
+256-bit SSL Encrypted
+
+</span>
+
+</div>
+
+<div>
+
+<i class="fa-solid fa-lock"></i>
+
+<span>
+
+Secure Paystack Payment
+
+</span>
+
+</div>
+
+<div>
+
+<i class="fa-solid fa-ticket"></i>
+
+<span>
+
+Instant Ticket Delivery
+
+</span>
+
+</div>
+
+</div>
+
+
+
+<button
+id="payButton"
+class="pay-btn">
+
+<i class="fa-solid fa-lock"></i>
+
+Proceed to Payment
+
+</button>
+
+
+
+</div>
+
+</aside>
+
+</main>
+
+
+
+<footer class="checkout-footer">
+
+<p>
+
+&copy; 2026 TicketFussion. All Rights Reserved.
+
+</p>
+
+</footer>
+
+
+
+<script src="jsbuy.js"></script>
+
+</body>
+
+</html>
