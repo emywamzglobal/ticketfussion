@@ -243,7 +243,7 @@ const MAX_TICKETS = 10;
 
         PaystackPop.setup({
 
-    key: "YOUR_PAYSTACK_PUBLIC_KEY",
+    key: "pk_live_4160c206082512a2d3c719c911b99d268db2ab37",
 
     email: document.getElementById("email").value,
 
