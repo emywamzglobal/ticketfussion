@@ -48,11 +48,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let quantity = Number(ticketQty) || 1;
 
-    let price = Number(ticketPrice) || 0;
+let price = Number(ticketPrice) || 0;
 
-    const SERVICE_FEE_PER_TICKET = 5;
+let total = 0;
 
-    const MAX_TICKETS = 10;
+const SERVICE_FEE_PER_TICKET = 5;
+const MAX_TICKETS = 10;
 
 
 
@@ -83,8 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const fee =
             quantity * SERVICE_FEE_PER_TICKET;
 
-        const total =
-            subtotal + fee;
+        total = subtotal + fee;
 
         quantityInput.value = quantity;
 
@@ -241,16 +241,33 @@ document.addEventListener("DOMContentLoaded", () => {
         =====================================
         */
 
-        setTimeout(() => {
+        PaystackPop.setup({
 
-            alert("Paystack integration will begin here.");
+    key: "YOUR_PAYSTACK_PUBLIC_KEY",
 
-            payButton.disabled = false;
+    email: document.getElementById("email").value,
 
-            payButton.innerHTML =
-                '<i class="fa-solid fa-lock"></i> Proceed to Payment';
+    amount: total * 100,
 
-        },1000);
+    currency: "USD",
+
+    callback: function(response){
+
+        window.location.href =
+            "/success.html?reference=" + response.reference;
+
+    },
+
+    onClose: function(){
+
+        payButton.disabled = false;
+
+        payButton.innerHTML =
+        '<i class="fa-solid fa-lock"></i> Proceed to Payment';
+
+    }
+
+}).openIframe();
 
     });
 
