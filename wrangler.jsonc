@@ -1,0 +1,13 @@
+{
+  "name": "ticketfussion",
+  "main": "worker.js",
+  "compatibility_date": "2026-06-27",
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ticketfussion-db",
+      "database_id": "e5bfbc2e-03f6-4c71-b6a3-4c6e922235ec"
+    }
+  ]
+}
