@@ -196,3 +196,28 @@ if (currencySelect) {
 
 }
 
+function buyTicket(category, id, unitPrice){
+
+    // Match Name
+    const eventName =
+        document.querySelector(".match-header h1").textContent;
+
+    // Quantity
+    const quantity =
+        parseInt(document.getElementById(id).textContent);
+
+    // Total Price
+    const totalPrice =
+        unitPrice * quantity;
+
+    // Save to localStorage
+
+    localStorage.setItem("eventName", eventName);
+
+    localStorage.setItem("ticketCategory", category);
+
+    localStorage.setItem("ticketQuantity", quantity);
+
+    localStorage.setItem("ticketPrice", totalPrice);
+
+}
