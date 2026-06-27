@@ -33,99 +33,36 @@
 
 </header>
 
-<section class="category-filters">
-
-    <button class="cat-btn">Category 1</button>
-    <button class="cat-btn">Category 2</button>
-    <button class="cat-btn">Category 3</button>
-    <button class="cat-btn">Category 4</button>
-    <button class="cat-btn vip">VIP Hospitality</button>
-
-</section>
-
-<section class="ticket-layout">
+<section class="ticket-closed-section">
 
     <div class="stadium-side">
 
         <img
-            src="../stadium/guadalajara stadium.png"
-            alt="Guadalajara Stadium Seating Map"
+            src="../stadium/kansas city stadium.png"
+            alt="Kansas City Stadium Seating Map"
             class="stadium-map"
         >
 
     </div>
 
-    <div class="ticket-side">
+    <div class="ticket-closed-box">
 
-        <div class="ticket-card">
-            <h3>Category 1</h3>
-            <p class="ticket-price">$250.00</p>
+        <div class="closed-lock">🔒</div>
 
-            <div class="quantity-box">
-                <button onclick="changeQty('cat1',-1)">−</button>
-                <span id="cat1">1</span>
-                <button onclick="changeQty('cat1',1)">+</button>
-            </div>
+        <h2>Ticket Sales Closed</h2>
 
-            <a href="../buy.html" class="buy-btn">Buy Now</a>
-        </div>
+        <p>
+            This event is no longer available for purchase.
+            Thank you for choosing TicketFussion.
+        </p>
 
-        <div class="ticket-card">
-            <h3>Category 2</h3>
-            <p class="ticket-price">$450.00</p>
-
-            <div class="quantity-box">
-                <button onclick="changeQty('cat2',-1)">−</button>
-                <span id="cat2">1</span>
-                <button onclick="changeQty('cat2',1)">+</button>
-            </div>
-
-            <a href="../buy.html" class="buy-btn">Buy Now</a>
-        </div>
-
-        <div class="ticket-card">
-            <h3>Category 3</h3>
-            <p class="ticket-price">$700.00</p>
-
-            <div class="quantity-box">
-                <button onclick="changeQty('cat3',-1)">−</button>
-                <span id="cat3">1</span>
-                <button onclick="changeQty('cat3',1)">+</button>
-            </div>
-
-            <a href="../buy.html" class="buy-btn">Buy Now</a>
-        </div>
-
-        <div class="ticket-card">
-            <h3>Category 4</h3>
-            <p class="ticket-price">$1000.00</p>
-
-            <div class="quantity-box">
-                <button onclick="changeQty('cat4',-1)">−</button>
-                <span id="cat4">1</span>
-                <button onclick="changeQty('cat4',1)">+</button>
-            </div>
-
-            <a href="../buy.html" class="buy-btn">Buy Now</a>
-        </div>
-
-        <div class="ticket-card vip-card">
-            <h3>VIP Hospitality</h3>
-            <p class="ticket-price">$2500.00</p>
-
-            <div class="quantity-box">
-                <button onclick="changeQty('vip',-1)">−</button>
-                <span id="vip">1</span>
-                <button onclick="changeQty('vip',1)">+</button>
-            </div>
-
-            <a href="../buy.html" class="buy-btn">Buy Now</a>
-        </div>
+        <button class="closed-ticket-btn" disabled>
+            TICKET SALES CLOSED
+        </button>
 
     </div>
 
 </section>
-
 <footer class="site-footer">
     <p>© 2026 TicketFussion. All Rights Reserved.</p>
 </footer>
