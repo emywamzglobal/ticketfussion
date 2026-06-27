@@ -206,9 +206,6 @@ function buyTicket(category, id, unitPrice){
     const quantity =
         parseInt(document.getElementById(id).textContent);
 
-    // Total Price
-    const totalPrice =
-        unitPrice * quantity;
 
     // Save to localStorage
 
@@ -218,6 +215,6 @@ function buyTicket(category, id, unitPrice){
 
     localStorage.setItem("ticketQuantity", quantity);
 
-    localStorage.setItem("ticketPrice", totalPrice);
+    localStorage.setItem("ticketPrice", unitPrice);
 
 }
