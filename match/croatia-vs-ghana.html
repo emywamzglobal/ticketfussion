@@ -59,7 +59,7 @@
 
         <div class="ticket-card">
             <h3>Category 1</h3>
-            <p class="ticket-price">$250.00</p>
+            <p class="ticket-price" id="cat1-price">$250.00</p>
 
             <div class="quantity-box">
                 <button onclick="changeQty('cat1',-1)">−</button>
@@ -67,12 +67,15 @@
                 <button onclick="changeQty('cat1',1)">+</button>
             </div>
 
-            <a href="../buy.html" class="buy-btn">Buy Now</a>
-        </div>
+            <a href="../buy.html"
+   class="buy-btn"
+   onclick="buyTicket('Category 1','cat1',250)">
+   Buy Now
+</a>
 
         <div class="ticket-card">
             <h3>Category 2</h3>
-            <p class="ticket-price">$450.00</p>
+            <p class="ticket-price" id="cat2-price">$450.00</p>
 
             <div class="quantity-box">
                 <button onclick="changeQty('cat2',-1)">−</button>
@@ -80,12 +83,16 @@
                 <button onclick="changeQty('cat2',1)">+</button>
             </div>
 
-            <a href="../buy.html" class="buy-btn">Buy Now</a>
+            <a href="../buy.html"
+   class="buy-btn"
+   onclick="buyTicket('Category 2','cat2',450)">
+   Buy Now
+</a>
         </div>
 
         <div class="ticket-card">
             <h3>Category 3</h3>
-            <p class="ticket-price">$700.00</p>
+            <p class="ticket-price" id="cat3-price">$700.00</p>
 
             <div class="quantity-box">
                 <button onclick="changeQty('cat3',-1)">−</button>
@@ -93,12 +100,15 @@
                 <button onclick="changeQty('cat3',1)">+</button>
             </div>
 
-            <a href="../buy.html" class="buy-btn">Buy Now</a>
-        </div>
+            <a href="../buy.html"
+   class="buy-btn"
+   onclick="buyTicket('Category 3','cat3',700)">
+   Buy Now
+</a>
 
         <div class="ticket-card">
             <h3>Category 4</h3>
-            <p class="ticket-price">$1000.00</p>
+            <p class="ticket-price" id="cat4-price">$1000.00</p>
 
             <div class="quantity-box">
                 <button onclick="changeQty('cat4',-1)">−</button>
@@ -106,12 +116,16 @@
                 <button onclick="changeQty('cat4',1)">+</button>
             </div>
 
-            <a href="../buy.html" class="buy-btn">Buy Now</a>
+            <a href="../buy.html"
+   class="buy-btn"
+   onclick="buyTicket('Category 4','cat4',1000)">
+   Buy Now
+</a>
         </div>
 
         <div class="ticket-card vip-card">
             <h3>VIP Hospitality</h3>
-            <p class="ticket-price">$2500.00</p>
+            <p class="ticket-price" id="vip-price">$2500.00</p>
 
             <div class="quantity-box">
                 <button onclick="changeQty('vip',-1)">−</button>
@@ -119,7 +133,11 @@
                 <button onclick="changeQty('vip',1)">+</button>
             </div>
 
-            <a href="../buy.html" class="buy-btn">Buy Now</a>
+            <a href="../buy.html"
+   class="buy-btn"
+   onclick="buyTicket('VIP Hospitality','vip',2500)">
+   Buy Now
+</a>
         </div>
 
     </div>

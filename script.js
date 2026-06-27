@@ -145,15 +145,19 @@ function updatePrice(id){
         vip: 2500
     };
 
-    let qty = parseInt(document.getElementById(id).textContent);
+    const qty = parseInt(document.getElementById(id).textContent);
 
-    let total = prices[id] * qty;
+    const total = prices[id] * qty;
 
-    document.getElementById(id + "-price").textContent =
-        total.toLocaleString("en-US", {
-            style: "currency",
-            currency: "USD"
-        });
+    const priceElement = document.getElementById(id + "-price");
+
+    if(priceElement){
+
+        priceElement.textContent =
+            "$" + total.toFixed(2);
+
+    }
+
 }
 
 function displayKickoffTime() {
