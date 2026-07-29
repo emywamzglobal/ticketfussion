@@ -1,0 +1,176 @@
+/* ==========================================
+   TICKETFUSSION
+   RESPONSIVE.CSS
+   Global Responsive Behaviour
+========================================== */
+
+/* ==========================================
+   GLOBAL CONTAINER
+========================================== */
+
+.container{
+    width:90%;
+    max-width:1400px;
+    margin:0 auto;
+}
+
+/* ==========================================
+   RESPONSIVE IMAGES
+========================================== */
+
+.img-fluid{
+    width:100%;
+    height:auto;
+    display:block;
+}
+
+/* ==========================================
+   FLEX UTILITIES
+========================================== */
+
+.flex{
+    display:flex;
+}
+
+.flex-center{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.flex-between{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.flex-column{
+    display:flex;
+    flex-direction:column;
+}
+
+/* ==========================================
+   GRID UTILITIES
+========================================== */
+
+.grid-2{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+}
+
+.grid-3{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.grid-4{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+/* ==========================================
+   TABLE RESPONSIVENESS
+========================================== */
+
+.table-responsive{
+    width:100%;
+    overflow-x:auto;
+}
+
+/* ==========================================
+   RESPONSIVE EMBEDS
+========================================== */
+
+.embed-responsive{
+    position:relative;
+    width:100%;
+    overflow:hidden;
+}
+
+.embed-responsive iframe,
+.embed-responsive video{
+    width:100%;
+    height:100%;
+}
+
+/* ==========================================
+   VISIBILITY HELPERS
+========================================== */
+
+.hide{
+    display:none !important;
+}
+
+.hide-mobile{
+    display:block;
+}
+
+.show-mobile{
+    display:none;
+}
+
+/* ==========================================
+   TABLET
+   768px - 1023px
+========================================== */
+
+@media (max-width:1023px){
+
+    .container{
+        width:94%;
+    }
+
+    .grid-4{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .grid-3{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .grid-2{
+        grid-template-columns:1fr;
+    }
+
+}
+
+/* ==========================================
+   MOBILE
+   0px - 767px
+========================================== */
+
+@media (max-width:767px){
+
+    .container{
+        width:95%;
+    }
+
+    .flex-between{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+
+    .grid-4,
+    .grid-3,
+    .grid-2{
+        grid-template-columns:1fr;
+    }
+
+    .hide-mobile{
+        display:none !important;
+    }
+
+    .show-mobile{
+        display:block !important;
+    }
+
+    .table-responsive{
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+    }
+
+}

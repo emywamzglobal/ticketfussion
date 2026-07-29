@@ -1,0 +1,803 @@
+/*=========================================
+  TicketFussion Checkout
+  cssbuy.css
+==========================================*/
+
+
+/*========== RESET ==========*/
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    font-family:'Poppins',sans-serif;
+
+    background:#f4f7fb;
+
+    color:#374151;
+
+    line-height:1.6;
+
+}
+
+
+
+/*========== LINKS ==========*/
+
+a{
+
+    text-decoration:none;
+
+    transition:.3s;
+
+}
+
+
+
+/*========== HEADER ==========*/
+
+.checkout-header{
+
+    width:100%;
+
+    background:#ffffff;
+
+    padding:20px 8%;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+    position:sticky;
+
+    top:0;
+
+    z-index:999;
+
+}
+
+
+
+.back-btn{
+
+    color:#0A84FF;
+
+    font-weight:600;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+
+
+.back-btn:hover{
+
+    color:#0666c9;
+
+}
+
+
+
+.checkout-title{
+
+    text-align:right;
+
+}
+
+
+
+.checkout-title h1{
+
+    font-size:30px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+
+
+.checkout-title p{
+
+    color:#6b7280;
+
+}
+
+
+
+/*========== MAIN ==========*/
+
+.checkout-container{
+
+    width:90%;
+
+    max-width:1400px;
+
+    margin:40px auto;
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr;
+
+    gap:35px;
+
+}
+
+
+
+/*========== LEFT ==========*/
+
+.checkout-left{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:30px;
+
+}
+
+
+
+/*========== RIGHT ==========*/
+
+.checkout-right{
+
+    position:relative;
+
+}
+
+
+
+/*========== CARDS ==========*/
+
+.section-card,
+
+.summary-card{
+
+    background:#ffffff;
+
+    border-radius:18px;
+
+    padding:30px;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+
+
+.section-card:hover,
+
+.summary-card:hover{
+
+    transform:translateY(-4px);
+
+}
+
+
+
+/*========== STICKY ==========*/
+
+.summary-card{
+
+    position:sticky;
+
+    top:120px;
+
+}
+
+
+
+/*========== HEADINGS ==========*/
+
+.section-card h2,
+
+.summary-card h2{
+
+    font-size:24px;
+
+    color:#111827;
+
+    margin-bottom:25px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+
+
+.section-card h2 i{
+
+    color:#0A84FF;
+
+}
+
+
+
+/*========== FORM ==========*/
+
+.input-group{
+
+    margin-bottom:22px;
+
+}
+
+
+
+.input-group label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-weight:600;
+
+}
+
+
+
+.input-group input,
+
+.input-group select{
+
+    width:100%;
+
+    padding:15px;
+
+    border:1px solid #d1d5db;
+
+    border-radius:12px;
+
+    outline:none;
+
+    font-size:15px;
+
+    font-family:'Poppins',sans-serif;
+
+    transition:.3s;
+
+}
+
+
+
+.input-group input:focus,
+
+.input-group select:focus{
+
+    border-color:#0A84FF;
+
+    box-shadow:0 0 0 4px rgba(10,132,255,.15);
+
+}
+
+
+
+/*========== SUPPORT ==========*/
+
+.support-box{
+
+    margin-top:20px;
+
+    background:#f4f7fb;
+
+    border-radius:12px;
+
+    padding:18px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+}
+
+
+
+.support-box i{
+
+    color:#0A84FF;
+
+    font-size:22px;
+
+}
+
+
+
+.support-box span{
+
+    font-weight:600;
+
+}
+
+
+
+/*========== SUMMARY ==========*/
+
+.summary-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:15px;
+
+    margin-bottom:18px;
+
+}
+
+
+
+.summary-row span{
+
+    color:#6b7280;
+
+}
+
+
+
+.summary-row strong{
+
+    color:#111827;
+
+    font-weight:600;
+
+    text-align:right;
+
+}
+
+
+
+.summary-card hr{
+
+    border:none;
+
+    border-top:1px solid #e5e7eb;
+
+    margin:25px 0;
+
+}
+
+/*========== QUANTITY ==========*/
+
+.quantity-box{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.quantity-box button{
+
+    width:38px;
+
+    height:38px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#0A84FF;
+
+    color:#ffffff;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    font-size:15px;
+
+}
+
+.quantity-box button:hover{
+
+    background:#0666c9;
+
+    transform:scale(1.08);
+
+}
+
+.quantity-box input{
+
+    width:60px;
+
+    height:40px;
+
+    border:1px solid #d1d5db;
+
+    border-radius:10px;
+
+    text-align:center;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    background:#ffffff;
+
+}
+
+
+
+/*========== TOTAL ==========*/
+
+.summary-total{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin:30px 0;
+
+}
+
+.summary-total span{
+
+    font-size:22px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+.summary-total strong{
+
+    font-size:32px;
+
+    font-weight:700;
+
+    color:#0A84FF;
+
+}
+
+
+
+/*========== TERMS ==========*/
+
+.terms-box{
+
+    margin-bottom:25px;
+
+    font-size:14px;
+
+}
+
+.terms-box label{
+
+    display:flex;
+
+    gap:10px;
+
+    cursor:pointer;
+
+    align-items:flex-start;
+
+}
+
+.terms-box input{
+
+    margin-top:4px;
+
+}
+
+.terms-box a{
+
+    color:#0A84FF;
+
+    font-weight:600;
+
+}
+
+
+
+/*========== SECURITY ==========*/
+
+.security-box{
+
+    background:#eef7ff;
+
+    border-radius:12px;
+
+    padding:18px;
+
+    margin-bottom:25px;
+
+}
+
+.security-box div{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-bottom:12px;
+
+}
+
+.security-box div:last-child{
+
+    margin-bottom:0;
+
+}
+
+.security-box i{
+
+    color:#16A34A;
+
+    font-size:18px;
+
+}
+
+
+
+/*========== PAY BUTTON ==========*/
+
+.pay-btn{
+
+    width:100%;
+
+    border:none;
+
+    padding:18px;
+
+    border-radius:14px;
+
+    background:#0A84FF;
+
+    color:#ffffff;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.35s;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.pay-btn:hover{
+
+    background:#16A34A;
+
+    transform:translateY(-3px);
+
+    box-shadow:0 12px 25px rgba(34,197,94,.25);
+
+}
+
+
+
+/*========== FOOTER ==========*/
+
+.checkout-footer{
+
+    margin-top:60px;
+
+    background:#111827;
+
+    color:#ffffff;
+
+    text-align:center;
+
+    padding:30px;
+
+}
+
+
+
+/*========== SCROLLBAR ==========*/
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#f4f7fb;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#0A84FF;
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#0666c9;
+
+}
+
+
+
+/*========== TABLETS ==========*/
+
+@media(max-width:992px){
+
+.checkout-container{
+
+    grid-template-columns:1fr;
+
+}
+
+.summary-card{
+
+    position:relative;
+
+    top:0;
+
+}
+
+.checkout-title{
+
+    display:none;
+
+}
+
+}
+
+
+
+/*========== MOBILE ==========*/
+
+@media(max-width:768px){
+
+.checkout-container{
+
+    width:94%;
+
+    margin:25px auto;
+
+}
+
+.checkout-header{
+
+    padding:18px;
+
+}
+
+.section-card,
+
+.summary-card{
+
+    padding:22px;
+
+}
+
+.section-card h2,
+
+.summary-card h2{
+
+    font-size:21px;
+
+}
+
+.summary-total strong{
+
+    font-size:28px;
+
+}
+
+.pay-btn{
+
+    font-size:17px;
+
+    padding:16px;
+
+}
+
+}
+
+
+
+/*========== SMALL PHONES ==========*/
+
+@media(max-width:480px){
+
+.summary-row{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+.summary-row strong{
+
+    text-align:left;
+
+}
+
+.summary-total{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:10px;
+
+}
+
+.support-box{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+.security-box div{
+
+    align-items:flex-start;
+
+}
+
+.quantity-box{
+
+    gap:8px;
+
+}
+
+.quantity-box button{
+
+    width:34px;
+
+    height:34px;
+
+}
+
+.quantity-box input{
+
+    width:52px;
+
+}
+
+}

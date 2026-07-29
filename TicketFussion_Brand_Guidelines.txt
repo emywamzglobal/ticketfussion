@@ -1,0 +1,83 @@
+TicketFussion 2.0 – Official Brand Guidelines
+
+OFFICIAL TAGLINE The Smarter Ticket Marketplace
+
+================================================== OFFICIAL BRAND COLORS
+==================================================
+
+Primary Blue HEX: #006CEE RGB: 0, 108, 238
+
+Purpose: - Primary buttons - Links - Icons - Active navigation -
+Highlights
+
+------------------------------------------------------------------------
+
+Primary Navy HEX: #021832 RGB: 2, 24, 50
+
+Purpose: - Headings - Navigation - Footer - Dark backgrounds - Primary
+text
+
+------------------------------------------------------------------------
+
+Neutral Gray HEX: #666666 RGB: 102, 102, 102
+
+Purpose: - Secondary text - Event details - Dates - Locations -
+Descriptions
+
+------------------------------------------------------------------------
+
+White HEX: #FFFFFF
+
+Purpose: - Backgrounds - Cards - Forms
+
+================================================== SUPPORTING UI COLORS
+==================================================
+
+Background HEX: #F8FAFC
+
+Border HEX: #E5E7EB
+
+Success HEX: #22C55E
+
+Warning HEX: #F59E0B
+
+Danger HEX: #EF4444
+
+================================================== CSS VARIABLES
+==================================================
+
+:root {
+
+    --primary: #006CEE;
+    --primary-dark: #021832;
+
+    --white: #FFFFFF;
+    --background: #F8FAFC;
+
+    --text: #021832;
+    --text-secondary: #666666;
+
+    --border: #E5E7EB;
+
+    --success: #22C55E;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+
+}
+
+================================================== TYPOGRAPHY
+==================================================
+
+Headings: Poppins (Bold / SemiBold)
+
+Body: Inter (Regular / Medium)
+
+================================================== BRAND RULES
+==================================================
+
+• Use #006CEE for primary actions. • Use #021832 for premium sections
+and headings. • Keep backgrounds light and clean. • Avoid introducing
+additional brand colors. • Maintain a modern, minimal interface. • Build
+every page with consistency.
+
+TicketFussion 2.0 The Smarter Ticket Marketplace
