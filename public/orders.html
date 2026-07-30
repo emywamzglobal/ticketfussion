@@ -67,7 +67,7 @@
 
     <link rel="stylesheet" href="/css/footer.css">
 
-    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/orders.css">
 
 </head>
 
@@ -182,156 +182,85 @@
 
 <main>
 
-    <!-- =====================================================
-        HERO
-    ====================================================== -->
+    <!-- ========================================= -->
+    <!-- ORDER SUCCESS -->
+    <!-- ========================================= -->
 
-    <section id="hero">
+    <section id="order-success">
 
         <div class="container">
 
-            <div class="hero-content">
+            <div class="success-card">
 
-                <span class="hero-tag">
+                <div class="success-icon">
 
-                    Trusted Worldwide
+                    <i class="fas fa-circle-check"></i>
+
+                </div>
+
+                <span class="section-tag">
+
+                    PAYMENT SUCCESSFUL
 
                 </span>
 
                 <h1>
 
-                    Buy and Sell Event Tickets with Confidence
+                    Order Confirmed
 
                 </h1>
 
                 <p>
 
-                    Discover concerts, sports, theatre, comedy and live experiences from trusted sellers around the world.
+                    Thank you for your purchase. Your payment was successful and your order has been confirmed.
 
                 </p>
 
-                <form id="hero-search-form"
-                      autocomplete="off">
+                <!-- ================================= -->
+                <!-- ORDER SUMMARY -->
+                <!-- ================================= -->
 
-                    <div class="search-box">
+                <div id="order-summary">
 
-                        <input
-                            type="search"
-                            id="hero-search"
-                            name="search"
-                            placeholder="Search artists, teams, events or venues..."
-                            aria-label="Search Events">
+                    <!--
 
-                        <button type="submit">
+                        JavaScript renders:
 
-                            Search
+                        Order Number
 
-                        </button>
+                        Event
 
-                    </div>
+                        Venue
 
-                </form>
+                        Date
 
-            </div>
+                        Quantity
 
-        </div>
+                        Amount Paid
 
-    </section>
-
-
-
-    <!-- =====================================================
-        TOP SELLING EVENTS
-    ====================================================== -->
-
-    <section id="featured-events">
-
-        <div class="container">
-
-            <div class="section-header">
-
-                <div>
-
-                    <span class="section-tag">
-
-                        Featured
-
-                    </span>
-
-                    <h2>
-
-                        Top Selling Events
-
-                    </h2>
-
-                    <p>
-
-                        Explore the biggest concerts, sporting events, theatre productions and live experiences.
-
-                    </p>
+                    -->
 
                 </div>
 
-            </div>
+                <!-- ================================= -->
+                <!-- ACTIONS -->
+                <!-- ================================= -->
 
-            <div id="featured-events-grid"
-                 class="event-grid">
+                <div class="success-actions">
 
-                <!--
-                    JavaScript renders event cards.
+                    <a
+                        href="orders.html"
+                        class="btn btn-primary">
 
-                    Banner
-                    Category
-                    Event Name
-                    Tour Stops / Performances
-                    Starting From
-                    View Event
-                -->
+                        My Orders
 
-            </div>
+                    </a>
 
-        </div>
+                    <a
+                        href="index.html"
+                        class="btn btn-outline">
 
-    </section>
-
-    <!-- =====================================================
-        SELL TICKETS
-    ====================================================== -->
-
-    <section id="sell-tickets">
-
-        <div class="container">
-
-            <div class="sell-banner">
-
-                <div class="sell-content">
-
-                    <span class="section-tag">
-
-                        SELL TICKETS
-
-                    </span>
-
-                    <h2>
-
-                        Can't Attend? Resell Your Tickets.
-
-                    </h2>
-
-                    <p>
-
-                        List your tickets on TicketFussion and connect with verified buyers looking for their next live event.
-
-                    </p>
-
-                </div>
-
-                <div class="sell-actions">
-
-                    <a href="sell.html"
-                       class="btn btn-primary">
-
-                        Sell Tickets
+                        Continue Browsing
 
                     </a>
 
@@ -535,6 +464,10 @@
 <!-- =====================================================
     JAVASCRIPT
 ====================================================== -->
+
+<script src="js/navbar.js"></script>
+
+<script src="js/footer.js"></script>
 
 <script src="js/home.js"></script>
 

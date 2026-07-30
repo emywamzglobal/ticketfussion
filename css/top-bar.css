@@ -1,0 +1,214 @@
+/*======================================================
+    ADMIN LAYOUT
+======================================================*/
+
+body{
+
+    margin:0;
+
+    background:#f5f7fa;
+
+    font-family:inherit;
+
+}
+
+.admin-wrapper{
+
+    display:flex;
+
+    min-height:100vh;
+
+}
+
+/*======================================================
+    SIDEBAR
+======================================================*/
+
+.sidebar{
+
+    width:260px;
+
+    background:#111827;
+
+    color:#ffffff;
+
+    display:flex;
+
+    flex-direction:column;
+
+    flex-shrink:0;
+
+}
+
+.admin-logo{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:2rem;
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+
+}
+
+.admin-logo img{
+
+    width:180px;
+
+    height:auto;
+
+    display:block;
+
+}
+
+.sidebar nav{
+
+    padding:2rem 0;
+
+}
+
+.sidebar ul{
+
+    list-style:none;
+
+    margin:0;
+
+    padding:0;
+
+}
+
+.sidebar li{
+
+    margin:0;
+
+}
+
+.sidebar a{
+
+    display:block;
+
+    padding:1rem 2rem;
+
+    color:#d1d5db;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.sidebar a:hover{
+
+    background:#1f2937;
+
+    color:#ffffff;
+
+}
+
+.sidebar a.active{
+
+    background:#2563eb;
+
+    color:#ffffff;
+
+}
+
+/*======================================================
+    MAIN
+======================================================*/
+
+.admin-main{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    min-width:0;
+
+}
+
+/*======================================================
+    TOP BAR
+======================================================*/
+
+.admin-header{
+
+    height:80px;
+
+    background:#ffffff;
+
+    border-bottom:1px solid #e5e7eb;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 2rem;
+
+}
+
+.admin-header h1{
+
+    margin:0;
+
+    font-size:2rem;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+.admin-header p{
+
+    margin:.35rem 0 0;
+
+    color:#6b7280;
+
+}
+
+.admin-user{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:1rem;
+
+    font-weight:600;
+
+}
+
+.admin-user img{
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+}
+
+/*======================================================
+    PAGE CONTENT
+======================================================*/
+
+.page-content{
+
+    padding:2rem;
+
+    flex:1;
+
+}
+

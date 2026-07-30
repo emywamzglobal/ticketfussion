@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- ==========================================
+        BASIC META
+    =========================================== -->
+
+    <meta charset="UTF-8">
+
+    <meta http-equiv="X-UA-Compatible"
+          content="IE=edge">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <!-- ==========================================
+        SEO
+    =========================================== -->
+
+    <title>
+
+        TicketFussion Admin | Ticket Listings
+
+    </title>
+
+    <meta name="description"
+          content="TicketFussion Administration Panel">
+
+    <meta name="robots"
+          content="noindex,nofollow">
+
+    <!-- ==========================================
+        FAVICON
+    =========================================== -->
+
+    <link rel="icon"
+          href="/assets/logos/favicon.png">
+
+    <!-- ==========================================
+        CSS
+    =========================================== -->
+
+    <link rel="stylesheet"
+          href="/css/reset.css">
+
+    <link rel="stylesheet"
+          href="/css/responsive.css">
+
+    <link rel="stylesheet"
+          href="/css/theme.css">
+
+    <link rel="stylesheet"
+          href="/css/admin.css">
+
+    <link rel="stylesheet"
+          href="/css/events.css">
+
+    <link rel="stylesheet"
+          href="/css/top-bar.css">
+
+</head>
+
+<body>
+
+<!-- =====================================================
+    ADMIN WRAPPER
+====================================================== -->
+
+<div class="admin-wrapper">
+
+    <!-- =====================================================
+        SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <a href="ticket-listings.html"
+           class="admin-logo">
+
+            <img src="/assets/logos/logo.png"
+                 alt="TicketFussion">
+
+        </a>
+
+        <nav>
+
+            <ul>
+
+                <li>
+
+                    <a href="ticket-listings.html"
+                       class="active">
+
+                        Ticket Listings
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="events.html">
+
+                        Events
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="occurrences.html">
+
+                        Occurrences
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="login.html">
+
+                        Login
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </aside>
+
+    <!-- =====================================================
+        MAIN
+    ====================================================== -->
+
+    <main class="admin-main">
+
+    <!-- ======================================
+        TOP BAR
+    ======================================= -->
+
+    <header class="admin-header">
+
+        <div>
+
+            <h1>
+
+                Ticket Listings
+
+            </h1>
+
+            <p>
+
+                Create and manage tickets for each occurrence.
+
+            </p>
+
+        </div>
+
+        <div class="admin-user">
+
+            Administrator
+
+        </div>
+
+    </header>
+
+    <!-- ======================================
+        PAGE CONTENT
+    ======================================= -->
+
+    <section class="page-content">
+
+        <form id="ticket-listing-form">
+
+            <!-- ======================================
+                TICKET INFORMATION
+            ======================================= -->
+
+            <div class="card">
+
+                <h2>
+
+                    Ticket Information
+
+                </h2>
+
+                <div class="form-grid">
+
+                    <!-- Occurrence -->
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Occurrence
+
+                        </label>
+
+                        <select>
+
+                            <option>
+
+                                Select Occurrence
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- Ticket Type -->
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Ticket Type
+
+                        </label>
+
+                        <input
+                            type="text"
+                            placeholder="VIP, General Admission, Standard...">
+
+                    </div>
+
+                    <!-- Section -->
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Section
+
+                        </label>
+
+                        <input
+                            type="text"
+                            placeholder="Section">
+
+                    </div>
+
+                    <!-- Row -->
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Row
+
+                        </label>
+
+                        <input
+                            type="text"
+                            placeholder="Row">
+
+                    </div>
+
+                    <!-- Seat(s) -->
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Seat(s)
+
+                        </label>
+
+                        <input
+                            type="text"
+                            placeholder="12-15 or A12,A13">
+
+                    </div>
+
+                    <!-- Quantity -->
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Quantity
+
+                        </label>
+
+                        <input
+                            type="number"
+                            min="1"
+                            placeholder="Available Tickets">
+
+                    </div>
+
+                    <!-- Price -->
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Price
+
+                        </label>
+
+                        <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            placeholder="0.00">
+
+                    </div>
+
+                    <!-- Delivery Method -->
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Delivery Method
+
+                        </label>
+
+                        <select>
+
+                            <option>
+
+                                E-ticket
+
+                            </option>
+
+                            <option>
+
+                                Mobile Ticket
+
+                            </option>
+
+                            <option>
+
+                                PDF Ticket
+
+                            </option>
+
+                            <option>
+
+                                Physical Ticket
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ======================================
+                ACTIONS
+            ======================================= -->
+
+            <div class="form-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-outline">
+
+                    Save Draft
+
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+
+                    Publish Listing
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+</div>
+
+<!-- =====================================================
+    JAVASCRIPT
+====================================================== -->
+
+<script src="js/admin.js"></script>
+
+<script src="js/events.js"></script>
+
+</body>
+
+</html>

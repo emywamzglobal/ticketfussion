@@ -1,0 +1,106 @@
+/* ==========================================================
+   CHECKOUT HEADER
+========================================================== */
+
+#checkout-header{
+
+    padding:5rem 0;
+
+}
+
+#checkout-summary{
+
+    display:grid;
+    gap:1rem;
+
+}
+
+
+
+/* ==========================================================
+   CHECKOUT
+========================================================== */
+
+#checkout{
+
+    padding:5rem 0 6rem;
+
+}
+
+.checkout-layout{
+
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:2rem;
+    align-items:start;
+
+}
+
+
+
+/* ==========================================================
+   LEFT COLUMN
+========================================================== */
+
+.checkout-card{
+
+    display:grid;
+    gap:3rem;
+
+}
+
+#buyer-information{
+
+    display:grid;
+    gap:2rem;
+
+}
+
+#payment-information{
+
+    display:grid;
+    gap:2rem;
+
+}
+
+.payment-security{
+
+    display:flex;
+    align-items:center;
+    gap:.75rem;
+
+}
+
+
+
+/* ==========================================================
+   ORDER SUMMARY
+========================================================== */
+
+#order-summary{
+
+    position:sticky;
+    top:2rem;
+
+}
+
+.summary-card{
+
+    display:grid;
+    gap:1.5rem;
+
+}
+
+#selected-ticket{
+
+    display:grid;
+    gap:.75rem;
+
+}
+
+#pricing-summary{
+
+    display:grid;
+    gap:.75rem;
+
+}

@@ -1,0 +1,229 @@
+/*=========================================================
+    TICKETFUSSION 2.0
+    FOOTER.CSS
+=========================================================*/
+
+/*=========================================================
+    FOOTER
+=========================================================*/
+
+#site-footer{
+
+    background:var(--primary-dark);
+
+    color:var(--white);
+
+    padding:1.5rem 0 .75rem;
+
+}
+
+/*=========================================================
+    OVERRIDE GLOBAL SECTION PADDING
+=========================================================*/
+
+#site-footer section{
+
+    padding:0;
+
+    margin:0;
+
+}
+
+/*=========================================================
+    GRID
+=========================================================*/
+
+.footer-grid{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:4rem;
+
+}
+
+.footer-column:first-child{
+
+    width:220px;
+
+    flex-shrink:0;
+
+}
+/*=========================================================
+    COLUMNS
+=========================================================*/
+
+.footer-column{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.footer-column h3{
+
+    color:var(--white);
+
+    font-size:1rem;
+
+    font-weight:var(--fw-semibold);
+
+    margin:0 0 .6rem;
+
+}
+
+.footer-column p{
+
+    margin:0;
+
+    max-width:220px;
+
+    color:rgba(255,255,255,.75);
+
+    line-height:1.5;
+
+    font-size:.95rem;
+
+}
+
+/*=========================================================
+    LOGO
+=========================================================*/
+
+.footer-logo{
+
+    display:inline-block;
+
+    margin-bottom:.6rem;
+
+}
+
+.footer-logo img{
+
+    display:block;
+
+    width:110px;
+
+    height:auto;
+
+}
+
+/*=========================================================
+    LINKS
+=========================================================*/
+
+.footer-column ul{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:.45rem;
+
+}
+
+.footer-column li{
+
+    margin:0;
+
+}
+
+.footer-column a{
+
+    color:rgba(255,255,255,.72);
+
+    transition:var(--transition);
+
+}
+
+.footer-column a:hover{
+
+    color:var(--white);
+
+}
+
+/*=========================================================
+    COPYRIGHT
+=========================================================*/
+
+.footer-bottom{
+
+    border-top:1px solid rgba(255,255,255,.08);
+
+    margin-top:.5rem;
+
+    padding-top:.75rem;
+
+    text-align:center;
+
+}
+
+.footer-bottom p{
+
+    margin:0;
+
+    color:rgba(255,255,255,.6);
+
+    font-size:.9rem;
+
+}
+
+/*=========================================================
+    TABLET
+=========================================================*/
+
+@media(max-width:992px){
+
+    .footer-grid{
+
+        grid-template-columns:repeat(2,1fr);
+
+        gap:2rem;
+
+    }
+
+}
+
+/*=========================================================
+    MOBILE
+=========================================================*/
+
+@media(max-width:768px){
+
+    #site-footer{
+
+        text-align:center;
+
+    }
+
+    .footer-grid{
+
+        grid-template-columns:1fr;
+
+        justify-items:center;
+
+        gap:1.5rem;
+
+    }
+
+    .footer-column{
+
+        align-items:center;
+
+    }
+
+    .footer-column p{
+
+        max-width:280px;
+
+    }
+
+    .footer-column ul{
+
+        align-items:center;
+
+    }
+
+}

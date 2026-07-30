@@ -1,0 +1,74 @@
+/* ==========================================================
+   OCCURRENCE HERO
+========================================================== */
+
+#occurrence-hero{
+
+    padding:6rem 0;
+
+}
+
+#occurrence-summary{
+
+    display:grid;
+    gap:1rem;
+    align-items:start;
+
+}
+
+
+
+/* ==========================================================
+   VENUE INFORMATION
+========================================================== */
+
+#venue-information{
+
+    padding:5rem 0;
+
+}
+
+#venue-content{
+
+    display:grid;
+    gap:2rem;
+
+}
+
+
+
+/* ==========================================================
+   SEATING MAP
+========================================================== */
+
+#seating-map{
+
+    padding:5rem 0;
+
+}
+
+#venue-map{
+
+    display:grid;
+    place-items:center;
+
+}
+
+
+
+/* ==========================================================
+   AVAILABLE TICKETS
+========================================================== */
+
+#ticket-listings{
+
+    padding:5rem 0 6rem;
+
+}
+
+#ticket-list{
+
+    display:grid;
+    gap:1.5rem;
+
+}

@@ -1,0 +1,205 @@
+/*======================================================
+    PAGE CONTENT
+======================================================*/
+
+.page-content{
+
+    padding:2rem;
+
+}
+
+/*======================================================
+    CARD
+======================================================*/
+
+.card{
+
+    background:#ffffff;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:12px;
+
+    padding:2rem;
+
+    margin-bottom:2rem;
+
+}
+
+.card h2{
+
+    margin:0 0 2rem;
+
+    font-size:1.5rem;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+/*======================================================
+    FORM GRID
+======================================================*/
+
+.form-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:1.5rem 2rem;
+
+}
+
+/*======================================================
+    FORM GROUP
+======================================================*/
+
+.form-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.form-group.full{
+
+    grid-column:1 / -1;
+
+}
+
+.form-group label{
+
+    margin-bottom:.6rem;
+
+    font-size:.95rem;
+
+    font-weight:600;
+
+    color:#374151;
+
+}
+
+/*======================================================
+    INPUTS
+======================================================*/
+
+.form-group input,
+
+.form-group select,
+
+.form-group textarea{
+
+    width:100%;
+
+    padding:1rem;
+
+    border:1px solid #d1d5db;
+
+    border-radius:8px;
+
+    background:#ffffff;
+
+    font-size:.95rem;
+
+    font-family:inherit;
+
+    transition:.25s;
+
+}
+
+.form-group input,
+
+.form-group select{
+
+    height:48px;
+
+}
+
+.form-group textarea{
+
+    resize:vertical;
+
+    min-height:140px;
+
+}
+
+.form-group input:focus,
+
+.form-group select:focus,
+
+.form-group textarea:focus{
+
+    outline:none;
+
+    border-color:#2563eb;
+
+}
+
+/*======================================================
+    ACTIONS
+======================================================*/
+
+.form-actions{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:1rem;
+
+    margin-top:2rem;
+
+}
+
+/*======================================================
+    FILE UPLOAD
+======================================================*/
+
+.upload-box{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    width:100%;
+
+    min-height:140px;
+
+    border:2px dashed #d1d5db;
+
+    border-radius:12px;
+
+    background:#ffffff;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.upload-box:hover{
+
+    border-color:#2563eb;
+
+}
+
+.upload-box input{
+
+    display:none;
+
+}
+
+.upload-box span{
+
+    font-size:1rem;
+
+    font-weight:600;
+
+    color:#6b7280;
+
+}

@@ -1,0 +1,413 @@
+/*=========================================================
+    TICKETFUSSION 2.0
+    HOME.CSS
+=========================================================*/
+
+/*=========================================================
+    HERO
+=========================================================*/
+
+#hero{
+
+    padding:4rem 0 3rem;
+
+}
+
+.hero{
+
+    display:grid;
+
+    grid-template-columns:1.1fr .9fr;
+
+    align-items:center;
+
+    gap:3rem;
+
+}
+
+.hero-tag{
+
+    display:inline-block;
+
+    margin-bottom:1rem;
+
+    color:var(--primary);
+
+    font-size:1rem;
+
+    font-weight:var(--fw-semibold);
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+}
+
+.hero-content h1{
+
+    max-width:700px;
+
+    margin-bottom:1.5rem;
+
+    font-size:clamp(3rem,5vw,3.8rem);
+
+    line-height:1.08;
+
+}
+
+.hero-content p{
+
+    max-width:600px;
+
+    font-size:1.15rem;
+
+    line-height:1.8;
+
+    margin-bottom:2rem;
+
+}
+
+.hero-actions{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:1rem;
+
+    flex-wrap:wrap;
+
+}
+/*=========================================================
+    SEARCH
+=========================================================*/
+
+.search-box{
+
+    background:var(--white);
+
+    border:1px solid var(--border);
+
+    border-radius:var(--radius-lg);
+
+    padding:1.5rem;
+
+    box-shadow:var(--shadow-md);
+
+}
+
+.search-form{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr) auto;
+
+    gap:1rem;
+
+    align-items:end;
+
+}
+
+/*=========================================================
+    FEATURED
+=========================================================*/
+
+#featured-events{
+
+    padding:3rem 0;
+
+}
+
+.event-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+
+    gap:1.75rem;
+
+}
+
+/*=========================================================
+    CATEGORIES
+=========================================================*/
+
+#categories{
+
+    padding:3rem 0;
+
+}
+
+.category-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+
+    gap:1.5rem;
+
+}
+
+.category-card{
+
+    background:var(--white);
+
+    border:1px solid var(--border);
+
+    border-radius:var(--radius-lg);
+
+    padding:2rem 1rem;
+
+    text-align:center;
+
+    transition:var(--transition);
+
+}
+
+.category-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:var(--shadow-md);
+
+}
+
+/*=========================================================
+    TRENDING
+=========================================================*/
+
+#trending-events{
+
+    padding:3rem 0;
+
+}
+
+/*=========================================================
+    UPCOMING
+=========================================================*/
+
+#upcoming-events{
+
+    padding:3rem 0;
+
+}
+
+/*=========================================================
+    SECTION LINKS
+=========================================================*/
+
+.section-link{
+
+    font-weight:var(--fw-semibold);
+
+    color:var(--primary);
+
+}
+
+.section-link:hover{
+
+    color:var(--primary-dark);
+
+}
+
+/*=========================================================
+    SELL BANNER
+=========================================================*/
+
+#sell-tickets{
+
+    padding:3rem 0;
+
+}
+
+.sell-banner{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:2rem;
+
+    background:var(--primary-dark);
+
+    color:var(--white);
+
+    border-radius:var(--radius-xl);
+
+    padding:3rem;
+
+}
+
+.sell-content h2{
+
+    color:var(--white);
+
+    margin-bottom:.75rem;
+
+}
+
+.sell-content p{
+
+    color:rgba(255,255,255,.8);
+
+    max-width:520px;
+
+}
+
+.sell-actions{
+
+    flex-shrink:0;
+
+}
+
+/*=========================================================
+    NEWSLETTER
+=========================================================*/
+
+#newsletter{
+
+    padding:3rem 0 2rem;
+
+}
+
+.newsletter-box{
+
+    display:grid;
+
+    grid-template-columns:1fr auto;
+
+    gap:2rem;
+
+    align-items:center;
+
+    background:var(--white);
+
+    border:1px solid var(--border);
+
+    border-radius:var(--radius-xl);
+
+    padding:2.5rem;
+
+    box-shadow:var(--shadow-sm);
+
+}
+
+.newsletter-content p{
+
+    margin-top:.5rem;
+
+}
+
+#newsletter-form{
+
+    display:flex;
+
+    gap:1rem;
+
+    align-items:center;
+
+}
+
+#newsletter-form input{
+
+    min-width:340px;
+
+}
+
+/*=========================================================
+    RESPONSIVE
+=========================================================*/
+
+@media(max-width:992px){
+
+    .hero{
+
+        grid-template-columns:1fr;
+
+        gap:3rem;
+
+    }
+
+    .search-form{
+
+        grid-template-columns:1fr 1fr;
+
+    }
+
+    .newsletter-box{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    #hero{
+
+        padding:4rem 0;
+
+    }
+
+    .hero{
+
+        text-align:center;
+
+    }
+
+    .hero-actions{
+
+        justify-content:center;
+
+    }
+
+    .search-form{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .sell-banner{
+
+        flex-direction:column;
+
+        text-align:center;
+
+        padding:2rem;
+
+    }
+
+    #newsletter-form{
+
+        flex-direction:column;
+
+        align-items:stretch;
+
+    }
+
+    #newsletter-form input{
+
+        min-width:100%;
+
+    }
+
+}
+
+@media(max-width:480px){
+
+    .newsletter-box{
+
+        padding:2rem 1.5rem;
+
+    }
+
+    .sell-banner{
+
+        padding:1.75rem;
+
+    }
+
+}

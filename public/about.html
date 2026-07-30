@@ -3,411 +3,599 @@
 
 <head>
 
+    <!-- ==========================================
+        BASIC META
+    =========================================== -->
+
     <meta charset="UTF-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>About TicketFussion | The Smarter Ticket Marketplace</title>
+    <!-- ==========================================
+        SEO
+    =========================================== -->
 
-    <meta name="description" content="Learn about TicketFussion, a trusted global football ticket marketplace committed to secure, transparent and customer-focused ticket purchasing.">
+    <title>TicketFussion | The Global Ticket Marketplace</title>
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <meta name="description"
+          content="Buy and sell tickets for sports, concerts, theatre, comedy and live events worldwide with TicketFussion.">
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="style.css">
+    <meta name="keywords"
+          content="tickets, concerts, sports, theatre, comedy, live events, TicketFussion">
+
+    <meta name="author"
+          content="TicketFussion">
+
+    <meta name="robots"
+          content="index, follow">
+
+    <!-- ==========================================
+        FAVICON
+    =========================================== -->
+
+    <link rel="icon" href="/assets/logos/favicon.png">
+
+    <!-- ==========================================
+        OPEN GRAPH
+    =========================================== -->
+
+    <meta property="og:title"
+          content="TicketFussion">
+
+    <meta property="og:description"
+          content="The Global Ticket Marketplace">
+
+    <meta property="og:image"
+          content="assets/logos/logo.png">
+
+    <meta property="og:type"
+          content="website">
+
+    <!-- ==========================================
+        CSS
+    =========================================== -->
+
+    <link rel="stylesheet" href="/css/reset.css">
+
+    <link rel="stylesheet" href="/css/responsive.css">
+
+    <link rel="stylesheet" href="/css/theme.css">
+
+    <link rel="stylesheet" href="/css/navbar.css">
+
+    <link rel="stylesheet" href="/css/footer.css">
+
+    <link rel="stylesheet" href="/css/about.css">
 
 </head>
 
 <body>
 
-<header class="header">
+<!-- =====================================================
+    HEADER
+====================================================== -->
 
-    <div class="logo-container">
+<header id="site-header">
 
-        <a href="index.html">
+    <nav class="navbar">
 
-            <img src="assets/logo.png"
-                 alt="TicketFussion Logo"
-                 class="logo">
+        <div class="container">
 
-        </a>
+            <!-- Logo -->
 
-    </div>
+            <a href="index.html"
+               class="navbar-logo"
+               aria-label="TicketFussion Home">
 
-    <nav class="nav-links">
+                <img src="/assets/logos/logo.png" alt="TicketFussion Logo">
 
-        <select id="currencySelect" class="currency-select">
+            </a>
 
-            <option value="USD">$ USD</option>
-            <option value="EUR">€ EUR</option>
-            <option value="GBP">£ GBP</option>
+            <!-- Main Navigation -->
 
-        </select>
+            <ul class="navbar-menu">
 
-        <a href="matches.html" class="buy-tickets-btn">
-            Buy Tickets
-        </a>
+                <li>
 
-        <a href="events.html">
-            Events
-        </a>
+                    <a href="index.html"
+                       class="active">
 
-        <a href="about.html">
-            About
-        </a>
+                        Home
 
-        <a href="faq.html">
-            FAQ
-        </a>
+                    </a>
 
-        <a href="contact.html">
-            Contact
-        </a>
+                </li>
 
-        <a href="sell.html" class="sell-btn">
-            Sell Tickets
-        </a>
+                <li>
 
-        <a href="login.html" class="login-btn">
-            Login
-        </a>
+                    <a href="sell.html">
 
-        <a href="signup.html" class="signup-btn">
-            Sign Up
-        </a>
+                        Sell Tickets
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="about.html">
+
+                        About
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="contact.html">
+
+                        Contact
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+            <!-- Right Actions -->
+
+            <div class="navbar-actions">
+
+                <a href="login.html"
+                   class="btn btn-outline">
+
+                    Login
+
+                </a>
+
+                <a href="register.html"
+                   class="btn btn-primary">
+
+                    Register
+
+                </a>
+
+            </div>
+
+            <!-- Mobile Menu -->
+
+            <button class="mobile-menu-button"
+                    type="button"
+                    aria-label="Open Navigation">
+
+                ☰
+
+            </button>
+
+        </div>
 
     </nav>
 
 </header>
 
+<!-- =====================================================
+    MAIN
+====================================================== -->
 
+<main>
 
-<!-- HERO -->
+    <!-- ========================================= -->
+    <!-- HERO -->
+    <!-- ========================================= -->
 
-<section class="about-hero">
+    <section id="about-hero">
 
-    <div class="about-hero-content">
+        <div class="container">
 
-        <h1>About TicketFussion</h1>
+            <span class="section-tag">
 
-        <p>
+                ABOUT TICKETFUSSION
 
-            TicketFussion is a global football ticket marketplace built to
-            make discovering, comparing and purchasing tickets for the
-            world's biggest football events simple, secure and transparent.
+            </span>
 
-            Every ticket purchased represents more than admission to a match.
-            It represents unforgettable experiences, lifelong memories and
-            the passion that unites football fans across the world.
+            <h1>
 
-        </p>
+                Your Marketplace for Live Event Tickets
 
-    </div>
-
-</section>
-
-
-
-<!-- OUR STORY -->
-
-<section class="about-section">
-
-    <h2>Who We Are</h2>
-
-    <p>
-
-        TicketFussion was created with one objective:
-        to simplify the football ticket buying experience while giving
-        supporters a marketplace they can trust.
-
-    </p>
-
-    <p>
-
-        We understand that purchasing football tickets—especially for
-        international tournaments and high-demand fixtures—can often be
-        confusing and overwhelming.
-
-        Our platform brings everything together in one place, allowing
-        supporters to explore matches, compare ticket categories,
-        understand seating options and purchase with confidence.
-
-    </p>
-
-</section>
-
-
-
-<section class="about-section light">
-
-    <h2>Our Mission</h2>
-
-    <p>
-
-        Our mission is to build one of the world's most trusted football
-        ticket marketplaces by combining transparency, customer protection,
-        secure technology and exceptional service.
-
-    </p>
-
-    <p>
-
-        We believe football should bring people together—not create
-        uncertainty when purchasing tickets.
-
-        Every feature on TicketFussion is designed to make ticket buying
-        easier, safer and more enjoyable for football supporters
-        around the world.
-
-    </p>
-
-</section>
-
-
-
-<section class="about-section">
-
-    <h2>More Than A Ticket Marketplace</h2>
-
-    <p>
-
-        TicketFussion is more than a place to buy tickets.
-
-        Our platform is designed to help customers make informed decisions
-        by providing clear event information, transparent pricing,
-        ticket categories, venue details and seating guidance before
-        completing a purchase.
-
-    </p>
-
-    <p>
-
-        From FIFA World Cup fixtures to Europe's leading football
-        competitions, TicketFussion continues to expand with one goal—
-        connecting supporters with unforgettable matchday experiences.
-
-    </p>
-
-</section>
-
-<!-- CUSTOMER SAFETY -->
-
-<section class="about-section light">
-
-    <h2>Your Security Is Our Priority</h2>
-
-    <p>
-
-        Trust is the foundation of TicketFussion.
-
-        Every improvement we make is guided by our commitment to protecting
-        customers throughout their ticket purchasing journey. We understand
-        that buying tickets online requires confidence, and we work hard to
-        create an experience that is secure, transparent and dependable.
-
-    </p>
-
-    <div class="trust-grid">
-
-        <div class="trust-card">
-
-            <h3>🔒 Secure Payments</h3>
+            </h1>
 
             <p>
 
-                All payments are processed through trusted payment providers
-                using secure encryption technologies to help protect every
-                transaction.
+                TicketFussion brings buyers and sellers together in one marketplace for concerts, sports, theater, comedy, festivals, and other live events. Discover upcoming events, buy tickets securely, or sell tickets you can no longer use—all in one place.
 
             </p>
 
         </div>
 
-        <div class="trust-card">
+    </section>
 
-            <h3>🎟 Transparent Pricing</h3>
+
+
+    <!-- ========================================= -->
+    <!-- WHAT WE DO -->
+    <!-- ========================================= -->
+
+    <section id="what-we-do">
+
+        <div class="container">
+
+            <div class="section-header">
+
+                <span class="section-tag">
+
+                    WHAT WE DO
+
+                </span>
+
+            </div>
+
+            <div class="features-grid">
+
+                <article class="feature-card">
+
+                    <i class="fas fa-ticket-alt"></i>
+
+                    <h3>
+
+                        Buy Tickets
+
+                    </h3>
+
+                    <p>
+
+                        Browse ticket listings for concerts, sports, theater, comedy, festivals, and live events across multiple venues.
+
+                    </p>
+
+                </article>
+
+                <article class="feature-card">
+
+                    <i class="fas fa-tags"></i>
+
+                    <h3>
+
+                        Sell Tickets
+
+                    </h3>
+
+                    <p>
+
+                        List tickets you can no longer use, manage your listings, and connect with buyers looking for live events.
+
+                    </p>
+
+                </article>
+
+                <article class="feature-card">
+
+                    <i class="fas fa-calendar-days"></i>
+
+                    <h3>
+
+                        Discover Events
+
+                    </h3>
+
+                    <p>
+
+                        Explore upcoming tours, games, performances, and live experiences from one easy-to-use marketplace.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ========================================= -->
+    <!-- EVENTS -->
+    <!-- ========================================= -->
+
+    <section id="event-availability">
+
+        <div class="container">
+
+            <span class="section-tag">
+
+                EVENTS
+
+            </span>
+
+            <h2>
+
+                New Events Added Regularly
+
+            </h2>
 
             <p>
 
-                We believe customers deserve clear pricing with no misleading
-                information or hidden surprises during checkout.
+                There's always something happening. From concerts and sports to theater, comedy, and festivals, TicketFussion helps you discover upcoming events and find tickets before they sell out.
 
             </p>
 
         </div>
 
-        <div class="trust-card">
+    </section>
 
-            <h3>🛡 Customer Protection</h3>
+
+
+    <!-- ========================================= -->
+    <!-- PAYMENTS -->
+    <!-- ========================================= -->
+
+    <section id="secure-payments">
+
+        <div class="container">
+
+            <span class="section-tag">
+
+                PAYMENTS
+
+            </span>
+
+            <h2>
+
+                Secure Checkout
+
+            </h2>
 
             <p>
 
-                We continually improve our platform to provide a safer,
-                more reliable marketplace for football supporters worldwide.
+                Complete every purchase through a secure checkout experience designed to protect your transaction from payment through order confirmation.
 
             </p>
 
         </div>
 
-        <div class="trust-card">
+    </section>
 
-            <h3>🤝 Dedicated Support</h3>
+
+
+    <!-- ========================================= -->
+    <!-- CLOSING -->
+    <!-- ========================================= -->
+
+    <section id="about-closing">
+
+        <div class="container">
+
+            <span class="section-tag">
+
+                TICKETFUSSION
+
+            </span>
+
+            <h2>
+
+                Live Events Start Here
+
+            </h2>
 
             <p>
 
-                Our customer support team is committed to assisting you before,
-                during and after your purchase whenever you need help.
+                Whether you're looking for your next event or selling tickets you can no longer use, TicketFussion gives you one marketplace to buy, sell, and discover live entertainment.
+
+            </p>
+
+            <a href="index.html"
+               class="btn btn-primary">
+
+                Browse Events
+
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer id="site-footer">
+
+    <div class="container">
+
+        <div class="footer-grid">
+
+            <!-- ==========================
+                BRAND
+            ========================== -->
+
+            <section class="footer-column">
+
+                <a href="index.html"
+                   class="footer-logo">
+
+                    <img src="/assets/logos/logo.png" alt="TicketFussion Logo">
+
+                </a>
+
+                <p>
+
+                    The Global Ticket Marketplace.
+
+                </p>
+
+            </section>
+
+            <!-- ==========================
+                MARKETPLACE
+            ========================== -->
+
+            <section class="footer-column">
+
+                <h3>
+
+                    Marketplace
+
+                </h3>
+
+                <ul>
+
+                    <li>
+
+                        <a href="tickets.html">
+
+                            Browse Events
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="sell.html">
+
+                            Sell Tickets
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </section>
+
+            <!-- ==========================
+                COMPANY
+            ========================== -->
+
+            <section class="footer-column">
+
+                <h3>
+
+                    Company
+
+                </h3>
+
+                <ul>
+
+                    <li>
+
+                        <a href="about.html">
+
+                            About
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="contact.html">
+
+                            Contact
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </section>
+
+            <!-- ==========================
+                LEGAL
+            ========================== -->
+
+            <section class="footer-column">
+
+                <h3>
+
+                    Legal
+
+                </h3>
+
+                <ul>
+
+                    <li>
+
+                        <a href="terms.html">
+
+                            Terms & Conditions
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="privacy.html">
+
+                            Privacy Policy
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </section>
+
+            <!-- ==========================
+                SOCIAL
+            ========================== -->
+
+            <section class="footer-column">
+
+                <h3>
+
+                    Follow Us
+
+                </h3>
+
+                <ul>
+
+                    <li>
+
+                        <a href="https://www.tiktok.com/@ticketfussion"
+                           target="_blank"
+                           rel="noopener noreferrer">
+
+                            TikTok @ticketfussion
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </section>
+
+        </div>
+
+        <div class="footer-bottom">
+
+            <p>
+
+                &copy; 2026 TicketFussion. All Rights Reserved.
 
             </p>
 
         </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- WHY TICKETFUSSION -->
-
-<section class="about-section">
-
-    <h2>Why TicketFussion?</h2>
-
-    <div class="why-grid">
-
-        <div class="why-card">
-
-            <h3>🌍 Global Football Marketplace</h3>
-
-            <p>
-
-                Discover tickets for the world's biggest football competitions
-                through one convenient platform.
-
-            </p>
-
-        </div>
-
-        <div class="why-card">
-
-            <h3>⚡ Fast & Simple</h3>
-
-            <p>
-
-                Browse matches, compare ticket categories and complete your
-                purchase in just a few steps.
-
-            </p>
-
-        </div>
-
-        <div class="why-card">
-
-            <h3>🔐 Customer Confidence</h3>
-
-            <p>
-
-                Every decision we make is focused on creating a safe,
-                transparent and reliable customer experience.
-
-            </p>
-
-        </div>
-
-        <div class="why-card">
-
-            <h3>🏆 Premium Football Experiences</h3>
-
-            <p>
-
-                From international tournaments to elite club competitions,
-                TicketFussion connects fans with unforgettable matchdays.
-
-            </p>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- VISION -->
-
-<section class="about-section light">
-
-    <h2>Our Vision</h2>
-
-    <p>
-
-        We envision TicketFussion becoming one of the world's most trusted
-        football ticket marketplaces by connecting supporters with football's
-        greatest moments through innovation, transparency and exceptional
-        customer service.
-
-    </p>
-
-</section>
-
-
-
-<!-- PROMISE -->
-
-<section class="about-section promise">
-
-    <h2>The TicketFussion Promise</h2>
-
-    <p>
-
-        Every ticket represents more than entry to a stadium.
-
-        It represents excitement, anticipation, unforgettable memories and
-        the opportunity to witness football history alongside thousands of
-        passionate supporters.
-
-    </p>
-
-    <p>
-
-        That is why TicketFussion is committed to building a marketplace
-        where trust, integrity, customer satisfaction and security remain
-        at the heart of everything we do.
-
-    </p>
-
-</section>
-
-
-
-<footer class="site-footer">
-
-    <div class="footer-content">
-
-        <img src="assets/logo.png"
-             alt="TicketFussion Logo"
-             class="footer-logo">
-
-        <p>
-
-            TicketFussion is building a trusted global football ticket
-            marketplace where supporters can discover, compare and purchase
-            tickets with confidence.
-
-        </p>
-
-        <p class="copyright">
-
-            © 2026 TicketFussion. All Rights Reserved.
-
-        </p>
 
     </div>
 
 </footer>
 
-<script src="script.js"></script>
+<!-- =====================================================
+    JAVASCRIPT
+====================================================== -->
+
+<script src="js/navbar.js"></script>
+
+<script src="js/footer.js"></script>
+
+<script src="js/home.js"></script>
 
 </body>
+
 </html>

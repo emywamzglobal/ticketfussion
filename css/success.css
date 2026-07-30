@@ -1,0 +1,76 @@
+/* ==========================================================
+   SUCCESS
+========================================================== */
+
+#order-success{
+
+    padding:6rem 0;
+
+}
+
+.success-card{
+
+    max-width:700px;
+    margin:auto;
+    display:grid;
+    gap:2rem;
+    text-align:center;
+
+}
+
+.success-icon{
+
+    display:grid;
+    place-items:center;
+
+}
+
+
+
+/* ==========================================================
+   ORDER DETAILS
+========================================================== */
+
+#order-details{
+
+    display:grid;
+    gap:1rem;
+    text-align:left;
+
+}
+
+
+
+/* ==========================================================
+   NEXT STEPS
+========================================================== */
+
+.next-steps{
+
+    display:grid;
+    gap:1rem;
+    text-align:left;
+
+}
+
+.next-steps ul{
+
+    display:grid;
+    gap:.75rem;
+
+}
+
+
+
+/* ==========================================================
+   ACTIONS
+========================================================== */
+
+.success-actions{
+
+    display:flex;
+    justify-content:center;
+    gap:1rem;
+    flex-wrap:wrap;
+
+}

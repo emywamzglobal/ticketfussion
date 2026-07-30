@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- ==========================================
+        BASIC META
+    =========================================== -->
+
+    <meta charset="UTF-8">
+
+    <meta http-equiv="X-UA-Compatible"
+          content="IE=edge">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <!-- ==========================================
+        SEO
+    =========================================== -->
+
+    <title>
+
+        TicketFussion Admin | Events
+
+    </title>
+
+    <meta name="description"
+          content="TicketFussion Administration Panel">
+
+    <meta name="robots"
+          content="noindex,nofollow">
+
+    <!-- ==========================================
+        FAVICON
+    =========================================== -->
+
+    <link rel="icon"
+          href="/assets/logos/favicon.png">
+
+    <!-- ==========================================
+        CSS
+    =========================================== -->
+
+    <link rel="stylesheet"
+          href="/css/reset.css">
+
+    <link rel="stylesheet"
+          href="/css/responsive.css">
+
+    <link rel="stylesheet"
+          href="/css/theme.css">
+
+    <link rel="stylesheet"
+          href="/css/admin.css">
+
+    <link rel="stylesheet"
+          href="/css/events.css">
+
+    <link rel="stylesheet"
+          href="/css/top-bar.css">
+
+</head>
+
+<body>
+
+<!-- =====================================================
+    ADMIN WRAPPER
+====================================================== -->
+
+<div class="admin-wrapper">
+
+    <!-- =====================================================
+        SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <a href="events.html"
+           class="admin-logo">
+
+            <img src="/assets/logos/logo.png"
+                 alt="TicketFussion">
+
+        </a>
+
+        <nav>
+
+            <ul>
+
+                <li>
+
+                    <a href="events.html"
+                       class="active">
+
+                        Events
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="occurrences.html">
+
+                        Occurrences
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="ticket-listings.html">
+
+                        Ticket Listings
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="login.html">
+
+                        Login
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </aside>
+
+    <!-- =====================================================
+        MAIN
+    ====================================================== -->
+
+    <main class="admin-main">
+
+        <!-- ======================================
+            TOP BAR
+        ======================================= -->
+
+        <header class="admin-header">
+
+            <div>
+
+                <h1>
+
+                    Events
+
+                </h1>
+
+                <p>
+
+                    Create, edit and publish events.
+
+                </p>
+
+            </div>
+
+            <div class="admin-user">
+
+                Administrator
+
+            </div>
+
+        </header>
+
+        <!-- ======================================
+            CONTENT
+        ======================================= -->
+
+        <section class="page-content">
+
+            <form id="event-form">
+
+                <!-- ===========================
+                    BASIC INFORMATION
+                ============================ -->
+
+                <div class="card">
+
+                    <h2>
+
+                        Basic Information
+
+                    </h2>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label>
+
+                                Hero Banner
+
+                            </label>
+
+                            <input type="file"
+                                   accept="image/*">
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>
+
+                                Event Name
+
+                            </label>
+
+                            <input type="text"
+                                   placeholder="Event Name">
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>
+
+                                Category
+
+                            </label>
+
+                            <select>
+
+                                <option>
+
+                                    Concert
+
+                                </option>
+
+                                <option>
+
+                                    Sports
+
+                                </option>
+
+                                <option>
+
+                                    Theatre
+
+                                </option>
+
+                                <option>
+
+                                    Comedy
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>
+
+                                Short Description
+
+                            </label>
+
+                            <textarea rows="3"
+                                      placeholder="Appears on Home Page"></textarea>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ===========================
+                    ACTIONS
+                ============================ -->
+
+                <div class="form-actions">
+
+                    <button class="btn btn-outline"
+                            type="button">
+
+                        Save Draft
+
+                    </button>
+
+                    <button class="btn btn-primary"
+                            type="submit">
+
+                        Publish Event
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</div>
+
+<!-- =====================================================
+    JAVASCRIPT
+====================================================== -->
+
+<script src="events.js"></script>
+
+</body>
+
+</html>

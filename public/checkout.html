@@ -67,7 +67,7 @@
 
     <link rel="stylesheet" href="/css/footer.css">
 
-    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/checkout.css">
 
 </head>
 
@@ -183,109 +183,22 @@
 <main>
 
     <!-- =====================================================
-        HERO
+        CHECKOUT HEADER
     ====================================================== -->
 
-    <section id="hero">
+    <section id="checkout-header">
 
         <div class="container">
 
-            <div class="hero-content">
+            <div id="checkout-summary">
 
-                <span class="hero-tag">
+                <!-- JavaScript
 
-                    Trusted Worldwide
-
-                </span>
-
-                <h1>
-
-                    Buy and Sell Event Tickets with Confidence
-
-                </h1>
-
-                <p>
-
-                    Discover concerts, sports, theatre, comedy and live experiences from trusted sellers around the world.
-
-                </p>
-
-                <form id="hero-search-form"
-                      autocomplete="off">
-
-                    <div class="search-box">
-
-                        <input
-                            type="search"
-                            id="hero-search"
-                            name="search"
-                            placeholder="Search artists, teams, events or venues..."
-                            aria-label="Search Events">
-
-                        <button type="submit">
-
-                            Search
-
-                        </button>
-
-                    </div>
-
-                </form>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =====================================================
-        TOP SELLING EVENTS
-    ====================================================== -->
-
-    <section id="featured-events">
-
-        <div class="container">
-
-            <div class="section-header">
-
-                <div>
-
-                    <span class="section-tag">
-
-                        Featured
-
-                    </span>
-
-                    <h2>
-
-                        Top Selling Events
-
-                    </h2>
-
-                    <p>
-
-                        Explore the biggest concerts, sporting events, theatre productions and live experiences.
-
-                    </p>
-
-                </div>
-
-            </div>
-
-            <div id="featured-events-grid"
-                 class="event-grid">
-
-                <!--
-                    JavaScript renders event cards.
-
-                    Banner
-                    Category
                     Event Name
-                    Tour Stops / Performances
-                    Starting From
-                    View Event
+                    Venue
+                    Date
+                    Ticket Summary
+
                 -->
 
             </div>
@@ -294,48 +207,236 @@
 
     </section>
 
+
+
     <!-- =====================================================
-        SELL TICKETS
+        CHECKOUT
     ====================================================== -->
 
-    <section id="sell-tickets">
+    <section id="checkout">
 
         <div class="container">
 
-            <div class="sell-banner">
+            <div class="checkout-layout">
 
-                <div class="sell-content">
+                <!-- ===================================== -->
+                <!-- LEFT COLUMN -->
+                <!-- ===================================== -->
 
-                    <span class="section-tag">
+                <div class="checkout-card">
 
-                        SELL TICKETS
+                    <!-- Buyer Information -->
 
-                    </span>
+                    <div id="buyer-information">
 
-                    <h2>
+                        <div class="section-header">
 
-                        Can't Attend? Resell Your Tickets.
+                            <span class="section-tag">
 
-                    </h2>
+                                Buyer
 
-                    <p>
+                            </span>
 
-                        List your tickets on TicketFussion and connect with verified buyers looking for their next live event.
+                            <h2>
 
-                    </p>
+                                Buyer Information
+
+                            </h2>
+
+                        </div>
+
+                        <form
+                            id="checkout-form"
+                            autocomplete="off">
+
+                            <div class="form-group">
+
+                                <label for="first-name">
+
+                                    First Name
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="first-name"
+                                    required>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="last-name">
+
+                                    Last Name
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="last-name"
+                                    required>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="email">
+
+                                    Email Address
+
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    required>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="phone">
+
+                                    Phone Number
+
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    id="phone">
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+
+
+                    <!-- Payment -->
+
+                    <div id="payment-information">
+
+                        <div class="section-header">
+
+                            <span class="section-tag">
+
+                                Payment
+
+                            </span>
+
+                            <h2>
+
+                                Secure Payment
+
+                            </h2>
+
+                            <p>
+
+                                Your payment is securely processed using Paystack.
+
+                            </p>
+
+                        </div>
+
+                        <div class="payment-security">
+
+                            🔒
+                            256-bit SSL Encrypted Checkout
+
+                        </div>
+
+                        <!--
+                            Paystack Inline
+                            or Embedded Payment
+                            renders here.
+                        -->
+
+                        <div id="paystack-payment">
+
+                        </div>
+
+                    </div>
 
                 </div>
 
-                <div class="sell-actions">
 
-                    <a href="sell.html"
-                       class="btn btn-primary">
 
-                        Sell Tickets
+                <!-- ===================================== -->
+                <!-- ORDER SUMMARY -->
+                <!-- ===================================== -->
 
-                    </a>
+                <aside id="order-summary">
 
-                </div>
+                    <div class="summary-card">
+
+                        <div class="section-header">
+
+                            <span class="section-tag">
+
+                                Order
+
+                            </span>
+
+                            <h2>
+
+                                Order Summary
+
+                            </h2>
+
+                        </div>
+
+                        <div id="selected-ticket">
+
+                            <!--
+
+                            JavaScript
+
+                            Event
+                            Venue
+                            Date
+                            Section
+                            Row
+                            Seats
+                            Quantity
+                            Delivery
+
+                            -->
+
+                        </div>
+
+                        <hr>
+
+                        <div id="pricing-summary">
+
+                            <!--
+
+                            Ticket Price
+
+                            Service Fee
+
+                            Delivery Fee
+
+                            Taxes
+
+                            Total
+
+                            -->
+
+                        </div>
+
+                        <button
+                            id="complete-order"
+                            class="btn btn-primary">
+
+                            Complete Order
+
+                        </button>
+
+                    </div>
+
+                </aside>
 
             </div>
 
@@ -536,7 +637,7 @@
     JAVASCRIPT
 ====================================================== -->
 
-<script src="js/home.js"></script>
+<script src="js/checkout.js"></script>
 
 </body>
 

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- ==========================================
+        BASIC META
+    =========================================== -->
+
+    <meta charset="UTF-8">
+
+    <meta http-equiv="X-UA-Compatible"
+          content="IE=edge">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <!-- ==========================================
+        SEO
+    =========================================== -->
+
+    <title>
+
+        TicketFussion Admin | Occurrences
+
+    </title>
+
+    <meta name="description"
+          content="TicketFussion Administration Panel">
+
+    <meta name="robots"
+          content="noindex,nofollow">
+
+    <!-- ==========================================
+        FAVICON
+    =========================================== -->
+
+    <link rel="icon"
+          href="/assets/logos/favicon.png">
+
+    <!-- ==========================================
+        CSS
+    =========================================== -->
+
+    <link rel="stylesheet"
+          href="/css/reset.css">
+
+    <link rel="stylesheet"
+          href="/css/responsive.css">
+
+    <link rel="stylesheet"
+          href="/css/theme.css">
+
+    <link rel="stylesheet"
+          href="/css/admin.css">
+
+    <link rel="stylesheet"
+          href="/css/events.css">
+
+    <link rel="stylesheet"
+          href="/css/top-bar.css">
+
+</head>
+
+<body>
+
+<!-- =====================================================
+    ADMIN WRAPPER
+====================================================== -->
+
+<div class="admin-wrapper">
+
+    <!-- =====================================================
+        SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <a href="occurrences.html"
+           class="admin-logo">
+
+            <img src="/assets/logos/logo.png"
+                 alt="TicketFussion">
+
+        </a>
+
+        <nav>
+
+            <ul>
+
+                <li>
+
+                    <a href="occurrences.html"
+                       class="active">
+
+                        Occurrences
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="events.html">
+
+                        Events
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="ticket-listings.html">
+
+                        Ticket Listings
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="login.html">
+
+                        Login
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </aside>
+
+    <!-- =====================================================
+        MAIN
+    ====================================================== -->
+
+    <main class="admin-main">
+
+    <!-- ======================================
+        TOP BAR
+    ======================================= -->
+
+    <header class="admin-header">
+
+        <div>
+
+            <h1>
+
+                Occurrences
+
+            </h1>
+
+            <p>
+
+                Manage event venues, dates and times.
+
+            </p>
+
+        </div>
+
+        <div class="admin-user">
+
+            Administrator
+
+        </div>
+
+    </header>
+
+    <!-- ======================================
+        PAGE CONTENT
+    ======================================= -->
+
+    <section class="page-content">
+
+        <form id="occurrence-form">
+
+            <!-- ======================================
+                OCCURRENCE INFORMATION
+            ======================================= -->
+
+            <div class="form-group venue-layout">
+
+    <label>Venue Layout</label>
+
+    <input type="file" accept="image/*">
+
+</div>
+
+<h2>
+
+    Occurrence Information
+
+</h2>
+
+                <div class="form-grid">
+
+                    <!-- Event -->
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Event
+
+                        </label>
+
+                        <select>
+
+                            <option>
+
+                                Select Event
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- Venue -->
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Venue
+
+                        </label>
+
+                        <input
+                            type="text"
+                            placeholder="Venue Name">
+
+                    </div>
+
+                    <!-- City -->
+
+                    <div class="form-group">
+
+                        <label>
+
+                            City
+
+                        </label>
+
+                        <input
+                            type="text"
+                            placeholder="City">
+
+                    </div>
+
+                    <!-- Country -->
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Country
+
+                        </label>
+
+                        <input
+                            type="text"
+                            placeholder="Country">
+
+                    </div>
+
+                    <!-- Event Date -->
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Event Date
+
+                        </label>
+
+                        <input
+                            type="date">
+
+                    </div>
+
+                    <!-- Event Time -->
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Event Time
+
+                        </label>
+
+                        <input
+                            type="time">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ======================================
+                ACTIONS
+            ======================================= -->
+
+            <div class="form-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-outline">
+
+                    Save Draft
+
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+
+                    Publish Occurrence
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+</div>
+
+<!-- =====================================================
+    JAVASCRIPT
+====================================================== -->
+
+<script src="occurrences.js"></script>
+
+</body>
+
+</html>

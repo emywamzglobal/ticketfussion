@@ -1,0 +1,112 @@
+/* ==========================================================
+   EVENT PAGE
+========================================================== */
+
+#event-hero{
+
+    padding:6rem 0;
+
+}
+
+#event-hero-content{
+
+    display:grid;
+    gap:2rem;
+    align-items:center;
+
+}
+
+
+
+/* ==========================================================
+   ABOUT
+========================================================== */
+
+#about-event{
+
+    padding:5rem 0;
+
+}
+
+#event-description{
+
+    max-width:900px;
+
+}
+
+
+
+/* ==========================================================
+   ARTISTS
+========================================================== */
+
+#event-artists{
+
+    padding:5rem 0;
+
+}
+
+#artists-grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:2rem;
+
+}
+
+
+
+/* ==========================================================
+   GALLERY
+========================================================== */
+
+#event-gallery{
+
+    padding:5rem 0;
+
+}
+
+#gallery-grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:1.5rem;
+
+}
+
+
+
+/* ==========================================================
+   TOUR INFORMATION
+========================================================== */
+
+#tour-information{
+
+    padding:5rem 0;
+
+}
+
+#tour-information-content{
+
+    max-width:900px;
+
+}
+
+
+
+/* ==========================================================
+   TOUR STOPS
+========================================================== */
+
+#tour-stops{
+
+    padding:5rem 0 6rem;
+
+}
+
+#tour-stops-grid{
+
+    display:grid;
+    gap:1.5rem;
+
+}
