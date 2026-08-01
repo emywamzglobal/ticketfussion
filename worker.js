@@ -16,6 +16,7 @@ export default {
     const result = await env.DB.prepare(`
         INSERT INTO orders (
             order_reference,
+            ticket_listing_id,
             event_id,
             category,
             customer_name,
@@ -27,10 +28,11 @@ export default {
             status,
             created_at
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
     `)
     .bind(
         reference,
+        body.ticket_listing_id,
         body.event_id,
         body.category,
         body.customer_name,
