@@ -4,14 +4,14 @@
 
 document.addEventListener(
     "DOMContentLoaded",
-    initialiseTicketListingForm
+    initialise
 );
 
 /* ==========================================================
    INITIALISE
 ========================================================== */
 
-async function initialiseTicketListingForm() {
+async function initialise() {
 
     await loadOccurrences();
 
@@ -19,7 +19,7 @@ async function initialiseTicketListingForm() {
         .getElementById("ticket-listing-form")
         .addEventListener(
             "submit",
-            saveTicketListing
+            publishTicketListing
         );
 
 }
@@ -48,12 +48,10 @@ async function loadOccurrences() {
 
             select.innerHTML += `
                 <option value="${occurrence.id}">
-                    ${occurrence.venue}
-                    -
-                    ${occurrence.city}
-                    -
-                    ${occurrence.event_date}
-                    (${occurrence.event_time})
+                    ${occurrence.venue} •
+                    ${occurrence.city} •
+                    ${occurrence.event_date} •
+                    ${occurrence.event_time}
                 </option>
             `;
 
@@ -65,22 +63,24 @@ async function loadOccurrences() {
 
         console.error(error);
 
+        alert("Unable to load occurrences.");
+
     }
 
 }
 
 /* ==========================================================
-   SAVE TICKET LISTING
+   PUBLISH TICKET LISTING
 ========================================================== */
 
-async function saveTicketListing(event) {
+async function publishTicketListing(event) {
 
     event.preventDefault();
 
     const payload = {
 
         occurrence_id:
-            document.getElementById("occurrence_id").value,
+            Number(document.getElementById("occurrence_id").value),
 
         ticket_type:
             document.getElementById("ticket_type").value,
@@ -95,14 +95,10 @@ async function saveTicketListing(event) {
             document.getElementById("seats").value,
 
         quantity:
-            Number(
-                document.getElementById("quantity").value
-            ),
+            Number(document.getElementById("quantity").value),
 
         price:
-            Number(
-                document.getElementById("price").value
-            ),
+            Number(document.getElementById("price").value),
 
         delivery_method:
             document.getElementById("delivery_method").value
@@ -117,7 +113,9 @@ async function saveTicketListing(event) {
                 method: "POST",
 
                 headers: {
+
                     "Content-Type": "application/json"
+
                 },
 
                 body: JSON.stringify(payload)
@@ -126,15 +124,17 @@ async function saveTicketListing(event) {
 
         if (!response.ok) {
 
-            throw new Error("Unable to save ticket listing.");
+            throw new Error();
 
         }
 
-        alert("Ticket listing created successfully.");
+        alert("Ticket listing published successfully.");
 
         document
             .getElementById("ticket-listing-form")
             .reset();
+
+        await loadOccurrences();
 
     }
 
@@ -142,7 +142,7 @@ async function saveTicketListing(event) {
 
         console.error(error);
 
-        alert(error.message);
+        alert("Unable to publish ticket listing.");
 
     }
 

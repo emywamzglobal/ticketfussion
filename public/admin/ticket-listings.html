@@ -141,250 +141,211 @@
 
     <main class="admin-main">
 
-    <!-- ======================================
-        TOP BAR
-    ======================================= -->
+<header class="admin-header">
 
-    <header class="admin-header">
+    <div>
 
-        <div>
+        <h1>Ticket Listings</h1>
 
-            <h1>
+        <p>Create tickets for a specific event occurrence.</p>
 
-                Ticket Listings
+    </div>
 
-            </h1>
+    <div class="admin-user">
 
-            <p>
+        Administrator
 
-                Create and manage tickets for each occurrence.
+    </div>
 
-            </p>
+</header>
+
+<section class="page-content">
+
+<form id="ticket-listing-form">
+
+    <h2>Ticket Information</h2>
+
+    <div class="form-grid">
+
+        <div class="form-group">
+
+            <label for="occurrence_id">
+
+                Occurrence
+
+            </label>
+
+            <select
+                id="occurrence_id"
+                required>
+
+                <option value="">
+
+                    Loading occurrences...
+
+                </option>
+
+            </select>
 
         </div>
 
-        <div class="admin-user">
+        <div class="form-group">
 
-            Administrator
+            <label for="ticket_type">
+
+                Ticket Type
+
+            </label>
+
+            <input
+                id="ticket_type"
+                type="text"
+                placeholder="VIP, General Admission"
+                required>
 
         </div>
 
-    </header>
+        <div class="form-group">
 
-    <!-- ======================================
-        PAGE CONTENT
-    ======================================= -->
+            <label for="section">
 
-    <section class="page-content">
+                Section
 
-        <form id="ticket-listing-form">
+            </label>
 
-            <!-- ======================================
-                TICKET INFORMATION
-            ======================================= -->
+            <input
+                id="section"
+                type="text"
+                placeholder="Section A">
 
-            <div class="card">
+        </div>
 
-                <h2>
+        <div class="form-group">
 
-                    Ticket Information
+            <label for="row">
 
-                </h2>
+                Row
 
-                <div class="form-grid">
+            </label>
 
-                    <!-- Occurrence -->
+            <input
+                id="row"
+                type="text"
+                placeholder="Row 5">
 
-                    <div class="form-group">
+        </div>
 
-                        <label>
+        <div class="form-group">
 
-                            Occurrence
+            <label for="seats">
 
-                        </label>
+                Seat(s)
 
-                        <select>
+            </label>
 
-                            <option>
+            <input
+                id="seats"
+                type="text"
+                placeholder="A12,A13">
 
-                                Select Occurrence
+        </div>
 
-                            </option>
+        <div class="form-group">
 
-                        </select>
+            <label for="quantity">
 
-                    </div>
+                Quantity
 
-                    <!-- Ticket Type -->
+            </label>
 
-                    <div class="form-group">
+            <input
+                id="quantity"
+                type="number"
+                min="1"
+                value="1"
+                required>
 
-                        <label>
+        </div>
 
-                            Ticket Type
+        <div class="form-group">
 
-                        </label>
+            <label for="price">
 
-                        <input
-                            type="text"
-                            placeholder="VIP, General Admission, Standard...">
+                Price (USD)
 
-                    </div>
+            </label>
 
-                    <!-- Section -->
+            <input
+                id="price"
+                type="number"
+                step="0.01"
+                required>
 
-                    <div class="form-group">
+        </div>
 
-                        <label>
+        <div class="form-group">
 
-                            Section
+            <label for="delivery_method">
 
-                        </label>
+                Delivery Method
 
-                        <input
-                            type="text"
-                            placeholder="Section">
+            </label>
 
-                    </div>
+            <select id="delivery_method">
 
-                    <!-- Row -->
+                <option value="E-ticket">
 
-                    <div class="form-group">
+                    E-ticket
 
-                        <label>
+                </option>
 
-                            Row
+                <option value="Mobile Ticket">
 
-                        </label>
+                    Mobile Ticket
 
-                        <input
-                            type="text"
-                            placeholder="Row">
+                </option>
 
-                    </div>
+                <option value="PDF Ticket">
 
-                    <!-- Seat(s) -->
+                    PDF Ticket
 
-                    <div class="form-group">
+                </option>
 
-                        <label>
+                <option value="Physical Ticket">
 
-                            Seat(s)
+                    Physical Ticket
 
-                        </label>
+                </option>
 
-                        <input
-                            type="text"
-                            placeholder="12-15 or A12,A13">
+            </select>
 
-                    </div>
+        </div>
 
-                    <!-- Quantity -->
+    </div>
 
-                    <div class="form-group">
+    <div class="form-actions">
 
-                        <label>
+        <button
+            type="reset"
+            class="btn btn-outline">
 
-                            Quantity
+            Clear
 
-                        </label>
+        </button>
 
-                        <input
-                            type="number"
-                            min="1"
-                            placeholder="Available Tickets">
+        <button
+            type="submit"
+            class="btn btn-primary">
 
-                    </div>
+            Publish Ticket Listing
 
-                    <!-- Price -->
+        </button>
 
-                    <div class="form-group">
+    </div>
 
-                        <label>
+</form>
 
-                            Price
-
-                        </label>
-
-                        <input
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            placeholder="0.00">
-
-                    </div>
-
-                    <!-- Delivery Method -->
-
-                    <div class="form-group">
-
-                        <label>
-
-                            Delivery Method
-
-                        </label>
-
-                        <select>
-
-                            <option>
-
-                                E-ticket
-
-                            </option>
-
-                            <option>
-
-                                Mobile Ticket
-
-                            </option>
-
-                            <option>
-
-                                PDF Ticket
-
-                            </option>
-
-                            <option>
-
-                                Physical Ticket
-
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- ======================================
-                ACTIONS
-            ======================================= -->
-
-            <div class="form-actions">
-
-                <button
-                    type="button"
-                    class="btn btn-outline">
-
-                    Save Draft
-
-                </button>
-
-                <button
-                    type="submit"
-                    class="btn btn-primary">
-
-                    Publish Listing
-
-                </button>
-
-            </div>
-
-        </form>
-
-    </section>
+</section>
 
 </main>
 
@@ -394,9 +355,7 @@
     JAVASCRIPT
 ====================================================== -->
 
-<script src="js/admin.js"></script>
-
-<script src="js/events.js"></script>
+<script src="/js/ticket-listings.js"></script>
 
 </body>
 
