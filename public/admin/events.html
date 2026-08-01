@@ -42,23 +42,11 @@
         CSS
     =========================================== -->
 
-    <link rel="stylesheet"
-          href="/css/reset.css">
-
-    <link rel="stylesheet"
-          href="/css/responsive.css">
-
-    <link rel="stylesheet"
-          href="/css/theme.css">
-
-    <link rel="stylesheet"
-          href="/css/admin.css">
-
-    <link rel="stylesheet"
-          href="/css/events.css">
-
-    <link rel="stylesheet"
-          href="/css/top-bar.css">
+    <link rel="stylesheet" href="/css/reset.css">
+<link rel="stylesheet" href="/css/responsive.css">
+<link rel="stylesheet" href="/css/theme.css">
+<link rel="stylesheet" href="/css/admin.css">
+<link rel="stylesheet" href="/css/top-bar.css">
 
 </head>
 
@@ -141,166 +129,118 @@
 
     <main class="admin-main">
 
-        <!-- ======================================
-            TOP BAR
-        ======================================= -->
+    <!-- ======================================
+        TOP BAR
+    ======================================= -->
+    <header class="admin-header">
+        <div>
+            <h1>Events</h1>
+            <p>Create, edit and publish events.</p>
+        </div>
 
-        <header class="admin-header">
+        <div class="admin-user">
+            Administrator
+        </div>
+    </header>
 
-            <div>
+    <!-- ======================================
+        CONTENT
+    ======================================= -->
+    
+    <section class="page-content">
 
-                <h1>
+        <form id="event-form">
 
-                    Events
+            <div class="card">
 
-                </h1>
+                <h2>Basic Information</h2>
 
-                <p>
+                <div class="form-grid">
 
-                    Create, edit and publish events.
+                    <!-- Hero Banner -->
+                    <div class="form-group">
+                        <label for="banner_image">Hero Banner</label>
 
-                </p>
+                        <input
+                            id="banner_image"
+                            name="banner_image"
+                            type="file"
+                            accept="image/*">
+                    </div>
 
-            </div>
+                    <!-- Event Name -->
+                    <div class="form-group">
+                        <label for="title">Event Name</label>
 
-            <div class="admin-user">
+                        <input
+                            id="title"
+                            name="title"
+                            type="text"
+                            placeholder="Event Name"
+                            required>
+                    </div>
 
-                Administrator
+                    <!-- Category -->
+                    <div class="form-group">
+                        <label for="category">Category</label>
 
-            </div>
+                        <select
+                            id="category"
+                            name="category"
+                            required>
 
-        </header>
+                            <option value="">Select Category</option>
+                            <option value="Concert">Concert</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Theatre">Theatre</option>
+                            <option value="Comedy">Comedy</option>
 
-        <!-- ======================================
-            CONTENT
-        ======================================= -->
+                        </select>
+                    </div>
 
-        <section class="page-content">
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="description">
+                            Short Description
+                        </label>
 
-            <form id="event-form">
-
-                <!-- ===========================
-                    BASIC INFORMATION
-                ============================ -->
-
-                <div class="card">
-
-                    <h2>
-
-                        Basic Information
-
-                    </h2>
-
-                    <div class="form-grid">
-
-                        <div class="form-group">
-
-                            <label>
-
-                                Hero Banner
-
-                            </label>
-
-                            <input type="file"
-                                   accept="image/*">
-
-                        </div>
-
-                        <div class="form-group">
-
-                            <label>
-
-                                Event Name
-
-                            </label>
-
-                            <input type="text"
-                                   placeholder="Event Name">
-
-                        </div>
-
-                        <div class="form-group">
-
-                            <label>
-
-                                Category
-
-                            </label>
-
-                            <select>
-
-                                <option>
-
-                                    Concert
-
-                                </option>
-
-                                <option>
-
-                                    Sports
-
-                                </option>
-
-                                <option>
-
-                                    Theatre
-
-                                </option>
-
-                                <option>
-
-                                    Comedy
-
-                                </option>
-
-                            </select>
-
-                        </div>
-
-                        <div class="form-group">
-
-                            <label>
-
-                                Short Description
-
-                            </label>
-
-                            <textarea rows="3"
-                                      placeholder="Appears on Home Page"></textarea>
-
-                        </div>
-
+                        <textarea
+                            id="description"
+                            name="description"
+                            rows="5"
+                            placeholder="Appears on Home Page"
+                            required></textarea>
                     </div>
 
                 </div>
 
-                <!-- ===========================
-                    ACTIONS
-                ============================ -->
+            </div>
 
-                <div class="form-actions">
+            <div class="form-actions">
 
-                    <button class="btn btn-outline"
-                            type="button">
+                <button
+                    class="btn btn-outline"
+                    type="button">
 
-                        Save Draft
+                    Save Draft
 
-                    </button>
+                </button>
 
-                    <button class="btn btn-primary"
-                            type="submit">
+                <button
+                    class="btn btn-primary"
+                    type="submit">
 
-                        Publish Event
+                    Publish Event
 
-                    </button>
+                </button>
 
-                </div>
+            </div>
 
-            </form>
+        </form>
 
-        </section>
+    </section>
 
-    </main>
+</main>
 
 </div>
 
