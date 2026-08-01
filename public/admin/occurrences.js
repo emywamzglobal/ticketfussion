@@ -81,25 +81,40 @@ async function createOccurrence(e) {
 
     const payload = {
 
-        event_id:
-            document.getElementById("event_id").value,
+    event_id:
+        document.getElementById("event_id").value,
 
-        venue:
-            document.getElementById("venue").value.trim(),
+    about_event:
+        document.getElementById("about_event").value.trim(),
 
-        city:
-            document.getElementById("city").value.trim(),
+    event_gallery:
+        "",
 
-        country:
-            document.getElementById("country").value.trim(),
+    event_information:
+        document.getElementById("event_information").value.trim(),
 
-        event_date:
-            document.getElementById("event_date").value,
+    venue:
+        document.getElementById("venue").value.trim(),
 
-        event_time:
-            document.getElementById("event_time").value
+    venue_information:
+        document.getElementById("venue_information").value.trim(),
 
-    };
+    venue_layout:
+        "",
+
+    city:
+        document.getElementById("city").value.trim(),
+
+    country:
+        document.getElementById("country").value.trim(),
+
+    event_date:
+        document.getElementById("event_date").value,
+
+    event_time:
+        document.getElementById("event_time").value
+
+};
 
     try {
 
