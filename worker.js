@@ -345,6 +345,37 @@ if (
 
 }
 
+// ==========================
+// UPLOAD IMAGE TO R2
+// ==========================
+
+if (url.pathname === "/api/upload" && request.method === "POST") {
+
+    const formData = await request.formData();
+
+    const file = formData.get("file");
+
+    if (!file) {
+        return Response.json(
+            { error: "No file uploaded." },
+            { status: 400 }
+        );
+    }
+
+    const key = `event-banners/${Date.now()}-${file.name}`;
+
+    await env.ASSETS.put(key, file.stream(), {
+        httpMetadata: {
+            contentType: file.type
+        }
+    });
+
+    return Response.json({
+        success: true,
+        url: `https://pub-1d8af21f3a8c45fcbbfdb4e95bb13a1f.r2.dev/${key}`
+    });
+}
+
     // ==========================
     // WEBSITE
     // ==========================

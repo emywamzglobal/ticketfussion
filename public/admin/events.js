@@ -31,19 +31,50 @@ async function createEvent(e) {
     const description =
         document.getElementById("description").value.trim();
 
-    const banner =
-        document.getElementById("banner_image").value.trim();
+    const file =
+        document.getElementById("banner_image").files[0];
 
-    const payload = {
+    if (!file) {
 
-        title,
-        category,
-        description,
-        banner_image: banner
+        alert("Please select a banner image.");
 
-    };
+        return;
+
+    }
 
     try {
+
+        // Upload image to R2
+        const formData = new FormData();
+
+        formData.append("file", file);
+
+        const uploadResponse = await fetch(
+            "/api/upload",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+        if (!uploadResponse.ok) {
+
+            throw new Error("Image upload failed.");
+
+        }
+
+        const uploadResult =
+            await uploadResponse.json();
+
+        // Save event
+        const payload = {
+
+            title,
+            category,
+            description,
+            banner_image: uploadResult.url
+
+        };
 
         const response = await fetch(
             "/api/events",
