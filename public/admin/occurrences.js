@@ -5,12 +5,69 @@
 const form =
     document.getElementById("occurrence-form");
 
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        loadEvents();
+
+    }
+);
+
 if (form) {
 
     form.addEventListener(
         "submit",
         createOccurrence
     );
+
+}
+
+/* ==========================================================
+   LOAD EVENTS
+========================================================== */
+
+async function loadEvents() {
+
+    const select =
+        document.getElementById("event_id");
+
+    try {
+
+        const response =
+            await fetch("/api/events");
+
+        const events =
+            await response.json();
+
+        select.innerHTML =
+            '<option value="">Select Event</option>';
+
+        events.forEach(event => {
+
+            const option =
+                document.createElement("option");
+
+            option.value =
+                event.id;
+
+            option.textContent =
+                event.title;
+
+            select.appendChild(option);
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        select.innerHTML =
+            '<option value="">Unable to load events</option>';
+
+    }
 
 }
 
@@ -27,23 +84,8 @@ async function createOccurrence(e) {
         event_id:
             document.getElementById("event_id").value,
 
-        about_event:
-            document.getElementById("about_event").value.trim(),
-
-        event_gallery:
-            document.getElementById("event_gallery").value.trim(),
-
-        event_information:
-            document.getElementById("event_information").value.trim(),
-
         venue:
             document.getElementById("venue").value.trim(),
-
-        venue_information:
-            document.getElementById("venue_information").value.trim(),
-
-        venue_layout:
-            document.getElementById("venue_layout").value.trim(),
 
         city:
             document.getElementById("city").value.trim(),
@@ -61,24 +103,25 @@ async function createOccurrence(e) {
 
     try {
 
-        const response = await fetch(
-            "/api/occurrences",
-            {
+        const response =
+            await fetch(
+                "/api/occurrences",
+                {
 
-                method: "POST",
+                    method: "POST",
 
-                headers: {
+                    headers: {
 
-                    "Content-Type":
-                        "application/json"
+                        "Content-Type":
+                            "application/json"
 
-                },
+                    },
 
-                body: JSON.stringify(payload)
+                    body:
+                        JSON.stringify(payload)
 
-            }
-
-        );
+                }
+            );
 
         if (!response.ok) {
 
@@ -93,6 +136,8 @@ async function createOccurrence(e) {
         );
 
         form.reset();
+
+        loadEvents();
 
     }
 

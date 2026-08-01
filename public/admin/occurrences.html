@@ -177,159 +177,124 @@
 
     <section class="page-content">
 
-        <form id="occurrence-form">
+    <form id="occurrence-form">
 
-            <!-- ======================================
-                OCCURRENCE INFORMATION
-            ======================================= -->
+        <h2>Occurrence Information</h2>
 
-            <div class="form-group venue-layout">
+        <div class="form-grid">
 
-    <label>Venue Layout</label>
-
-    <input type="file" accept="image/*">
-
-</div>
-
-<h2>
-
-    Occurrence Information
-
-</h2>
-
-                <div class="form-grid">
-
-                    <!-- Event -->
-
-                    <div class="form-group">
-
-                        <label>
-
-                            Event
-
-                        </label>
-
-                        <select>
-
-                            <option>
-
-                                Select Event
-
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                    <!-- Venue -->
-
-                    <div class="form-group">
-
-                        <label>
-
-                            Venue
-
-                        </label>
-
-                        <input
-                            type="text"
-                            placeholder="Venue Name">
-
-                    </div>
-
-                    <!-- City -->
-
-                    <div class="form-group">
-
-                        <label>
-
-                            City
-
-                        </label>
-
-                        <input
-                            type="text"
-                            placeholder="City">
-
-                    </div>
-
-                    <!-- Country -->
-
-                    <div class="form-group">
-
-                        <label>
-
-                            Country
-
-                        </label>
-
-                        <input
-                            type="text"
-                            placeholder="Country">
-
-                    </div>
-
-                    <!-- Event Date -->
-
-                    <div class="form-group">
-
-                        <label>
-
-                            Event Date
-
-                        </label>
-
-                        <input
-                            type="date">
-
-                    </div>
-
-                    <!-- Event Time -->
-
-                    <div class="form-group">
-
-                        <label>
-
-                            Event Time
-
-                        </label>
-
-                        <input
-                            type="time">
-
-                    </div>
-
-                </div>
-
+            <div class="form-group">
+                <label for="venue_layout">Venue Layout</label>
+                <input
+                    type="file"
+                    id="venue_layout"
+                    accept="image/*">
             </div>
 
-            <!-- ======================================
-                ACTIONS
-            ======================================= -->
-
-            <div class="form-actions">
-
-                <button
-                    type="button"
-                    class="btn btn-outline">
-
-                    Save Draft
-
-                </button>
-
-                <button
-                    type="submit"
-                    class="btn btn-primary">
-
-                    Publish Occurrence
-
-                </button>
-
+            <div class="form-group">
+                <label for="event_id">Event</label>
+                <select id="event_id" required>
+                    <option value="">Loading events...</option>
+                </select>
             </div>
 
-        </form>
+            <div class="form-group">
+                <label for="venue">Venue</label>
+                <input
+                    type="text"
+                    id="venue"
+                    placeholder="Venue Name"
+                    required>
+            </div>
 
-    </section>
+            <div class="form-group">
+                <label for="city">City</label>
+                <input
+                    type="text"
+                    id="city"
+                    placeholder="City"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="country">Country</label>
+                <input
+                    type="text"
+                    id="country"
+                    placeholder="Country"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="event_date">Event Date</label>
+                <input
+                    type="date"
+                    id="event_date"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="event_time">Event Time</label>
+                <input
+                    type="time"
+                    id="event_time"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="about_event">About Event</label>
+                <textarea
+                    id="about_event"
+                    rows="5"
+                    placeholder="About this occurrence..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="event_gallery">Event Gallery</label>
+                <input
+                    type="file"
+                    id="event_gallery"
+                    multiple
+                    accept="image/*">
+            </div>
+
+            <div class="form-group">
+                <label for="event_information">Event Information</label>
+                <textarea
+                    id="event_information"
+                    rows="5"
+                    placeholder="Extra event information..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="venue_information">Venue Information</label>
+                <textarea
+                    id="venue_information"
+                    rows="5"
+                    placeholder="Venue details..."></textarea>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+
+            <button
+                type="reset"
+                class="btn btn-outline">
+                Clear
+            </button>
+
+            <button
+                type="submit"
+                class="btn btn-primary">
+                Publish Occurrence
+            </button>
+
+        </div>
+
+    </form>
+
+</section>
 
 </main>
 
