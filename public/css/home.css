@@ -122,11 +122,13 @@
 
     display:grid;
 
-    grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+    grid-template-columns:repeat(auto-fill,minmax(300px,300px));
+
+    justify-content:center;
 
     gap:2rem;
 
-    align-items:start;
+    padding-top:1rem;
 
 }
 
@@ -438,11 +440,9 @@
 
     height:100%;
 
-    width:100%;
+    max-width:320px;
 
-    max-width:none;
-
-    margin:0;
+    margin:auto;
 
 }
 
