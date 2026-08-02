@@ -112,7 +112,7 @@ function createEventCard(event) {
 
                 <p>
 
-                    ${event.description}
+                    ${event.description.substring(0,100)}...
 
                 </p>
 

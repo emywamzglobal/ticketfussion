@@ -228,9 +228,9 @@ function renderSelectedTicket() {
 
             <p>
 
-                <strong>Seats:</strong>
+                <strong>Quantity:</strong>
 
-                ${checkoutData.seats || "-"}
+                ${checkoutData.quantity || "-"}
 
             </p>
 
@@ -470,7 +470,7 @@ async function createOrder() {
             checkoutData.country,
 
         quantity:
-            1,
+            checkoutData.quantity,
 
         amount:
             total

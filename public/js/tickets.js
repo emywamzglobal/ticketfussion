@@ -170,13 +170,6 @@ No tickets available.
 
         <p>
 
-            Seats:
-            ${ticket.seats || "-"}
-
-        </p>
-
-        <p>
-
             Quantity:
             ${ticket.quantity}
 
