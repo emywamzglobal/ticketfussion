@@ -1,0 +1,231 @@
+/*=========================================================
+    MY TICKET
+=========================================================*/
+
+main{
+
+    min-height:80vh;
+
+    padding:4rem 0;
+
+    background:#f5f7fb;
+
+}
+
+#ticket-page{
+
+    max-width:900px;
+
+    margin:0 auto;
+
+    padding:0 1rem;
+
+}
+
+/*=========================================================
+    TICKET CARD
+=========================================================*/
+
+.ticket-card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+
+    border:1px solid #ececec;
+
+}
+
+/*=========================================================
+    EVENT BANNER
+=========================================================*/
+
+.ticket-banner{
+
+    width:100%;
+
+    height:280px;
+
+    overflow:hidden;
+
+}
+
+.ticket-banner img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    display:block;
+
+}
+
+/*=========================================================
+    CONTENT
+=========================================================*/
+
+.ticket-content{
+
+    padding:2rem;
+
+}
+
+.ticket-content h1{
+
+    font-size:2rem;
+
+    margin-bottom:.5rem;
+
+}
+
+.ticket-meta{
+
+    color:#666;
+
+    margin-bottom:2rem;
+
+}
+
+/*=========================================================
+    GRID
+=========================================================*/
+
+.ticket-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:1.5rem;
+
+    margin-bottom:2rem;
+
+}
+
+.ticket-item{
+
+    background:#fafafa;
+
+    border-radius:12px;
+
+    padding:1rem;
+
+    border:1px solid #ececec;
+
+}
+
+.ticket-item span{
+
+    display:block;
+
+    color:#888;
+
+    font-size:.85rem;
+
+    margin-bottom:.4rem;
+
+}
+
+.ticket-item strong{
+
+    color:#111;
+
+    font-size:1rem;
+
+}
+
+/*=========================================================
+    REFERENCE
+=========================================================*/
+
+.ticket-reference{
+
+    text-align:center;
+
+    padding:1.5rem;
+
+    border-top:1px solid #ececec;
+
+}
+
+.ticket-reference h3{
+
+    margin-bottom:.75rem;
+
+}
+
+.ticket-reference code{
+
+    font-size:1.2rem;
+
+    font-weight:700;
+
+    color:var(--primary);
+
+}
+
+/*=========================================================
+    QR CODE
+=========================================================*/
+
+.ticket-qr{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:2rem;
+
+}
+
+/*=========================================================
+    BUTTONS
+=========================================================*/
+
+.ticket-actions{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:1rem;
+
+    padding:0 2rem 2rem;
+
+    flex-wrap:wrap;
+
+}
+
+/*=========================================================
+    MOBILE
+=========================================================*/
+
+@media(max-width:768px){
+
+    .ticket-banner{
+
+        height:220px;
+
+    }
+
+    .ticket-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .ticket-content{
+
+        padding:1.5rem;
+
+    }
+
+}

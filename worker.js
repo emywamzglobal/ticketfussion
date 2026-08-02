@@ -280,6 +280,82 @@ if (url.pathname.startsWith("/api/ticket-listings/") && request.method === "DELE
 
 }
 
+// ==========================
+// TICKETS
+// ==========================
+
+// Create Ticket
+if (url.pathname === "/api/tickets" && request.method === "POST") {
+
+    const body = await request.json();
+
+    const result = await createTicket(body, env);
+
+    return Response.json(result);
+
+}
+
+// Get All Tickets
+if (url.pathname === "/api/tickets" && request.method === "GET") {
+
+    const tickets = await getTickets(env);
+
+    return Response.json(tickets);
+
+}
+
+// Get Single Ticket
+if (url.pathname.startsWith("/api/tickets/") && request.method === "GET") {
+
+    const id = url.pathname.split("/").pop();
+
+    const ticket = await getTicket(id, env);
+
+    return Response.json(ticket);
+
+}
+
+// Get Ticket By Reference
+if (
+    request.method === "GET" &&
+    url.pathname.startsWith("/api/tickets/reference/")
+) {
+
+    const reference = url.pathname.split("/").pop();
+
+    const ticket = await getTicketByReference(
+        reference,
+        env
+    );
+
+    return Response.json(ticket);
+
+}
+
+// Update Ticket
+if (url.pathname.startsWith("/api/tickets/") && request.method === "PUT") {
+
+    const id = url.pathname.split("/").pop();
+
+    const body = await request.json();
+
+    const result = await updateTicket(id, body, env);
+
+    return Response.json(result);
+
+}
+
+// Delete Ticket
+if (url.pathname.startsWith("/api/tickets/") && request.method === "DELETE") {
+
+    const id = url.pathname.split("/").pop();
+
+    const result = await deleteTicket(id, env);
+
+    return Response.json(result);
+
+}
+
 // ==========================================================
 // CHECKOUT
 // GET /api/checkout/:ticketId
@@ -872,6 +948,248 @@ async function deleteTicketListing(id, env) {
 
 }
 
+/* ==========================================================
+   TICKETS
+========================================================== */
+
+/**
+ * Create Ticket
+ */
+async function createTicket(request, env) {
+
+    const {
+        ticket_reference,
+        order_id,
+        ticket_listing_id,
+        occurrence_id,
+        event_id,
+        customer_name,
+        customer_email,
+        section,
+        row,
+        seat_numbers,
+        qr_code,
+        status
+    } = request;
+
+    const result = await env.DB
+        .prepare(`
+            INSERT INTO tickets (
+
+                ticket_reference,
+                order_id,
+                ticket_listing_id,
+                occurrence_id,
+                event_id,
+                customer_name,
+                customer_email,
+                section,
+                row,
+                seat_numbers,
+                qr_code,
+                status
+
+            )
+
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `)
+        .bind(
+
+            ticket_reference,
+            order_id,
+            ticket_listing_id,
+            occurrence_id,
+            event_id,
+            customer_name,
+            customer_email,
+            section,
+            row,
+            seat_numbers,
+            qr_code,
+            status
+
+        )
+        .run();
+
+    return result;
+
+}
+
+/**
+ * Get All Tickets
+ */
+async function getTickets(env) {
+
+    const result = await env.DB
+        .prepare(`
+            SELECT *
+
+            FROM tickets
+
+            ORDER BY created_at DESC
+        `)
+        .all();
+
+    return result.results;
+
+}
+
+/**
+ * Get Single Ticket
+ */
+async function getTicket(id, env) {
+
+    const result = await env.DB
+        .prepare(`
+            SELECT *
+
+            FROM tickets
+
+            WHERE id = ?
+        `)
+        .bind(id)
+        .first();
+
+    return result;
+
+}
+
+/* ==========================================================
+   GET TICKET BY REFERENCE
+========================================================== */
+
+async function getTicketByReference(reference, env) {
+
+    const result = await env.DB
+        .prepare(`
+
+SELECT
+
+    t.ticket_reference,
+    t.customer_name,
+    t.customer_email,
+    t.section,
+    t.row,
+    t.seat_numbers,
+    t.qr_code,
+    t.status,
+
+    tl.ticket_type,
+
+    o.event_date,
+    o.event_time,
+    o.venue,
+    o.city,
+    o.country,
+
+    e.title,
+    e.category,
+    e.banner_image
+
+FROM tickets t
+
+INNER JOIN ticket_listings tl
+ON tl.id = t.ticket_listing_id
+
+INNER JOIN occurrences o
+ON o.id = t.occurrence_id
+
+INNER JOIN events e
+ON e.id = t.event_id
+
+WHERE t.ticket_reference = ?
+
+LIMIT 1
+
+        `)
+        .bind(reference)
+        .first();
+
+    return result;
+
+}
+
+/**
+ * Update Ticket
+ */
+async function updateTicket(id, request, env) {
+
+    const {
+        ticket_reference,
+        order_id,
+        ticket_listing_id,
+        occurrence_id,
+        event_id,
+        customer_name,
+        customer_email,
+        section,
+        row,
+        seat_numbers,
+        qr_code,
+        status
+    } = request;
+
+    const result = await env.DB
+        .prepare(`
+            UPDATE tickets
+
+            SET
+
+                ticket_reference = ?,
+                order_id = ?,
+                ticket_listing_id = ?,
+                occurrence_id = ?,
+                event_id = ?,
+                customer_name = ?,
+                customer_email = ?,
+                section = ?,
+                row = ?,
+                seat_numbers = ?,
+                qr_code = ?,
+                status = ?
+
+            WHERE id = ?
+        `)
+        .bind(
+
+            ticket_reference,
+            order_id,
+            ticket_listing_id,
+            occurrence_id,
+            event_id,
+            customer_name,
+            customer_email,
+            section,
+            row,
+            seat_numbers,
+            qr_code,
+            status,
+            id
+
+        )
+        .run();
+
+    return result;
+
+}
+
+/**
+ * Delete Ticket
+ */
+async function deleteTicket(id, env) {
+
+    const result = await env.DB
+        .prepare(`
+            DELETE FROM tickets
+
+            WHERE id = ?
+        `)
+        .bind(id)
+        .run();
+
+    return result;
+
+}
 
 /* ==========================================================
    CHECKOUT
@@ -968,25 +1286,116 @@ async function verifyPayment(reference, env) {
 
     await env.DB.prepare(`
 
-        UPDATE orders
+    UPDATE orders
 
-        SET
+    SET
 
-            status = 'paid'
+        status = 'paid'
 
-        WHERE order_reference = ?
+    WHERE order_reference = ?
+
+`)
+.bind(reference)
+.run();
+
+const order = await getOrderByReference(
+    reference,
+    env
+);
+
+// Check if ticket already exists
+const existingTicket = await env.DB
+    .prepare(`
+
+        SELECT ticket_reference
+
+        FROM tickets
+
+        WHERE order_id = ?
+
+        LIMIT 1
 
     `)
-    .bind(reference)
-    .run();
+    .bind(order.id)
+    .first();
+
+if (existingTicket) {
 
     return {
 
         success: true,
 
-        payment: data.data
+        payment: data.data,
+
+        ticket_reference: existingTicket.ticket_reference,
+
+        order
 
     };
+
+}
+
+// Generate Ticket Reference
+const ticketReference =
+    "TF-" +
+    crypto.randomUUID()
+        .replace(/-/g, "")
+        .substring(0, 10)
+        .toUpperCase();
+
+// QR Code Value
+const qrCode = ticketReference;
+
+// Create Ticket
+await createTicket({
+
+    ticket_reference: ticketReference,
+
+    order_id: order.id,
+
+    ticket_listing_id: order.ticket_listing_id,
+
+    occurrence_id: order.occurrence_id,
+
+    event_id: order.event_id,
+
+    customer_name: order.customer_name,
+
+    customer_email: order.customer_email,
+
+    section: order.section,
+
+    row: order.row,
+
+    seat_numbers: order.seats,
+
+    qr_code: qrCode,
+
+    status: "active"
+
+}, env);
+
+await sendTicketEmail(
+
+    order,
+
+    ticketReference,
+
+    env
+
+);
+
+return {
+
+    success: true,
+
+    payment: data.data,
+
+    ticket_reference: ticketReference,
+
+    order
+
+};
 
 }
 
@@ -996,28 +1405,37 @@ async function verifyPayment(reference, env) {
 
 async function getOrderByReference(reference, env) {
 
-    const result = await env.DB.prepare(`
+    const result = await env.DB
+        .prepare(`
 
 SELECT
 
+    o.id,
     o.order_reference,
+    o.ticket_listing_id,
+    o.event_id,
     o.customer_name,
     o.customer_email,
     o.customer_phone,
+    o.customer_country,
     o.quantity,
     o.amount,
     o.status,
 
-    e.title,
+    tl.ticket_type,
+    tl.section,
+    tl.row,
+    tl.seats,
+    tl.delivery_method,
+    tl.occurrence_id,
 
+    oc.event_date,
+    oc.event_time,
     oc.venue,
     oc.city,
     oc.country,
-    oc.event_date,
-    oc.event_time,
 
-    tl.ticket_type,
-    tl.delivery_method
+    e.title
 
 FROM orders o
 
@@ -1034,10 +1452,235 @@ WHERE o.order_reference = ?
 
 LIMIT 1
 
-    `)
-    .bind(reference)
-    .first();
+        `)
+        .bind(reference)
+        .first();
 
     return result;
+
+}
+
+/* ==========================================================
+   SEND TICKET EMAIL
+========================================================== */
+
+async function sendTicketEmail(
+    order,
+    ticketReference,
+    env
+) {
+
+    const ticketUrl =
+        `https://www.ticketfussion.com/my-ticket.html?ticket=${ticketReference}`;
+
+    const html = `
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+</head>
+
+<body style="margin:0;padding:0;background:#f5f7fb;font-family:Arial,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0">
+
+<tr>
+
+<td align="center" style="padding:40px 20px;">
+
+<table width="650" cellpadding="0" cellspacing="0"
+style="background:#ffffff;border-radius:12px;overflow:hidden;">
+
+<tr>
+
+<td
+style="background:#5B2EFF;
+padding:30px;
+text-align:center;
+color:#fff;">
+
+<h1 style="margin:0;">
+
+TicketFussion
+
+</h1>
+
+<p style="margin-top:10px;">
+
+Your ticket is ready 🎉
+
+</p>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding:35px;">
+
+<h2>
+
+Hi ${order.customer_name},
+
+</h2>
+
+<p>
+
+Thank you for purchasing with
+<strong>TicketFussion</strong>.
+
+</p>
+
+<p>
+
+Your payment has been confirmed.
+
+</p>
+
+<hr>
+
+<h2>
+
+${order.title}
+
+</h2>
+
+<p>
+
+📍 ${order.venue}, ${order.city}, ${order.country}
+
+</p>
+
+<p>
+
+📅 ${order.event_date}
+
+</p>
+
+<p>
+
+🕗 ${order.event_time}
+
+</p>
+
+<p>
+
+🎫 Ticket Reference
+
+</p>
+
+<h3>
+
+${ticketReference}
+
+</h3>
+
+<p>
+
+Your ticket is securely stored on TicketFussion.
+
+Click below anytime to access your QR code and entry details.
+
+</p>
+
+<p style="text-align:center;margin:40px 0;">
+
+<a
+href="${ticketUrl}"
+style="background:#5B2EFF;
+color:#fff;
+padding:15px 35px;
+text-decoration:none;
+border-radius:8px;
+font-weight:bold;">
+
+View My Ticket
+
+</a>
+
+</p>
+
+<hr>
+
+<p style="color:#666;">
+
+Need help?
+
+support@ticketfussion.com
+
+</p>
+
+<p style="color:#999;font-size:13px;">
+
+© 2026 TicketFussion
+
+<br>
+
+The Global Ticket Marketplace
+
+</p>
+
+</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>
+
+`;
+
+    const response = await fetch(
+
+        "https://api.resend.com/emails",
+
+        {
+
+            method: "POST",
+
+            headers: {
+
+                Authorization:
+                    `Bearer ${env.RESEND_API_KEY}`,
+
+                "Content-Type":
+                    "application/json"
+
+            },
+
+            body: JSON.stringify({
+
+                from:
+                    "TicketFussion <tickets@ticketfussion.com>",
+
+                to:
+                    [order.customer_email],
+
+                subject:
+                    `Your Ticket for ${order.title}`,
+
+                html
+
+            })
+
+        }
+
+    );
+
+    return await response.json();
 
 }
