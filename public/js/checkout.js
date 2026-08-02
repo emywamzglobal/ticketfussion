@@ -21,6 +21,8 @@ let orderId = null;
 
 let orderReference = null;
 
+let selectedQuantity = 1;
+
 const SERVICE_FEE = 10.00;
 
 const DELIVERY_FEE = 0.00;
@@ -85,6 +87,8 @@ async function initialiseCheckout() {
 
         renderSelectedTicket();
 
+        renderQuantitySelector();
+
         renderPricingSummary();
 
         bindEvents();
@@ -119,6 +123,19 @@ function bindEvents() {
             createOrder
 
         );
+
+        document
+    .getElementById("quantity")
+    .addEventListener("change", function () {
+
+        selectedQuantity = Number(this.value);
+
+        document.getElementById("selected-quantity").textContent =
+            selectedQuantity;
+
+        renderPricingSummary();
+
+    });
 
 }
 
@@ -228,11 +245,25 @@ function renderSelectedTicket() {
 
             <p>
 
-                <strong>Quantity:</strong>
+                <strong>Available:</strong>
 
-                ${checkoutData.quantity || "-"}
+                ${checkoutData.quantity} ticket(s)
 
             </p>
+
+            <p>
+
+    <strong>Selected:</strong>
+
+    <span id="selected-quantity">
+
+        ${selectedQuantity}
+
+    </span>
+
+    ticket(s)
+
+</p>
 
             <p>
 
@@ -248,6 +279,30 @@ function renderSelectedTicket() {
 
 }
 
+function renderQuantitySelector() {
+
+    const select = document.getElementById("quantity");
+
+    select.innerHTML = "";
+
+    const max = Number(checkoutData.quantity);
+
+    for (let i = 1; i <= max; i++) {
+
+        const option = document.createElement("option");
+
+        option.value = i;
+
+        option.textContent = i;
+
+        select.appendChild(option);
+
+    }
+
+    document.getElementById("available-seats").textContent =
+        `${max} ticket(s) available`;
+
+}
 
 /* ==========================================================
    PRICING SUMMARY
@@ -259,7 +314,7 @@ function renderPricingSummary() {
         Number(checkoutData.price);
 
     const subtotal =
-        ticketPrice;
+        ticketPrice * selectedQuantity;
 
     const total =
 
@@ -433,7 +488,7 @@ async function createOrder() {
 
     const total =
 
-        Number(checkoutData.price)
+        (Number(checkoutData.price) * selectedQuantity)
 
         + SERVICE_FEE
 
@@ -470,7 +525,7 @@ async function createOrder() {
             checkoutData.country,
 
         quantity:
-            checkoutData.quantity,
+            selectedQuantity,
 
         amount:
             total
@@ -552,13 +607,20 @@ async function createOrder() {
 
 function launchPaystack(email, amount) {
 
-    if (!window.PaystackPop) {
+    if (typeof PaystackPop === "undefined") {
 
         alert("Paystack failed to load.");
 
         return;
 
     }
+
+    console.log({
+        key: PAYSTACK_PUBLIC_KEY,
+        email: email,
+        amount: Math.round(amount * 100),
+        ref: orderReference
+    });
 
     const handler = PaystackPop.setup({
 
@@ -577,133 +639,115 @@ function launchPaystack(email, amount) {
             custom_fields: [
 
                 {
-
                     display_name: "Event",
-
                     variable_name: "event",
-
                     value: checkoutData.title
-
                 },
 
                 {
-
                     display_name: "Ticket",
-
                     variable_name: "ticket",
-
                     value: checkoutData.ticket_type
-
                 },
 
                 {
-
                     display_name: "Venue",
-
                     variable_name: "venue",
-
                     value: checkoutData.venue
-
                 },
 
                 {
-
                     display_name: "Customer",
-
                     variable_name: "customer",
-
                     value: email
-
                 }
 
             ]
 
         },
 
-        callback: async function (response) {
+        callback: function (response) {
 
-            try {
-
-                const verify = await fetch(
-
-                    "/api/payments/verify",
-
-                    {
-
-                        method: "POST",
-
-                        headers: {
-
-                            "Content-Type":
-                                "application/json"
-
-                        },
-
-                        body: JSON.stringify({
-
-                            reference:
-                                response.reference
-
-                        })
-
-                    }
-
-                );
-
-                const result =
-                    await verify.json();
-
-                if (result.success) {
-
-                    alert(
-                        "Payment successful!"
-                    );
-
-                    window.location.href =
-                        `success.html?reference=${response.reference}`;
-
-                }
-
-                else {
-
-                    alert(
-
-                        result.message ||
-
-                        "Payment verification failed."
-
-                    );
-
-                }
-
-            }
-
-            catch (error) {
-
-                console.error(error);
-
-                alert(
-
-                    "Unable to verify payment."
-
-                );
-
-            }
+            verifyPayment(response.reference);
 
         },
 
         onClose: function () {
 
-            alert(
-
-                "Payment cancelled."
-
-            );
+            alert("Payment cancelled.");
 
         }
 
     });
 
     handler.openIframe();
+
+}
+
+
+/* ==========================================================
+   VERIFY PAYMENT
+========================================================== */
+
+async function verifyPayment(reference) {
+
+    try {
+
+        const verify = await fetch(
+
+            "/api/payments/verify",
+
+            {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type": "application/json"
+
+                },
+
+                body: JSON.stringify({
+
+                    reference: reference
+
+                })
+
+            }
+
+        );
+
+        const result = await verify.json();
+
+        if (result.success) {
+
+            alert("Payment successful!");
+
+            window.location.href =
+                `success.html?reference=${reference}`;
+
+        }
+
+        else {
+
+            alert(
+
+                result.message ||
+
+                "Payment verification failed."
+
+            );
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert("Unable to verify payment.");
+
+    }
 
 }

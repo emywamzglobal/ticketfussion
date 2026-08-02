@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 export default {
   async fetch(request, env) {
 
@@ -450,6 +451,30 @@ if (url.pathname === "/api/upload" && request.method === "POST") {
         success: true,
         url: `https://pub-1d8af21f3a8c45fcbbfdb4e95bb13a1f.r2.dev/${key}`
     });
+}
+
+// ==========================================================
+// ADMIN LOGIN
+// POST /api/admin/login
+// ==========================================================
+
+if (
+    url.pathname === "/api/admin/login" &&
+    request.method === "POST"
+) {
+
+    const body = await request.json();
+
+    const result = await loginAdmin(
+
+        body,
+
+        env
+
+    );
+
+    return Response.json(result);
+
 }
 
     // ==========================
@@ -1683,4 +1708,120 @@ The Global Ticket Marketplace
 
     return await response.json();
 
+}
+
+/* ==========================================================
+   ADMIN LOGIN
+========================================================== */
+
+async function loginAdmin(body, env) {
+
+    const {
+
+        email,
+
+        password
+
+    } = body;
+
+    const admin = await env.DB
+        .prepare(`
+
+            SELECT *
+
+            FROM admin_users
+
+            WHERE email = ?
+
+            LIMIT 1
+
+        `)
+        .bind(email)
+        .first();
+
+    if (!admin) {
+
+        return {
+
+            success: false,
+
+            message: "Invalid email or password."
+
+        };
+
+    }
+
+    const validPassword = await bcrypt.compare(
+
+        password,
+
+        admin.password_hash
+
+    );
+
+    if (!validPassword) {
+
+        return {
+
+            success: false,
+
+            message: "Invalid email or password."
+
+        };
+
+    }
+
+    await env.DB.prepare(`
+
+        UPDATE admin_users
+
+        SET last_login = datetime('now')
+
+        WHERE id = ?
+
+    `)
+    .bind(admin.id)
+    .run();
+
+    const sessionToken = crypto.randomUUID();
+
+const expiresAt = new Date(
+    Date.now() + (24 * 60 * 60 * 1000)
+).toISOString();
+
+await env.DB.prepare(`
+
+    INSERT INTO admin_sessions (
+
+        admin_id,
+
+        session_token,
+
+        expires_at
+
+    )
+
+    VALUES (?, ?, ?)
+
+`)
+.bind(
+
+    admin.id,
+
+    sessionToken,
+
+    expiresAt
+
+)
+.run();
+
+return {
+
+    success: true,
+
+    session_token: sessionToken,
+
+    message: "Login successful."
+
+};
 }
