@@ -218,3 +218,32 @@ function buyTicket(category, id, unitPrice){
     localStorage.setItem("ticketPrice", unitPrice);
 
 }
+
+/* ==========================================================
+   MOBILE NAVIGATION
+========================================================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const menuButton =
+        document.querySelector(".mobile-menu-button");
+
+    const navbarMenu =
+        document.querySelector(".navbar-menu");
+
+    const navbarActions =
+        document.querySelector(".navbar-actions");
+
+    if (!menuButton || !navbarMenu || !navbarActions) return;
+
+    menuButton.addEventListener("click", () => {
+
+        navbarMenu.classList.toggle("active");
+
+        navbarActions.classList.toggle("active");
+
+        menuButton.classList.toggle("active");
+
+    });
+
+});
