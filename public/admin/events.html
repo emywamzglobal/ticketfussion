@@ -52,12 +52,6 @@
 
 <body>
 
-<!-- =====================================================
-    ADMIN WRAPPER
-====================================================== -->
-
-<div class="admin-wrapper">
-
     <!-- =====================================================
         SIDEBAR
     ====================================================== -->
@@ -106,41 +100,59 @@
                     </a>
 
                 </li>
-
-                <li>
-
-                    <a href="login.html">
-
-                        Login
-
-                    </a>
-
-                </li>
-
             </ul>
-
         </nav>
 
     </aside>
 
-    <!-- =====================================================
-        MAIN
-    ====================================================== -->
+<!-- =====================================================
+    MAIN
+====================================================== -->
 
-    <main class="admin-main">
+<main class="admin-main">
 
     <!-- ======================================
         TOP BAR
     ======================================= -->
+
     <header class="admin-header">
-        <div>
+
+        <div class="page-title">
+
             <h1>Events</h1>
+
             <p>Create, edit and publish events.</p>
+
         </div>
 
         <div class="admin-user">
-            Administrator
+
+            <div class="admin-avatar">
+
+                A
+
+            </div>
+
+            <div class="admin-details">
+
+                <span id="admin-name">
+
+                    Administrator
+
+                </span>
+
+            </div>
+
+            <button
+                id="logout-btn"
+                class="logout-btn">
+
+                Logout
+
+            </button>
+
         </div>
+
     </header>
 
     <!-- ======================================
@@ -247,7 +259,7 @@
 <!-- =====================================================
     JAVASCRIPT
 ====================================================== -->
-
+<script src="/admin/admin-auth.js"></script>
 <script src="/admin/events.js"></script>
 
 </body>

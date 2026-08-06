@@ -4,7 +4,57 @@ export default {
 
     const url = new URL(request.url);
 
-    // ==========================
+if (url.pathname === "/sitemap.xml") {
+
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+<url>
+<loc>https://ticketfussion.com/</loc>
+<changefreq>daily</changefreq>
+<priority>1.0</priority>
+</url>
+
+<url>
+<loc>https://ticketfussion.com/about.html</loc>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+
+<url>
+<loc>https://ticketfussion.com/contact.html</loc>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+
+<url>
+<loc>https://ticketfussion.com/faq.html</loc>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+
+<url>
+<loc>https://ticketfussion.com/event.html</loc>
+<changefreq>daily</changefreq>
+<priority>0.9</priority>
+</url>
+
+</urlset>`;
+
+    return new Response(sitemap, {
+
+        headers: {
+
+            "Content-Type": "application/xml"
+
+        }
+
+    });
+
+}
+
+// ==========================
     // API ROUTES
     // ==========================
     if (url.pathname === "/api/orders" && request.method === "POST") {
@@ -468,6 +518,60 @@ if (
     const result = await loginAdmin(
 
         body,
+
+        env
+
+    );
+
+    return Response.json(result);
+
+}
+
+// ==========================================================
+// ADMIN SESSION
+// GET /api/admin/session
+// ==========================================================
+
+if (
+
+    url.pathname === "/api/admin/session" &&
+    request.method === "GET"
+
+) {
+
+    const sessionToken =
+
+        request.headers.get("Authorization");
+
+    const result = await getAdminSession(
+
+        sessionToken,
+
+        env
+
+    );
+
+    return Response.json(result);
+
+}
+
+// ==========================================================
+// ADMIN LOGOUT
+// POST /api/admin/logout
+// ==========================================================
+
+if (
+
+    url.pathname === "/api/admin/logout" &&
+    request.method === "POST"
+
+) {
+
+    const body = await request.json();
+
+    const result = await logoutAdmin(
+
+        body.session_token,
 
         env
 
@@ -1824,4 +1928,125 @@ return {
     message: "Login successful."
 
 };
+}
+
+/* ==========================================================
+   GET ADMIN SESSION
+========================================================== */
+
+async function getAdminSession(
+
+    sessionToken,
+
+    env
+
+) {
+
+    if (!sessionToken) {
+
+        return {
+
+            success: false,
+
+            message: "No session."
+
+        };
+
+    }
+
+    const session = await env.DB.prepare(`
+
+        SELECT
+
+            admin_users.id,
+            admin_users.email,
+            admin_sessions.expires_at
+
+        FROM admin_sessions
+
+        INNER JOIN admin_users
+        ON admin_users.id = admin_sessions.admin_id
+
+        WHERE admin_sessions.session_token = ?
+
+        LIMIT 1
+
+    `)
+    .bind(sessionToken)
+    .first();
+
+    if (!session) {
+
+        return {
+
+            success: false,
+
+            message: "Invalid session."
+
+        };
+
+    }
+
+    if (
+
+        new Date(session.expires_at) < new Date()
+
+    ) {
+
+        return {
+
+            success: false,
+
+            message: "Session expired."
+
+        };
+
+    }
+
+    return {
+
+        success: true,
+
+        admin: {
+
+            id: session.id,
+
+            email: session.email
+
+        }
+
+    };
+
+}
+
+/* ==========================================================
+   LOGOUT ADMIN
+========================================================== */
+
+async function logoutAdmin(
+
+    sessionToken,
+
+    env
+
+) {
+
+    await env.DB.prepare(`
+
+        DELETE FROM admin_sessions
+
+        WHERE session_token = ?
+
+    `)
+    .bind(sessionToken)
+    .run();
+
+    return {
+
+        success: true,
+
+        message: "Logged out."
+
+    };
+
 }

@@ -64,12 +64,6 @@
 
 <body>
 
-<!-- =====================================================
-    ADMIN WRAPPER
-====================================================== -->
-
-<div class="admin-wrapper">
-
     <!-- =====================================================
         SIDEBAR
     ====================================================== -->
@@ -90,10 +84,10 @@
 
                 <li>
 
-                    <a href="occurrences.html"
+                    <a href="events.html"
                        class="active">
 
-                        Occurrences
+                        Events
 
                     </a>
 
@@ -101,9 +95,9 @@
 
                 <li>
 
-                    <a href="events.html">
+                    <a href="occurrences.html">
 
-                        Events
+                        Occurrences
 
                     </a>
 
@@ -119,15 +113,6 @@
 
                 </li>
 
-                <li>
-
-                    <a href="login.html">
-
-                        Login
-
-                    </a>
-
-                </li>
 
             </ul>
 
@@ -135,11 +120,11 @@
 
     </aside>
 
-    <!-- =====================================================
-        MAIN
-    ====================================================== -->
+<!-- =====================================================
+    MAIN
+====================================================== -->
 
-    <main class="admin-main">
+<main class="admin-main">
 
     <!-- ======================================
         TOP BAR
@@ -147,25 +132,39 @@
 
     <header class="admin-header">
 
-        <div>
+        <div class="page-title">
 
-            <h1>
+            <h1>Occurrences</h1>
 
-                Occurrences
-
-            </h1>
-
-            <p>
-
-                Manage event venues, dates and times.
-
-            </p>
+            <p>Create, edit and publish occurrences.</p>
 
         </div>
 
         <div class="admin-user">
 
-            Administrator
+            <div class="admin-avatar">
+
+                A
+
+            </div>
+
+            <div class="admin-details">
+
+                <span id="admin-name">
+
+                    Administrator
+
+                </span>
+
+            </div>
+
+            <button
+                id="logout-btn"
+                class="logout-btn">
+
+                Logout
+
+            </button>
 
         </div>
 
@@ -303,7 +302,7 @@
 <!-- =====================================================
     JAVASCRIPT
 ====================================================== -->
-
+<script src="/admin/admin-auth.js"></script>
 <script src="/admin/occurrences.js"></script>
 
 </body>

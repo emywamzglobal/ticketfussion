@@ -64,12 +64,6 @@
 
 <body>
 
-<!-- =====================================================
-    ADMIN WRAPPER
-====================================================== -->
-
-<div class="admin-wrapper">
-
     <!-- =====================================================
         SIDEBAR
     ====================================================== -->
@@ -90,18 +84,8 @@
 
                 <li>
 
-                    <a href="ticket-listings.html"
+                    <a href="events.html"
                        class="active">
-
-                        Ticket Listings
-
-                    </a>
-
-                </li>
-
-                <li>
-
-                    <a href="events.html">
 
                         Events
 
@@ -121,9 +105,9 @@
 
                 <li>
 
-                    <a href="login.html">
+                    <a href="ticket-listings.html">
 
-                        Login
+                        Ticket Listings
 
                     </a>
 
@@ -135,30 +119,60 @@
 
     </aside>
 
-    <!-- =====================================================
-        MAIN
-    ====================================================== -->
+<!-- =====================================================
+    MAIN
+====================================================== -->
 
-    <main class="admin-main">
+<main class="admin-main">
 
-<header class="admin-header">
+    <!-- ======================================
+        TOP BAR
+    ======================================= -->
 
-    <div>
+    <header class="admin-header">
 
-        <h1>Ticket Listings</h1>
+        <div class="page-title">
 
-        <p>Create tickets for a specific event occurrence.</p>
+            <h1>Ticket Listings</h1>
 
-    </div>
+            <p>Create, edit and publish ticket listings.</p>
 
-    <div class="admin-user">
+        </div>
 
-        Administrator
+        <div class="admin-user">
 
-    </div>
+            <div class="admin-avatar">
 
-</header>
+                A
 
+            </div>
+
+            <div class="admin-details">
+
+                <span id="admin-name">
+
+                    Administrator
+
+                </span>
+
+            </div>
+
+            <button
+                id="logout-btn"
+                class="logout-btn">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </header>
+    
+ <!-- ======================================
+        CONTENT
+======================================= -->
+    
 <section class="page-content">
 
 <form id="ticket-listing-form">
@@ -354,7 +368,7 @@
 <!-- =====================================================
     JAVASCRIPT
 ====================================================== -->
-
+<script src="/admin/admin-auth.js"></script>
 <script src="/admin/ticket-listings.js"></script>
 
 </body>

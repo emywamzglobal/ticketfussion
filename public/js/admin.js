@@ -61,7 +61,16 @@ if (loginForm) {
 
                 }
 
+                localStorage.setItem(
+
+                    "admin_session",
+
+                    result.session_token
+
+                );
+
                 window.location.href =
+
                     "/admin/events.html";
 
             }
@@ -71,7 +80,9 @@ if (loginForm) {
                 console.error(error);
 
                 alert(
+
                     "Unable to login. Please try again."
+
                 );
 
             }
