@@ -1,54 +1,476 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
+    <!-- ==========================================
+        BASIC META
+    =========================================== -->
+
     <meta charset="UTF-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Login | TicketFussion</title>
+    <!-- ==========================================
+        SEO
+    =========================================== -->
 
-    <link rel="icon" type="image/png" href="assets/favicon.png">
-    <link rel="stylesheet" href="style.css">
+    <title>TicketFussion | The Global Ticket Marketplace</title>
+
+    <meta name="description"
+          content="Buy and sell tickets for sports, concerts, theatre, comedy and live events worldwide with TicketFussion.">
+
+    <meta name="keywords"
+          content="tickets, concerts, sports, theatre, comedy, live events, TicketFussion">
+
+    <meta name="author"
+          content="TicketFussion">
+
+    <meta name="robots"
+          content="index, follow">
+
+    <!-- ==========================================
+        FAVICON
+    =========================================== -->
+
+    <link rel="icon" href="assets/logos/favicon.png">
+    <!-- ==========================================
+        OPEN GRAPH
+    =========================================== -->
+
+    <meta property="og:title"
+          content="TicketFussion">
+
+    <meta property="og:description"
+          content="The Global Ticket Marketplace">
+
+    <meta property="og:image"
+          content="assets/logos/logo.png">
+
+    <meta property="og:type"
+          content="website">
+
+    <!-- ==========================================
+        CSS
+    =========================================== -->
+
+    <link rel="stylesheet" href="css/reset.css">
+
+<link rel="stylesheet" href="css/responsive.css">
+
+<link rel="stylesheet" href="css/theme.css">
+
+<link rel="stylesheet" href="css/navbar.css">
+
+<link rel="stylesheet" href="css/footer.css">
+
+<link rel="stylesheet" href="css/about.css">
+
 </head>
+
 <body>
-<a href="index.html" class="back-btn">
-    ← Back
-</a>
-<section class="auth-page">
 
-    <div class="auth-box">
+<!-- =====================================================
+    HEADER
+====================================================== -->
 
-        <h1>Welcome Back</h1>
+<header id="site-header">
 
-        <p class="auth-subtitle">
-            Login to your TicketFussion account
-        </p>
+    <nav class="navbar">
 
-        <form>
+        <div class="container">
 
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" placeholder="Enter your email" required>
+            <!-- Logo -->
+
+            <a href="index.html"
+               class="navbar-logo"
+               aria-label="TicketFussion Home">
+
+                <img src="assets/logos/logo.png" alt="TicketFussion Logo">
+
+            </a>
+
+            <!-- Main Navigation -->
+
+            <ul class="navbar-menu">
+
+                <li>
+
+                    <a href="index.html"
+                       class="active">
+
+                        Home
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="sell.html">
+
+                        Sell Tickets
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="about.html">
+
+                        About
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="contact.html">
+
+                        Contact
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+            <!-- Right Actions -->
+
+            <div class="navbar-actions">
+
+                <a href="login.html"
+                   class="btn btn-outline">
+
+                    Login
+
+                </a>
+
+                <a href="signup.html"
+                   class="btn btn-primary">
+
+                    Register
+
+                </a>
+
             </div>
 
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" placeholder="Enter your password" required>
-            </div>
+            <!-- Mobile Menu -->
 
-            <button type="submit" class="auth-btn">
-                Login
+            <button class="mobile-menu-button"
+                    type="button"
+                    aria-label="Open Navigation">
+
+                ☰
+
             </button>
 
-        </form>
+        </div>
 
-        <p class="auth-link">
-            Don't have an account?
-            <a href="signup.html">Create Account</a>
-        </p>
+    </nav>
+
+</header>
+
+<!-- =====================================================
+    MAIN
+====================================================== -->
+
+<main>
+
+   <section class="auth-section">
+
+    <div class="container">
+
+        <div class="auth-card">
+
+            <h1>Welcome Back</h1>
+
+            <p class="auth-subtitle">
+                Sign in to access your tickets, orders and account.
+            </p>
+
+            <form id="login-form">
+
+                <div class="form-group">
+
+                    <label for="login-email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="login-email"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="login-password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="login-password"
+                        required
+                    >
+
+                </div>
+
+                <div class="auth-options">
+
+                    <label class="remember-me">
+
+                        <input
+                            type="checkbox"
+                            id="remember-me"
+                        >
+
+                        Remember Me
+
+                    </label>
+
+                    <a
+                        href="#"
+                        class="forgot-password"
+                    >
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn-primary auth-btn"
+                >
+                    Login
+                </button>
+
+            </form>
+
+            <p class="auth-switch">
+
+                Don't have an account?
+
+                <a href="/signup.html">
+                    Create Account
+                </a>
+
+            </p>
+
+        </div>
 
     </div>
 
 </section>
+
+</main>
+
+<footer id="site-footer">
+
+    <div class="container">
+
+        <div class="footer-grid">
+
+            <!-- ==========================
+                BRAND
+            ========================== -->
+
+            <section class="footer-column">
+
+                <a href="index.html"
+                   class="footer-logo">
+
+                    <img src="assets/logos/logo.png" alt="TicketFussion Logo">
+                </a>
+
+                <p>
+
+                    The Global Ticket Marketplace.
+
+                </p>
+
+            </section>
+
+            <!-- ==========================
+                MARKETPLACE
+            ========================== -->
+
+            <section class="footer-column">
+
+                <h3>
+
+                    Marketplace
+
+                </h3>
+
+                <ul>
+
+                    <li>
+
+                        <a href="tickets.html">
+
+                            Browse Events
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="sell.html">
+
+                            Sell Tickets
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </section>
+
+            <!-- ==========================
+                COMPANY
+            ========================== -->
+
+            <section class="footer-column">
+
+                <h3>
+
+                    Company
+
+                </h3>
+
+                <ul>
+
+                    <li>
+
+                        <a href="about.html">
+
+                            About
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="contact.html">
+
+                            Contact
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </section>
+
+            <!-- ==========================
+                LEGAL
+            ========================== -->
+
+            <section class="footer-column">
+
+                <h3>
+
+                    Legal
+
+                </h3>
+
+                <ul>
+
+                    <li>
+
+                        <a href="terms.html">
+
+                            Terms & Conditions
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="privacy.html">
+
+                            Privacy Policy
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </section>
+
+            <!-- ==========================
+                SOCIAL
+            ========================== -->
+
+            <section class="footer-column">
+
+                <h3>
+
+                    Follow Us
+
+                </h3>
+
+                <ul>
+
+                    <li>
+
+                        <a href="https://www.tiktok.com/@ticketfussion"
+                           target="_blank"
+                           rel="noopener noreferrer">
+
+                            TikTok @ticketfussion
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </section>
+
+        </div>
+
+        <div class="footer-bottom">
+
+            <p>
+
+                &copy; 2026 TicketFussion. All Rights Reserved.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+<!-- =====================================================
+    JAVASCRIPT
+====================================================== -->
+<script src="js/auth.js"></script>
+
+<script src="js/navbar.js"></script>
+
+<script src="js/footer.js"></script>
+
+<script src="js/home.js"></script>
+
 <script src="js/main.js"></script>
+
 </body>
+
 </html>

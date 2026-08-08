@@ -581,6 +581,93 @@ if (
 
 }
 
+// ==========================================================
+// CUSTOMER REGISTER
+// POST /api/customer/register
+// ==========================================================
+
+if (
+    url.pathname === "/api/customer/register" &&
+    request.method === "POST"
+) {
+
+    const body = await request.json();
+
+    const result = await registerCustomer(
+        body,
+        env
+    );
+
+    return Response.json(result);
+
+}
+
+// ==========================================================
+// CUSTOMER LOGIN
+// POST /api/customer/login
+// ==========================================================
+
+if (
+    url.pathname === "/api/customer/login" &&
+    request.method === "POST"
+) {
+
+    const body = await request.json();
+
+    const result = await loginCustomer(
+        body,
+        env
+    );
+
+    return Response.json(result);
+
+}
+
+// ==========================================================
+// CUSTOMER SESSION
+// GET /api/customer/session
+// ==========================================================
+
+if (
+    url.pathname === "/api/customer/session" &&
+    request.method === "GET"
+) {
+
+    const sessionToken =
+        request.headers.get("Authorization");
+
+    const result =
+        await getCustomerSession(
+            sessionToken,
+            env
+        );
+
+    return Response.json(result);
+
+}
+
+// ==========================================================
+// CUSTOMER LOGOUT
+// POST /api/customer/logout
+// ==========================================================
+
+if (
+    url.pathname === "/api/customer/logout" &&
+    request.method === "POST"
+) {
+
+    const body = await request.json();
+
+    const result =
+        await logoutCustomer(
+            body.session_token,
+            env
+        );
+
+    return Response.json(result);
+
+}
+
     // ==========================
     // WEBSITE
     // ==========================
@@ -2046,6 +2133,331 @@ async function logoutAdmin(
         success: true,
 
         message: "Logged out."
+
+    };
+
+}
+
+async function registerCustomer(
+    body,
+    env
+) {
+
+    const {
+        first_name,
+        last_name,
+        email,
+        phone,
+        password
+    } = body;
+
+    const existingCustomer =
+        await env.DB.prepare(`
+
+            SELECT id
+
+            FROM customers
+
+            WHERE email = ?
+
+            LIMIT 1
+
+        `)
+        .bind(email)
+        .first();
+
+    if (existingCustomer) {
+
+        return {
+            success: false,
+            message:
+                "Email already registered."
+        };
+
+    }
+
+    const passwordHash =
+        await bcrypt.hash(
+            password,
+            10
+        );
+
+    const result =
+        await env.DB.prepare(`
+
+            INSERT INTO customers (
+
+                first_name,
+                last_name,
+                email,
+                phone,
+                password_hash
+
+            )
+
+            VALUES (?, ?, ?, ?, ?)
+
+        `)
+        .bind(
+
+            first_name,
+            last_name,
+            email,
+            phone,
+            passwordHash
+
+        )
+        .run();
+
+    return {
+
+        success: true,
+
+        customer_id:
+            result.meta.last_row_id,
+
+        message:
+            "Account created successfully."
+
+    };
+
+}
+
+async function loginCustomer(
+    body,
+    env
+) {
+
+    const {
+        email,
+        password
+    } = body;
+
+    const customer =
+        await env.DB.prepare(`
+
+            SELECT *
+
+            FROM customers
+
+            WHERE email = ?
+
+            LIMIT 1
+
+        `)
+        .bind(email)
+        .first();
+
+    if (!customer) {
+
+        return {
+
+            success: false,
+
+            message:
+                "Invalid email or password."
+
+        };
+
+    }
+
+    const validPassword =
+        await bcrypt.compare(
+            password,
+            customer.password_hash
+        );
+
+    if (!validPassword) {
+
+        return {
+
+            success: false,
+
+            message:
+                "Invalid email or password."
+
+        };
+
+    }
+
+    await env.DB.prepare(`
+
+        UPDATE customers
+
+        SET last_login = datetime('now')
+
+        WHERE id = ?
+
+    `)
+    .bind(customer.id)
+    .run();
+
+    const sessionToken =
+        crypto.randomUUID();
+
+    const expiresAt =
+        new Date(
+            Date.now() +
+            (30 * 24 * 60 * 60 * 1000)
+        ).toISOString();
+
+    await env.DB.prepare(`
+
+        INSERT INTO customer_sessions (
+
+            customer_id,
+            session_token,
+            expires_at
+
+        )
+
+        VALUES (?, ?, ?)
+
+    `)
+    .bind(
+
+        customer.id,
+        sessionToken,
+        expiresAt
+
+    )
+    .run();
+
+    return {
+
+        success: true,
+
+        session_token:
+            sessionToken,
+
+        customer: {
+
+            id: customer.id,
+            first_name:
+                customer.first_name,
+            last_name:
+                customer.last_name,
+            email:
+                customer.email
+
+        }
+
+    };
+
+}
+
+async function getCustomerSession(
+    sessionToken,
+    env
+) {
+
+    if (!sessionToken) {
+
+        return {
+
+            success: false,
+
+            message:
+                "No session."
+
+        };
+
+    }
+
+    const session =
+        await env.DB.prepare(`
+
+SELECT
+
+    c.id,
+    c.first_name,
+    c.last_name,
+    c.email,
+    cs.expires_at
+
+FROM customer_sessions cs
+
+INNER JOIN customers c
+ON c.id = cs.customer_id
+
+WHERE cs.session_token = ?
+
+LIMIT 1
+
+        `)
+        .bind(sessionToken)
+        .first();
+
+    if (!session) {
+
+        return {
+
+            success: false,
+
+            message:
+                "Invalid session."
+
+        };
+
+    }
+
+    if (
+        new Date(session.expires_at)
+        < new Date()
+    ) {
+
+        return {
+
+            success: false,
+
+            message:
+                "Session expired."
+
+        };
+
+    }
+
+    return {
+
+        success: true,
+
+        customer: {
+
+            id: session.id,
+            first_name:
+                session.first_name,
+            last_name:
+                session.last_name,
+            email:
+                session.email
+
+        }
+
+    };
+
+}
+
+async function logoutCustomer(
+    sessionToken,
+    env
+) {
+
+    await env.DB.prepare(`
+
+        DELETE FROM customer_sessions
+
+        WHERE session_token = ?
+
+    `)
+    .bind(sessionToken)
+    .run();
+
+    return {
+
+        success: true,
+
+        message:
+            "Logged out."
 
     };
 

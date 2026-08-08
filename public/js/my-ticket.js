@@ -3,14 +3,40 @@
 =========================================================*/
 
 const ticketContainer =
-    document.getElementById("ticket-page");
+    document.getElementById(
+        "ticket-page"
+    );
+
+/*=========================================================
+    REQUIRE LOGIN
+=========================================================*/
+
+async function requireCustomer() {
+
+    const customer =
+        await checkCustomerSession();
+
+    if (!customer) {
+
+        window.location.href =
+            "/login.html";
+
+        return null;
+
+    }
+
+    return customer;
+
+}
 
 /*=========================================================
     GET TICKET REFERENCE
 =========================================================*/
 
 const params =
-    new URLSearchParams(window.location.search);
+    new URLSearchParams(
+        window.location.search
+    );
 
 const ticketReference =
     params.get("ticket");
@@ -27,9 +53,14 @@ async function loadTicket() {
 
             <div class="container">
 
-                <h2>Ticket Not Found</h2>
+                <h2>
+                    Ticket Not Found
+                </h2>
 
-                <p>No ticket reference was provided.</p>
+                <p>
+                    No ticket reference
+                    was provided.
+                </p>
 
             </div>
 
@@ -41,13 +72,15 @@ async function loadTicket() {
 
     try {
 
-        const response = await fetch(
+        const response =
+            await fetch(
 
-            `/api/tickets/reference/${ticketReference}`
+                `/api/tickets/reference/${ticketReference}`
 
-        );
+            );
 
-        const ticket = await response.json();
+        const ticket =
+            await response.json();
 
         if (!ticket) {
 
@@ -55,9 +88,14 @@ async function loadTicket() {
 
                 <div class="container">
 
-                    <h2>Ticket Not Found</h2>
+                    <h2>
+                        Ticket Not Found
+                    </h2>
 
-                    <p>This ticket does not exist.</p>
+                    <p>
+                        This ticket does
+                        not exist.
+                    </p>
 
                 </div>
 
@@ -79,7 +117,9 @@ async function loadTicket() {
 
             <div class="container">
 
-                <h2>Something went wrong.</h2>
+                <h2>
+                    Something went wrong.
+                </h2>
 
             </div>
 
@@ -110,7 +150,11 @@ function renderTicket(ticket) {
 
     <div class="ticket-content">
 
-        <h1>${ticket.title}</h1>
+        <h1>
+
+            ${ticket.title}
+
+        </h1>
 
         <p class="ticket-meta">
 
@@ -175,8 +219,7 @@ function renderTicket(ticket) {
                 </strong>
 
             </div>
-
-            <div class="ticket-item">
+                        <div class="ticket-item">
 
                 <span>Section</span>
 
@@ -228,7 +271,11 @@ function renderTicket(ticket) {
 
         <div class="ticket-reference">
 
-            <h3>Ticket Reference</h3>
+            <h3>
+
+                Ticket Reference
+
+            </h3>
 
             <code>
 
@@ -252,13 +299,17 @@ function renderTicket(ticket) {
 
         <div class="ticket-actions">
 
-            <button class="btn btn-primary">
+            <button
+                class="btn btn-primary"
+            >
 
                 Download PDF
 
             </button>
 
-            <button class="btn btn-outline">
+            <button
+                class="btn btn-outline"
+            >
 
                 Share Ticket
 
@@ -278,4 +329,17 @@ function renderTicket(ticket) {
     START
 =========================================================*/
 
-loadTicket();
+(async () => {
+
+    const customer =
+        await requireCustomer();
+
+    if (!customer) {
+
+        return;
+
+    }
+
+    await loadTicket();
+
+})();
