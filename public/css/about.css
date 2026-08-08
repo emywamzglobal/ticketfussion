@@ -138,19 +138,33 @@
 
 }
 
-.auth-btn{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:8px;
-    background:var(--primary-color);
-    color:#fff;
-    font-size:16px;
-    font-weight:600;
-    cursor:pointer;
-    transition:.3s;
+.auth-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 180px;
+    height: 52px;
+
+    padding: 0 2rem;
+    border-radius: 12px;
+
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    border: none;
 }
 
-.auth-btn:hover{
-    opacity:.9;
+.auth-btn:hover {
+    transform: translateY(-2px);
+}
+
+.auth-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
 }
