@@ -165,3 +165,150 @@ async function createOccurrence(e) {
     }
 
 }
+
+/* ==========================================================
+   LOAD OCCURRENCES LIST
+========================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadOccurrencesList
+);
+
+async function loadOccurrencesList() {
+
+    const container =
+        document.getElementById(
+            "occurrences-list"
+        );
+
+    if (!container) return;
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/occurrences"
+            );
+
+        const occurrences =
+            await response.json();
+
+        if (!occurrences.length) {
+
+            container.innerHTML =
+                "<p>No occurrences found.</p>";
+
+            return;
+
+        }
+
+        container.innerHTML =
+            occurrences.map(
+                occurrence => `
+
+                <div class="admin-record">
+
+                    <div class="record-info">
+
+                        <strong>
+
+                            ${occurrence.venue}
+
+                        </strong>
+
+                        <br>
+
+                        ${occurrence.city},
+                        ${occurrence.country}
+
+                        <br>
+
+                        ${occurrence.event_date}
+                        ${occurrence.event_time}
+
+                    </div>
+
+                    <div class="record-actions">
+
+                        <button
+                            class="btn btn-outline"
+                            onclick="editOccurrence(${occurrence.id})">
+
+                            Edit
+
+                        </button>
+
+                        <button
+                            class="btn btn-danger"
+                            onclick="deleteOccurrenceRecord(${occurrence.id})">
+
+                            Delete
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `
+            ).join("");
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        container.innerHTML =
+            "<p>Unable to load occurrences.</p>";
+
+    }
+
+}
+
+/* ==========================================================
+   DELETE OCCURRENCE
+========================================================== */
+
+async function deleteOccurrenceRecord(id) {
+
+    if (
+        !confirm(
+            "Delete this occurrence?"
+        )
+    ) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/occurrences/${id}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+        if (!response.ok) {
+
+            throw new Error();
+
+        }
+
+        await loadOccurrencesList();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to delete occurrence."
+        );
+
+    }
+
+}

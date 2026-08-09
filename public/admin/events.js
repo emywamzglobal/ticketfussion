@@ -117,3 +117,137 @@ async function createEvent(e) {
     }
 
 }
+
+/* ==========================================================
+   LOAD EVENTS
+========================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadEventsList
+);
+
+async function loadEventsList() {
+
+    const container =
+        document.getElementById(
+            "events-list"
+        );
+
+    if (!container) return;
+
+    try {
+
+        const response =
+            await fetch("/api/events");
+
+        const events =
+            await response.json();
+
+        if (!events.length) {
+
+            container.innerHTML =
+                "<p>No events found.</p>";
+
+            return;
+
+        }
+
+        container.innerHTML =
+            events.map(event => `
+                        <div class="admin-record">
+
+            <div class="record-info">
+
+                <strong>
+                    ${event.title}
+                </strong>
+
+                <br>
+
+                ${event.category}
+
+            </div>
+
+            <div class="record-actions">
+
+                <button
+                    class="btn btn-outline"
+                    onclick="editEvent(${event.id})">
+
+                    Edit
+
+                </button>
+
+                <button
+                    class="btn btn-danger"
+                    onclick="deleteEventRecord(${event.id})">
+
+                    Delete
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `).join("");
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        container.innerHTML =
+            "<p>Unable to load events.</p>";
+
+    }
+
+}
+
+/* ==========================================================
+   DELETE EVENT
+========================================================== */
+
+async function deleteEventRecord(id) {
+
+    if (
+        !confirm(
+            "Delete this event?"
+        )
+    ) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/events/${id}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+        if (!response.ok) {
+
+            throw new Error();
+
+        }
+
+        loadEventsList();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to delete event."
+        );
+
+    }
+
+}

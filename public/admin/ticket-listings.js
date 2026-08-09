@@ -147,3 +147,155 @@ async function publishTicketListing(event) {
     }
 
 }
+
+/* ==========================================================
+   LOAD TICKET LISTINGS
+========================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadTicketListingsList
+);
+
+async function loadTicketListingsList() {
+
+    const container =
+        document.getElementById(
+            "ticket-listings-list"
+        );
+
+    if (!container) return;
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/ticket-listings"
+            );
+
+        const listings =
+            await response.json();
+
+        if (!listings.length) {
+
+            container.innerHTML =
+                "<p>No ticket listings found.</p>";
+
+            return;
+
+        }
+
+        container.innerHTML =
+            listings.map(
+                listing => `
+
+                <div class="admin-record">
+
+                    <div class="record-info">
+
+                        <strong>
+
+                            ${listing.ticket_type}
+
+                        </strong>
+
+                        <br>
+
+                        ${listing.section || "General"}
+
+                        ${listing.row ? `• Row ${listing.row}` : ""}
+
+                        <br>
+
+                        Qty:
+                        ${listing.quantity}
+
+                        •
+
+                        $${listing.price}
+
+                    </div>
+
+                    <div class="record-actions">
+
+                        <button
+                            class="btn btn-outline"
+                            onclick="editTicketListing(${listing.id})">
+
+                            Edit
+
+                        </button>
+
+                        <button
+                            class="btn btn-danger"
+                            onclick="deleteTicketListingRecord(${listing.id})">
+
+                            Delete
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `
+            ).join("");
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        container.innerHTML =
+            "<p>Unable to load ticket listings.</p>";
+
+    }
+
+}
+
+/* ==========================================================
+   DELETE TICKET LISTING
+========================================================== */
+
+async function deleteTicketListingRecord(id) {
+
+    if (
+        !confirm(
+            "Delete this ticket listing?"
+        )
+    ) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/ticket-listings/${id}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+        if (!response.ok) {
+
+            throw new Error();
+
+        }
+
+        await loadTicketListingsList();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to delete ticket listing."
+        );
+
+    }
+
+}
