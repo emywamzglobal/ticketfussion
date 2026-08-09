@@ -104,17 +104,21 @@ async function registerCustomer(event) {
                 "/api/customer/register",
 
                 {
+
                     method: "POST",
 
                     headers: {
+
                         "Content-Type":
                             "application/json"
+
                     },
 
                     body:
                         JSON.stringify(
                             payload
                         )
+
                 }
 
             );
@@ -137,7 +141,7 @@ async function registerCustomer(event) {
         );
 
         window.location.href =
-            "/login";
+            "/login.html";
 
     }
 
@@ -350,6 +354,64 @@ async function logoutCustomer() {
 }
 
 /* ==========================================================
+   NAVBAR
+========================================================== */
+
+async function updateNavbar() {
+
+    const customer =
+        await checkCustomerSession();
+
+    const loginLink =
+        document.getElementById(
+            "nav-login"
+        );
+
+    const registerLink =
+        document.getElementById(
+            "nav-register"
+        );
+
+    const logoutLink =
+        document.getElementById(
+            "logout-btn"
+        );
+
+    if (customer) {
+
+        if (loginLink)
+            loginLink.style.display =
+                "none";
+
+        if (registerLink)
+            registerLink.style.display =
+                "none";
+
+        if (logoutLink)
+            logoutLink.style.display =
+                "inline-flex";
+
+    }
+
+    else {
+
+        if (loginLink)
+            loginLink.style.display =
+                "inline-flex";
+
+        if (registerLink)
+            registerLink.style.display =
+                "inline-flex";
+
+        if (logoutLink)
+            logoutLink.style.display =
+                "none";
+
+    }
+
+}
+
+/* ==========================================================
    INIT
 ========================================================== */
 
@@ -394,3 +456,5 @@ if (logoutButton) {
     );
 
 }
+
+updateNavbar();
