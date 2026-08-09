@@ -7,6 +7,75 @@ document.addEventListener(
     loadTickets
 );
 
+let exchangeRates = {
+    USD: 1
+};
+
+async function loadExchangeRates() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/exchange-rates"
+            );
+
+        exchangeRates =
+            await response.json();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Exchange rate error:",
+            error
+        );
+
+    }
+
+}
+
+function getCurrency() {
+
+    return (
+        localStorage.getItem(
+            "currency"
+        ) || "USD"
+    );
+
+}
+
+function getCurrencySymbol(currency) {
+
+    const symbols = {
+
+        USD: "$",
+        GBP: "£",
+        EUR: "€",
+        CAD: "C$",
+        AUD: "A$"
+
+    };
+
+    return symbols[currency] || "$";
+
+}
+
+function convertPrice(price) {
+
+    const currency =
+        getCurrency();
+
+    const rate =
+        exchangeRates[currency] || 1;
+
+    return (
+        Number(price) * rate
+    ).toFixed(2);
+
+}
+
 /* ==========================================================
    LOAD PAGE
 ========================================================== */
@@ -44,6 +113,8 @@ async function loadTickets() {
 
         const listings =
             await listingResponse.json();
+
+            await loadExchangeRates();
 
         renderPage(
             occurrence,
@@ -188,7 +259,12 @@ No tickets available.
 
         <h2>
 
-            $${Number(ticket.price).toFixed(2)}
+            ${getCurrencySymbol(
+            getCurrency()
+            )}
+            ${convertPrice(
+            ticket.price
+           )}
 
         </h2>
 

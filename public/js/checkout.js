@@ -29,6 +29,75 @@ const DELIVERY_FEE = 0.00;
 
 const TAX = 0.00;
 
+let exchangeRates = {
+    USD: 1
+};
+
+async function loadExchangeRates() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/exchange-rates"
+            );
+
+        exchangeRates =
+            await response.json();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Exchange rate error:",
+            error
+        );
+
+    }
+
+}
+
+function getCurrency() {
+
+    return (
+        localStorage.getItem(
+            "currency"
+        ) || "USD"
+    );
+
+}
+
+function getCurrencySymbol(currency) {
+
+    const symbols = {
+
+        USD: "$",
+        GBP: "£",
+        EUR: "€",
+        CAD: "C$",
+        AUD: "A$"
+
+    };
+
+    return symbols[currency] || "$";
+
+}
+
+function convertPrice(price) {
+
+    const currency =
+        getCurrency();
+
+    const rate =
+        exchangeRates[currency] || 1;
+
+    return (
+        Number(price) * rate
+    ).toFixed(2);
+
+}
+
 
 /* ==========================================================
    START APPLICATION
@@ -82,6 +151,8 @@ async function initialiseCheckout() {
         }
 
         checkoutData = await response.json();
+
+        await loadExchangeRates();
 
         renderCheckoutSummary();
 
@@ -326,6 +397,14 @@ function renderPricingSummary() {
 
         TAX;
 
+    const currency =
+        getCurrency();
+
+    const symbol =
+        getCurrencySymbol(
+            currency
+        );
+
     const pricing = document.getElementById(
         "pricing-summary"
     );
@@ -342,7 +421,7 @@ function renderPricingSummary() {
 
             <span>
 
-                $${subtotal.toFixed(2)}
+                ${symbol}${convertPrice(subtotal)}
 
             </span>
 
@@ -358,7 +437,7 @@ function renderPricingSummary() {
 
             <span>
 
-                $${SERVICE_FEE.toFixed(2)}
+                ${symbol}${convertPrice(SERVICE_FEE)}
 
             </span>
 
@@ -374,7 +453,7 @@ function renderPricingSummary() {
 
             <span>
 
-                $${DELIVERY_FEE.toFixed(2)}
+                ${symbol}${convertPrice(DELIVERY_FEE)}
 
             </span>
 
@@ -390,7 +469,7 @@ function renderPricingSummary() {
 
             <span>
 
-                $${TAX.toFixed(2)}
+                ${symbol}${convertPrice(TAX)}
 
             </span>
 
@@ -408,16 +487,21 @@ function renderPricingSummary() {
 
             <strong>
 
-                $${total.toFixed(2)}
+                ${symbol}${convertPrice(total)}
 
             </strong>
 
         </div>
 
+        <p class="payment-note">
+
+            Payment will be processed in USD.
+
+        </p>
+
     `;
 
 }
-
 /* ==========================================================
    CREATE ORDER
 ========================================================== */

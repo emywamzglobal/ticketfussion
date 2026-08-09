@@ -116,6 +116,10 @@ function createEventCard(event) {
 
                 </p>
 
+                <div class="availability-badge">
+                   🔥 Limited Availability
+                </div>
+
                 <a
                     href="event.html?event=${event.id}"
                     class="btn btn-primary">
