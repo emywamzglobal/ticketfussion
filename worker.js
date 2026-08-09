@@ -668,6 +668,38 @@ if (
 
 }
 
+// ==========================================================
+// EXCHANGE RATES
+// GET /api/exchange-rates
+// ==========================================================
+
+if (
+    url.pathname === "/api/exchange-rates" &&
+    request.method === "GET"
+) {
+
+    const response = await fetch(
+        "https://api.frankfurter.app/latest?from=USD&to=GBP,EUR,CAD,AUD"
+    );
+
+    const data = await response.json();
+
+    return Response.json({
+
+        USD: 1,
+
+        GBP: data.rates.GBP,
+
+        EUR: data.rates.EUR,
+
+        CAD: data.rates.CAD,
+
+        AUD: data.rates.AUD
+
+    });
+
+}
+
     // ==========================
     // WEBSITE
     // ==========================
