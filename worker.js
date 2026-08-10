@@ -144,6 +144,7 @@ if (
             SELECT *
             FROM occurrences
             WHERE event_id = ?
+            AND status != 'archived'
             ORDER BY event_date ASC,
                      event_time ASC
         `)
@@ -228,6 +229,8 @@ if (
             SELECT *
             FROM ticket_listings
             WHERE occurrence_id = ?
+            AND status != 'archived'
+            AND status != 'closed'
             ORDER BY price ASC
         `)
         .bind(occurrenceId)
@@ -700,15 +703,124 @@ if (
 
 }
 
-    // ==========================
-    // WEBSITE
-    // ==========================
-    return env.ASSETS.fetch(request);
+// ==========================
+// WEBSITE
+// ==========================
+return env.ASSETS.fetch(request);
 
-  }
+},
+
+async scheduled(event, env, ctx) {
+
+    const now = new Date().toISOString();
+
+    // 24–12 hours before event
+    await env.DB.prepare(`
+        UPDATE occurrences
+        SET status = 'limited'
+        WHERE status = 'active'
+        AND datetime(event_date || ' ' || event_time)
+        BETWEEN datetime(?, '+12 hours')
+        AND datetime(?, '+24 hours')
+    `)
+    .bind(now, now)
+    .run();
+
+    await env.DB.prepare(`
+        UPDATE ticket_listings
+        SET status = 'limited'
+        WHERE occurrence_id IN (
+            SELECT id
+            FROM occurrences
+            WHERE status = 'limited'
+        )
+    `)
+    .run();
+
+    // Less than 12 hours before event
+    await env.DB.prepare(`
+        UPDATE occurrences
+        SET status = 'closed'
+        WHERE status IN ('active', 'limited')
+        AND datetime(event_date || ' ' || event_time)
+        <= datetime(?, '+12 hours')
+        AND datetime(event_date || ' ' || event_time)
+        > datetime(?)
+    `)
+    .bind(now, now)
+    .run();
+
+    await env.DB.prepare(`
+        UPDATE ticket_listings
+        SET status = 'closed'
+        WHERE occurrence_id IN (
+            SELECT id
+            FROM occurrences
+            WHERE status = 'closed'
+        )
+    `)
+    .run();
+
+    // Event passed
+    await env.DB.prepare(`
+        UPDATE occurrences
+        SET status = 'completed'
+        WHERE status = 'closed'
+        AND datetime(event_date || ' ' || event_time)
+        <= datetime(?)
+    `)
+    .bind(now)
+    .run();
+
+    // 24 hours after event
+    await env.DB.prepare(`
+        UPDATE occurrences
+        SET status = 'archived'
+        WHERE status = 'completed'
+        AND datetime(event_date || ' ' || event_time)
+        <= datetime(?, '-24 hours')
+    `)
+    .bind(now)
+    .run();
+
+    await env.DB.prepare(`
+        UPDATE ticket_listings
+        SET status = 'archived'
+        WHERE occurrence_id IN (
+            SELECT id
+            FROM occurrences
+            WHERE status = 'archived'
+        )
+    `)
+    .run();
+
+    // Delete after 30 days
+    await env.DB.prepare(`
+        DELETE FROM ticket_listings
+        WHERE status = 'archived'
+        AND occurrence_id IN (
+            SELECT id
+            FROM occurrences
+            WHERE status = 'archived'
+            AND datetime(event_date || ' ' || event_time)
+            < datetime(?, '-30 days')
+        )
+    `)
+    .bind(now)
+    .run();
+
+    await env.DB.prepare(`
+        DELETE FROM occurrences
+        WHERE status = 'archived'
+        AND datetime(event_date || ' ' || event_time)
+        < datetime(?, '-30 days')
+    `)
+    .bind(now)
+    .run();
+
+}
+
 };
-
-
 /* ==========================================================
    EVENTS
 ========================================================== */
