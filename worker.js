@@ -2120,6 +2120,12 @@ The Global Ticket Marketplace
 
 `;
 
+const pdfBase64 =
+    await generateTicketPdf(
+        order,
+        ticketReference
+    );
+
     const response = await fetch(
 
         "https://api.resend.com/emails",
@@ -2149,7 +2155,16 @@ The Global Ticket Marketplace
                 subject:
                     `Your Ticket for ${order.title}`,
 
-                html
+                html,
+
+                attachments: [
+    {
+        filename:
+            `${ticketReference}.pdf`,
+        content:
+            pdfBase64
+    }
+],
 
             })
 
