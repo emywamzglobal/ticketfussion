@@ -23,7 +23,7 @@ let orderReference = null;
 
 let selectedQuantity = 1;
 
-const SERVICE_FEE = 10.00;
+const SERVICE_FEE = 0.00;
 
 const DELIVERY_FEE = 0.00;
 

@@ -52,7 +52,7 @@ let price = Number(ticketPrice) || 0;
 
 let total = 0;
 
-const SERVICE_FEE_PER_TICKET = 5;
+const SERVICE_FEE_PER_TICKET = 0.00;
 const MAX_TICKETS = 10;
 
 
