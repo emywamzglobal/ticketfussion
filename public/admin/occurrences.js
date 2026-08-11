@@ -79,42 +79,73 @@ async function createOccurrence(e) {
 
     e.preventDefault();
 
+    let venueLayoutUrl = "";
+
+    const venueLayoutFile =
+        document.getElementById("venue_layout").files[0];
+
+    if (venueLayoutFile) {
+
+        const uploadFormData = new FormData();
+
+        uploadFormData.append(
+            "file",
+            venueLayoutFile
+        );
+
+        const uploadResponse =
+            await fetch(
+                "/api/upload",
+                {
+                    method: "POST",
+                    body: uploadFormData
+                }
+            );
+
+        const uploadResult =
+            await uploadResponse.json();
+
+        venueLayoutUrl =
+            uploadResult.url;
+
+    }
+
     const payload = {
 
-    event_id:
-        document.getElementById("event_id").value,
+        event_id:
+            document.getElementById("event_id").value,
 
-    about_event:
-        document.getElementById("about_event").value.trim(),
+        about_event:
+            document.getElementById("about_event").value.trim(),
 
-    event_gallery:
-        "",
+        event_gallery:
+            "",
 
-    event_information:
-        document.getElementById("event_information").value.trim(),
+        event_information:
+            document.getElementById("event_information").value.trim(),
 
-    venue:
-        document.getElementById("venue").value.trim(),
+        venue:
+            document.getElementById("venue").value.trim(),
 
-    venue_information:
-        document.getElementById("venue_information").value.trim(),
+        venue_information:
+            document.getElementById("venue_information").value.trim(),
 
-    venue_layout:
-        "",
+        venue_layout:
+            venueLayoutUrl,
 
-    city:
-        document.getElementById("city").value.trim(),
+        city:
+            document.getElementById("city").value.trim(),
 
-    country:
-        document.getElementById("country").value.trim(),
+        country:
+            document.getElementById("country").value.trim(),
 
-    event_date:
-        document.getElementById("event_date").value,
+        event_date:
+            document.getElementById("event_date").value,
 
-    event_time:
-        document.getElementById("event_time").value
+        event_time:
+            document.getElementById("event_time").value
 
-};
+    };
 
     try {
 
@@ -122,19 +153,15 @@ async function createOccurrence(e) {
             await fetch(
                 "/api/occurrences",
                 {
-
                     method: "POST",
 
                     headers: {
-
                         "Content-Type":
                             "application/json"
-
                     },
 
                     body:
                         JSON.stringify(payload)
-
                 }
             );
 
@@ -165,7 +192,6 @@ async function createOccurrence(e) {
     }
 
 }
-
 /* ==========================================================
    LOAD OCCURRENCES LIST
 ========================================================== */
