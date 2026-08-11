@@ -1822,6 +1822,120 @@ LIMIT 1
 
 }
 
+async function generateTicketPdf(
+    order,
+    ticketReference
+) {
+
+    const qrDataUrl =
+        await QRCode.toDataURL(
+            ticketReference
+        );
+
+    const pdf =
+        await PDFDocument.create();
+
+    const page =
+        pdf.addPage([600, 800]);
+
+    const font =
+        await pdf.embedFont(
+            StandardFonts.Helvetica
+        );
+
+    page.drawText(
+        "TicketFussion",
+        {
+            x: 50,
+            y: 740,
+            size: 24,
+            font
+        }
+    );
+
+    page.drawText(
+        order.title,
+        {
+            x: 50,
+            y: 690,
+            size: 18,
+            font
+        }
+    );
+
+    page.drawText(
+        `Venue: ${order.venue}`,
+        {
+            x: 50,
+            y: 650,
+            size: 12,
+            font
+        }
+    );
+
+    page.drawText(
+        `Date: ${order.event_date}`,
+        {
+            x: 50,
+            y: 620,
+            size: 12,
+            font
+        }
+    );
+
+    page.drawText(
+        `Time: ${order.event_time}`,
+        {
+            x: 50,
+            y: 590,
+            size: 12,
+            font
+        }
+    );
+
+    page.drawText(
+        `Ticket Ref: ${ticketReference}`,
+        {
+            x: 50,
+            y: 540,
+            size: 14,
+            font
+        }
+    );
+
+    const qrBytes = Uint8Array.from(
+        atob(
+            qrDataUrl.split(",")[1]
+        ),
+        c => c.charCodeAt(0)
+    );
+
+    const qrImage =
+        await pdf.embedPng(
+            qrBytes
+        );
+
+    page.drawImage(
+        qrImage,
+        {
+            x: 350,
+            y: 500,
+            width: 180,
+            height: 180
+        }
+    );
+
+    const pdfBytes =
+        await pdf.save();
+
+    return Buffer.from(
+        pdfBytes
+    ).toString(
+        "base64"
+    );
+
+}
+
 /* ==========================================================
    SEND TICKET EMAIL
 ========================================================== */
