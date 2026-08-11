@@ -1,4 +1,6 @@
 import bcrypt from "bcryptjs";
+import { PDFDocument, StandardFonts } from "pdf-lib";
+import QRCode from "qrcode";
 export default {
   async fetch(request, env) {
 
