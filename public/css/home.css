@@ -408,10 +408,10 @@
 
 .event-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(300px, 320px));
-    justify-content:center;
+    grid-template-columns:repeat(3, 1fr);
     gap:2rem;
     padding-top:1rem;
+    width:100%;
 }
 
 .event-card{
