@@ -876,7 +876,7 @@ async function getEvents(env) {
             SELECT *
 
             FROM events
-            WHERE status = 'published'
+            
 
             ORDER BY created_at DESC
         `)
