@@ -2272,6 +2272,11 @@ The Global Ticket Marketplace
                 ticketReference
             );
 
+            console.log(
+    "PDF DONE:",
+    ticketReference
+);
+
     } catch (error) {
 
         console.error(
@@ -2284,6 +2289,11 @@ The Global Ticket Marketplace
         );
 
     }
+
+    console.log(
+    "CALLING RESEND:",
+    order.customer_email
+);
 
     const response = await fetch(
         "https://api.resend.com/emails",
@@ -2369,6 +2379,12 @@ The Global Ticket Marketplace
 
     return result;
 }
+
+console.log(
+    "EMAIL START:",
+    ticketReference,
+    order.customer_email
+);
 /* ==========================================================
    ADMIN LOGIN
 ========================================================== */
