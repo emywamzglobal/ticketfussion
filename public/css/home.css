@@ -420,140 +420,92 @@
     EVENT CARDS
 =========================================================*/
 
+.event-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(300px, 320px));
+    justify-content:center;
+    gap:2rem;
+    padding-top:1rem;
+}
+
 .event-card{
-
+    width:100%;
     background:#fff;
-
     border-radius:16px;
-
     overflow:hidden;
-
     border:1px solid #ececec;
-
     box-shadow:0 6px 20px rgba(0,0,0,.08);
-
     transition:all .25s ease;
-
     display:flex;
-
     flex-direction:column;
-
-    height:100%;
-
-    max-width:320px;
-
-    margin:auto;
-
+    min-height:100%;
+    margin:0;
 }
 
 .event-card:hover{
-
     transform:translateY(-6px);
-
     box-shadow:0 15px 35px rgba(0,0,0,.15);
-
 }
 
+
+/* EVENT BANNER */
+
 .event-image{
-
-    height:180px;
-
+    width:100%;
+    height:200px;
     overflow:hidden;
-
     background:#f5f5f5;
-
+    flex-shrink:0;
 }
 
 .event-image img{
-
     width:100%;
-
     height:100%;
-
-    object-fit:cover;
-
-    object-position:center;
-
     display:block;
-
+    object-fit:cover;
+    object-position:center;
     transition:transform .3s ease;
-
 }
 
 .event-card:hover .event-image img{
-
     transform:scale(1.05);
-
 }
 
+
+/* EVENT CONTENT */
+
 .event-content{
-
     padding:1.25rem;
-
     display:flex;
-
     flex-direction:column;
-
     flex:1;
-
 }
 
 .event-category{
-
     color:var(--primary);
-
     font-size:.8rem;
-
     font-weight:700;
-
     text-transform:uppercase;
-
     letter-spacing:.5px;
-
     margin-bottom:.6rem;
-
 }
 
 .event-content h3{
-
     font-size:1.2rem;
-
     line-height:1.3;
-
     margin-bottom:.75rem;
-
 }
 
 .event-content p{
-
     color:#666;
-
     line-height:1.6;
-
     font-size:.95rem;
-
     margin-bottom:1.5rem;
-
     flex:1;
-
 }
 
 .event-content .btn{
-
     width:100%;
-
     text-align:center;
-
     margin-top:auto;
-
-}
-
-.availability-badge {
-    display: inline-block;
-    margin: 10px 0;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    background: rgba(255, 140, 0, 0.15);
 }
