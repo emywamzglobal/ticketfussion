@@ -2059,6 +2059,10 @@ async function generateTicketPdf(
    SEND TICKET EMAIL
 ========================================================== */
 
+/* ==========================================================
+   SEND TICKET EMAIL
+========================================================== */
+
 async function sendTicketEmail(
     order,
     ticketReference,
@@ -2069,7 +2073,6 @@ async function sendTicketEmail(
         `https://www.ticketfussion.com/my-ticket.html?ticket=${ticketReference}`;
 
     const html = `
-
 <!DOCTYPE html>
 
 <html>
@@ -2100,15 +2103,11 @@ text-align:center;
 color:#fff;">
 
 <h1 style="margin:0;">
-
 TicketFussion
-
 </h1>
 
 <p style="margin-top:10px;">
-
 Your ticket is ready 🎉
-
 </p>
 
 </td>
@@ -2120,68 +2119,47 @@ Your ticket is ready 🎉
 <td style="padding:35px;">
 
 <h2>
-
 Hi ${order.customer_name},
-
 </h2>
 
 <p>
-
 Thank you for purchasing with
 <strong>TicketFussion</strong>.
-
 </p>
 
 <p>
-
 Your payment has been confirmed.
-
 </p>
 
 <hr>
 
 <h2>
-
-${order.title}
-
+${order.title || "Your Event"}
 </h2>
 
 <p>
-
-📍 ${order.venue}, ${order.city}, ${order.country}
-
+📍 ${order.venue || ""}, ${order.city || ""}, ${order.country || ""}
 </p>
 
 <p>
-
-📅 ${order.event_date}
-
+📅 ${order.event_date || ""}
 </p>
 
 <p>
-
-🕗 ${order.event_time}
-
+🕗 ${order.event_time || ""}
 </p>
 
 <p>
-
 🎫 Ticket Reference
-
 </p>
 
 <h3>
-
 ${ticketReference}
-
 </h3>
 
 <p>
-
 Your ticket is securely stored on TicketFussion.
-
 Click below anytime to access your QR code and entry details.
-
 </p>
 
 <p style="text-align:center;margin:40px 0;">
@@ -2236,21 +2214,43 @@ The Global Ticket Marketplace
 </body>
 
 </html>
-
 `;
 
-const pdfBase64 =
-    await generateTicketPdf(
-        order,
-        ticketReference
-    );
+    /* ======================================================
+       GENERATE PDF
+    ====================================================== */
+
+    let pdfBase64;
+
+    try {
+
+        pdfBase64 =
+            await generateTicketPdf(
+                order,
+                ticketReference
+            );
+
+    } catch (error) {
+
+        console.error(
+            "TICKET PDF GENERATION FAILED:",
+            error
+        );
+
+        throw new Error(
+            "Ticket created, but PDF generation failed."
+        );
+
+    }
+
+
+    /* ======================================================
+       SEND THROUGH RESEND
+    ====================================================== */
 
     const response = await fetch(
-
         "https://api.resend.com/emails",
-
         {
-
             method: "POST",
 
             headers: {
@@ -2272,29 +2272,63 @@ const pdfBase64 =
                     [order.customer_email],
 
                 subject:
-                    `Your Ticket for ${order.title}`,
+                    `Your Ticket for ${order.title || "Your Event"}`,
 
                 html,
 
                 attachments: [
-    {
-        filename:
-            `${ticketReference}.pdf`,
-        content:
-            pdfBase64
-    }
-],
+                    {
+                        filename:
+                            `${ticketReference}.pdf`,
+
+                        content:
+                            pdfBase64
+                    }
+                ]
 
             })
 
         }
-
     );
 
-    return await response.json();
+
+    /* ======================================================
+       CHECK RESEND RESPONSE
+    ====================================================== */
+
+    const result =
+        await response.json();
+
+    console.log(
+        "RESEND RESPONSE:",
+        JSON.stringify(result)
+    );
+
+
+    if (!response.ok) {
+
+        console.error(
+            "RESEND EMAIL FAILED:",
+            response.status,
+            result
+        );
+
+        throw new Error(
+            `Email sending failed: ${JSON.stringify(result)}`
+        );
+
+    }
+
+
+    console.log(
+        "TICKET EMAIL SENT:",
+        result
+    );
+
+
+    return result;
 
 }
-
 /* ==========================================================
    ADMIN LOGIN
 ========================================================== */
