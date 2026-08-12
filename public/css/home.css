@@ -118,20 +118,6 @@
 
 }
 
-.event-grid{
-
-    display:grid;
-
-    grid-template-columns:repeat(auto-fill,minmax(300px,300px));
-
-    justify-content:start;
-
-    gap:2rem;
-
-    padding-top:1rem;
-
-}
-
 /*=========================================================
     CATEGORIES
 =========================================================*/
