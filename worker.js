@@ -1801,7 +1801,7 @@ if (!existingTicket) {
    7. SEND EMAIL ONLY IF NOT ALREADY SENT
 ------------------------------------------------------ */
 
-if (!existingTicket.email_sent_at) {
+if (existingTicket) {
 
     try {
 
