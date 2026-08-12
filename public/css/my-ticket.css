@@ -2,390 +2,570 @@
     MY TICKET
 =========================================================*/
 
-main{
-
-    min-height:80vh;
-
-    padding:4rem 0;
-
-    background:#f5f7fb;
-
+main {
+    min-height: 80vh;
+    padding: 4rem 0;
+    background: #f4f6fa;
 }
 
-#ticket-page{
-
-    max-width:1000px;
-
-    margin:0 auto;
-
-    padding:0 1rem;
-
+#ticket-page {
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 0 1rem;
 }
+
 
 /*=========================================================
-    TICKET CARD
+    PREMIUM TICKET
 =========================================================*/
 
-.ticket-card{
-
-    background:#fff;
-
-    border-radius:24px;
-
-    overflow:hidden;
-
-    border:1px solid #ececec;
-
-    box-shadow:0 20px 50px rgba(0,0,0,.08);
-
+.premium-ticket {
+    background: #080d18;
+    color: #fff;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 30px 70px rgba(0,0,0,.18);
+    border: 1px solid rgba(255,255,255,.08);
 }
+
 
 /*=========================================================
-    BANNER
+    EVENT HERO / BANNER
 =========================================================*/
 
-.ticket-banner{
+.ticket-hero {
+    position: relative;
+    min-height: 430px;
 
-    width:100%;
+    background-size: cover;
+    background-position: center;
 
-    height:320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
-    overflow:hidden;
+    padding: 2rem 2.5rem;
 
+    overflow: hidden;
 }
 
-.ticket-banner img{
 
-    width:100%;
+/* subtle premium overlay */
 
-    height:100%;
+.ticket-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
 
-    object-fit:cover;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(0,0,0,.15),
+            rgba(0,0,0,.05) 45%,
+            rgba(0,0,0,.55)
+        );
 
-    display:block;
-
+    pointer-events: none;
 }
+
 
 /*=========================================================
-    CONTENT
+    BRAND
 =========================================================*/
 
-.ticket-content{
+.ticket-brand {
+    position: relative;
+    z-index: 2;
 
-    padding:2.5rem;
+    display: flex;
+    flex-direction: column;
 
+    width: fit-content;
 }
+
+.ticket-brand strong {
+    font-size: 1.5rem;
+    letter-spacing: -.5px;
+}
+
+.ticket-brand strong span {
+    color: #7c5cff;
+}
+
+.ticket-brand small {
+    margin-top: .25rem;
+
+    font-size: .65rem;
+    letter-spacing: 2px;
+
+    color: rgba(255,255,255,.65);
+}
+
 
 /*=========================================================
-    EVENT HEADER
+    CONFIRMED
 =========================================================*/
 
-.ticket-event-header{
+.ticket-confirmed {
+    position: absolute;
+    top: 2rem;
+    right: 2.5rem;
 
-    display:flex;
+    z-index: 3;
 
-    justify-content:space-between;
+    padding: .55rem .9rem;
 
-    align-items:center;
+    border-radius: 999px;
 
-    gap:1rem;
+    background: rgba(22,163,74,.9);
 
-    margin-bottom:1rem;
-
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: 1px;
 }
 
-.ticket-event-header h1{
-
-    font-size:2rem;
-
-    line-height:1.2;
-
-    margin:0;
-
-}
 
 /*=========================================================
-    STATUS
+    EVENT TITLE
 =========================================================*/
 
-.ticket-status{
+.ticket-event-title {
+    position: relative;
+    z-index: 2;
 
-    padding:.6rem 1rem;
-
-    border-radius:999px;
-
-    font-size:.85rem;
-
-    font-weight:700;
-
-    text-transform:uppercase;
-
+    max-width: 700px;
 }
 
-.status-active{
+.ticket-event-title span {
+    display: inline-block;
 
-    background:#dcfce7;
+    margin-bottom: .6rem;
 
-    color:#166534;
+    font-size: .7rem;
+    font-weight: 800;
 
+    letter-spacing: 2px;
+
+    color: #a99aff;
 }
 
-.status-used{
+.ticket-event-title h1 {
+    margin: 0;
 
-    background:#fee2e2;
+    font-size: clamp(2.3rem, 6vw, 4.8rem);
 
-    color:#991b1b;
+    line-height: .95;
 
+    font-weight: 900;
+
+    letter-spacing: -2px;
+
+    text-transform: uppercase;
+
+    text-shadow: 0 4px 25px rgba(0,0,0,.35);
 }
 
-.status-cancelled{
-
-    background:#f3f4f6;
-
-    color:#374151;
-
-}
 
 /*=========================================================
-    META
+    EVENT INFO
 =========================================================*/
 
-.ticket-meta{
+.ticket-event-info {
+    position: relative;
+    z-index: 2;
 
-    color:#666;
+    display: flex;
 
-    line-height:1.8;
+    gap: 2.5rem;
 
-    margin-bottom:2rem;
-
+    margin-top: 2rem;
 }
+
+.ticket-event-info > div {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 110px;
+}
+
+.ticket-event-info b {
+    font-size: 1.2rem;
+
+    margin-bottom: .4rem;
+
+    color: #a99aff;
+}
+
+.ticket-event-info strong {
+    font-size: 1rem;
+}
+
+.ticket-event-info small {
+    margin-top: .25rem;
+
+    font-size: .65rem;
+
+    color: rgba(255,255,255,.55);
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
 
 /*=========================================================
-    SEAT CARD
+    SEAT PANEL
 =========================================================*/
 
-.ticket-seat-card{
+.ticket-seat-panel {
+    display: grid;
 
-    display:grid;
+    grid-template-columns:
+        repeat(3, 1fr);
 
-    grid-template-columns:repeat(3,1fr);
+    background: #111827;
 
-    gap:1rem;
-
-    margin-bottom:2rem;
-
+    border-top: 1px solid rgba(255,255,255,.07);
+    border-bottom: 1px solid rgba(255,255,255,.07);
 }
 
-.ticket-seat-card div{
+.ticket-seat-panel > div {
+    padding: 1.5rem;
 
-    background:#5B2EFF;
+    text-align: center;
 
-    color:#fff;
-
-    padding:1.25rem;
-
-    border-radius:16px;
-
-    text-align:center;
-
+    border-right: 1px solid rgba(255,255,255,.07);
 }
 
-.ticket-seat-card span{
-
-    display:block;
-
-    font-size:.8rem;
-
-    opacity:.8;
-
-    margin-bottom:.4rem;
-
+.ticket-seat-panel > div:last-child {
+    border-right: none;
 }
 
-.ticket-seat-card strong{
+.ticket-seat-panel span {
+    display: block;
 
-    font-size:1.2rem;
+    margin-bottom: .45rem;
 
+    color: #8992a4;
+
+    font-size: .65rem;
+
+    letter-spacing: 1.5px;
+
+    font-weight: 700;
 }
+
+.ticket-seat-panel strong {
+    font-size: 1.2rem;
+
+    color: #fff;
+}
+
 
 /*=========================================================
-    GRID
+    MAIN INFORMATION
 =========================================================*/
 
-.ticket-grid{
+.ticket-main-panel {
+    display: grid;
 
-    display:grid;
+    grid-template-columns: 1fr 300px;
 
-    grid-template-columns:repeat(2,1fr);
+    gap: 2rem;
 
-    gap:1rem;
-
-    margin-bottom:2rem;
-
+    padding: 2.5rem;
 }
 
-.ticket-item{
-
-    background:#fafafa;
-
-    border:1px solid #ececec;
-
-    border-radius:14px;
-
-    padding:1rem;
-
-}
-
-.ticket-item span{
-
-    display:block;
-
-    color:#888;
-
-    font-size:.85rem;
-
-    margin-bottom:.4rem;
-
-}
-
-.ticket-item strong{
-
-    color:#111;
-
-}
 
 /*=========================================================
-    REFERENCE
+    DETAILS
 =========================================================*/
 
-.ticket-reference-strip{
+.ticket-details {
+    display: grid;
 
-    background:#111;
+    grid-template-columns:
+        repeat(2, 1fr);
 
-    color:#fff;
-
-    border-radius:16px;
-
-    padding:1.5rem;
-
-    text-align:center;
-
-    margin-bottom:2rem;
-
+    gap: 1.5rem;
 }
 
-.ticket-reference-strip span{
+.ticket-details > div {
+    padding-bottom: 1rem;
 
-    display:block;
-
-    letter-spacing:2px;
-
-    font-size:.75rem;
-
-    opacity:.75;
-
-    margin-bottom:.6rem;
-
+    border-bottom:
+        1px solid rgba(255,255,255,.08);
 }
 
-.ticket-reference-strip code{
+.ticket-details span {
+    display: block;
 
-    font-size:1.4rem;
+    margin-bottom: .35rem;
 
-    font-weight:700;
+    color: #7d8799;
 
-    color:#fff;
+    font-size: .65rem;
 
+    font-weight: 700;
+
+    letter-spacing: 1.2px;
 }
+
+.ticket-details strong {
+    display: block;
+
+    color: #fff;
+
+    font-size: .95rem;
+
+    word-break: break-word;
+}
+
+.ticket-reference {
+    font-family: monospace;
+
+    letter-spacing: 1px;
+
+    color: #a99aff !important;
+}
+
 
 /*=========================================================
-    QR PANEL
+    QR CODE
 =========================================================*/
 
-.ticket-qr-panel{
+.ticket-qr {
+    display: flex;
 
-    text-align:center;
+    flex-direction: column;
 
-    padding:2rem;
+    align-items: center;
 
-    border:2px dashed #ddd;
+    justify-content: center;
 
-    border-radius:20px;
+    padding: 1.5rem;
 
-    margin-bottom:2rem;
+    background: #fff;
 
+    border-radius: 18px;
+
+    color: #111;
+
+    text-align: center;
 }
 
-.ticket-qr-panel img{
+.ticket-qr img {
+    width: 210px;
 
-    width:260px;
+    height: 210px;
 
-    max-width:100%;
+    max-width: 100%;
 
-    display:block;
+    object-fit: contain;
 
-    margin:0 auto 1rem;
-
+    margin-bottom: 1rem;
 }
 
-.ticket-qr-panel p{
+.ticket-qr strong {
+    font-size: .7rem;
 
-    color:#666;
-
+    letter-spacing: 1.5px;
 }
+
+.ticket-qr small {
+    margin-top: .5rem;
+
+    color: #777;
+
+    font-size: .65rem;
+
+    line-height: 1.5;
+}
+
 
 /*=========================================================
     ACTIONS
 =========================================================*/
 
-.ticket-actions{
+.ticket-actions {
+    display: flex;
 
-    display:flex;
+    justify-content: center;
 
-    justify-content:center;
+    gap: 1rem;
 
-    gap:1rem;
+    padding: 1.5rem 2.5rem 2.5rem;
 
-    flex-wrap:wrap;
-
+    background: #080d18;
 }
+
+.ticket-actions button {
+    min-width: 180px;
+
+    padding: .9rem 1.4rem;
+
+    border-radius: 10px;
+
+    border: none;
+
+    font-size: .8rem;
+
+    font-weight: 800;
+
+    letter-spacing: .5px;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        opacity .2s ease;
+}
+
+.ticket-actions button:hover {
+    transform: translateY(-2px);
+
+    opacity: .9;
+}
+
+.ticket-actions .btn-primary {
+    background: #6d4aff;
+
+    color: #fff;
+}
+
+.ticket-actions .btn-outline {
+    background: transparent;
+
+    color: #fff;
+
+    border: 1px solid rgba(255,255,255,.2);
+}
+
+
+/*=========================================================
+    FOOTER
+=========================================================*/
+
+.ticket-footer {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 2rem;
+
+    padding: 1.5rem 2.5rem;
+
+    background: #050914;
+
+    border-top:
+        1px solid rgba(255,255,255,.07);
+}
+
+.ticket-footer > div {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: .3rem;
+}
+
+.ticket-footer strong {
+    font-size: .75rem;
+}
+
+.ticket-footer small {
+    color: #737d90;
+
+    font-size: .65rem;
+}
+
 
 /*=========================================================
     MOBILE
 =========================================================*/
 
-@media(max-width:768px){
+@media (max-width: 768px) {
 
-    .ticket-banner{
-
-        height:220px;
-
+    main {
+        padding: 1.5rem 0;
     }
 
-    .ticket-content{
-
-        padding:1.5rem;
-
+    #ticket-page {
+        padding: 0 .75rem;
     }
 
-    .ticket-event-header{
-
-        flex-direction:column;
-
-        align-items:flex-start;
-
+    .premium-ticket {
+        border-radius: 16px;
     }
 
-    .ticket-seat-card{
+    .ticket-hero {
+        min-height: 430px;
 
-        grid-template-columns:1fr;
-
+        padding: 1.5rem;
     }
 
-    .ticket-grid{
+    .ticket-confirmed {
+        top: 1.5rem;
+        right: 1.5rem;
+    }
 
-        grid-template-columns:1fr;
+    .ticket-event-title h1 {
+        font-size: 2.5rem;
 
+        letter-spacing: -1px;
+    }
+
+    .ticket-event-info {
+        gap: 1rem;
+
+        flex-wrap: wrap;
+    }
+
+    .ticket-event-info > div {
+        min-width: 90px;
+    }
+
+    .ticket-seat-panel {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .ticket-seat-panel > div {
+        padding: 1rem .5rem;
+    }
+
+    .ticket-seat-panel strong {
+        font-size: .95rem;
+    }
+
+    .ticket-main-panel {
+        grid-template-columns: 1fr;
+
+        padding: 1.5rem;
+    }
+
+    .ticket-details {
+        grid-template-columns: 1fr;
+    }
+
+    .ticket-qr {
+        order: -1;
+    }
+
+    .ticket-actions {
+        flex-direction: column;
+
+        padding:
+            1rem 1.5rem 1.5rem;
+    }
+
+    .ticket-actions button {
+        width: 100%;
+    }
+
+    .ticket-footer {
+        flex-direction: column;
+
+        padding: 1.5rem;
     }
 
 }
