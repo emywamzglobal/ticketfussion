@@ -2380,11 +2380,6 @@ The Global Ticket Marketplace
     return result;
 }
 
-console.log(
-    "EMAIL START:",
-    ticketReference,
-    order.customer_email
-);
 /* ==========================================================
    ADMIN LOGIN
 ========================================================== */
