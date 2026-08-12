@@ -1,36 +1,18 @@
 /*=========================================================
     MY TICKET
+    TicketFussion
+=========================================================*/
+
+/*=========================================================
+    TICKET CONTAINER
 =========================================================*/
 
 const ticketContainer =
-    document.getElementById(
-        "ticket-page"
-    );
+    document.getElementById("ticket-page");
+
 
 /*=========================================================
-    REQUIRE LOGIN
-=========================================================*/
-
-async function requireCustomer() {
-
-    const customer =
-        await checkCustomerSession();
-
-    if (!customer) {
-
-        window.location.href =
-            "/login.html";
-
-        return null;
-
-    }
-
-    return customer;
-
-}
-
-/*=========================================================
-    GET TICKET REFERENCE
+    GET TICKET REFERENCE FROM URL
 =========================================================*/
 
 const params =
@@ -41,11 +23,16 @@ const params =
 const ticketReference =
     params.get("ticket");
 
+
 /*=========================================================
     LOAD TICKET
 =========================================================*/
 
 async function loadTicket() {
+
+    /*-----------------------------------------------
+        Check ticket reference
+    -----------------------------------------------*/
 
     if (!ticketReference) {
 
@@ -53,13 +40,10 @@ async function loadTicket() {
 
             <div class="container">
 
-                <h2>
-                    Ticket Not Found
-                </h2>
+                <h2>Ticket Not Found</h2>
 
                 <p>
-                    No ticket reference
-                    was provided.
+                    No ticket reference was provided.
                 </p>
 
             </div>
@@ -70,17 +54,35 @@ async function loadTicket() {
 
     }
 
+
+    /*-----------------------------------------------
+        Fetch ticket
+    -----------------------------------------------*/
+
     try {
 
         const response =
             await fetch(
-
-                `/api/tickets/reference/${ticketReference}`
-
+                `/api/tickets/reference/${encodeURIComponent(ticketReference)}`
             );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Ticket request failed: ${response.status}`
+            );
+
+        }
+
 
         const ticket =
             await response.json();
+
+
+        /*-------------------------------------------
+            Ticket does not exist
+        -------------------------------------------*/
 
         if (!ticket) {
 
@@ -88,13 +90,11 @@ async function loadTicket() {
 
                 <div class="container">
 
-                    <h2>
-                        Ticket Not Found
-                    </h2>
+                    <h2>Ticket Not Found</h2>
 
                     <p>
-                        This ticket does
-                        not exist.
+                        This ticket does not exist
+                        or is no longer available.
                     </p>
 
                 </div>
@@ -105,13 +105,23 @@ async function loadTicket() {
 
         }
 
+
+        /*-------------------------------------------
+            Render ticket
+        -------------------------------------------*/
+
         renderTicket(ticket);
 
     }
 
+
     catch (error) {
 
-        console.error(error);
+        console.error(
+            "LOAD TICKET ERROR:",
+            error
+        );
+
 
         ticketContainer.innerHTML = `
 
@@ -121,9 +131,314 @@ async function loadTicket() {
                     Something went wrong.
                 </h2>
 
+                <p>
+                    We could not load your ticket.
+                    Please try again.
+                </p>
+
             </div>
 
         `;
+
+    }
+
+}
+
+
+/*=========================================================
+    RENDER TICKET
+=========================================================*/
+
+function renderTicket(ticket) {
+
+    ticketContainer.innerHTML = `
+
+        <div class="ticket-card">
+
+
+            <!--=========================================
+                EVENT BANNER
+            =========================================-->
+
+            <div class="ticket-banner">
+
+                <img
+                    src="${ticket.banner_image || ""}"
+                    alt="${ticket.title || "Event"}"
+                >
+
+            </div>
+
+
+            <!--=========================================
+                TICKET CONTENT
+            =========================================-->
+
+            <div class="ticket-content">
+
+
+                <!--=====================================
+                    EVENT HEADER
+                =====================================-->
+
+                <div class="ticket-event-header">
+
+                    <h1>
+                        ${ticket.title || "Event"}
+                    </h1>
+
+
+                    <div
+                        class="ticket-status status-${ticket.status || "active"}"
+                    >
+
+                        ${ticket.status || "ACTIVE"}
+
+                    </div>
+
+                </div>
+
+
+                <!--=====================================
+                    EVENT INFORMATION
+                =====================================-->
+
+                <p class="ticket-meta">
+
+                    📍
+                    ${ticket.venue || ""}
+                    ${ticket.city ? ", " + ticket.city : ""}
+                    ${ticket.country ? ", " + ticket.country : ""}
+
+                    <br>
+
+                    📅
+                    ${ticket.event_date || ""}
+
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+
+                    🕒
+                    ${ticket.event_time || ""}
+
+                </p>
+
+
+                <!--=====================================
+                    SEAT INFORMATION
+                =====================================-->
+
+                <div class="ticket-seat-card">
+
+                    <div>
+
+                        <span>
+                            SECTION
+                        </span>
+
+                        <strong>
+                            ${ticket.section || "-"}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            ROW
+                        </span>
+
+                        <strong>
+                            ${ticket.row || "-"}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            SEAT
+                        </span>
+
+                        <strong>
+                            ${ticket.seat_numbers || "-"}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!--=====================================
+                    CUSTOMER DETAILS
+                =====================================-->
+
+                <div class="ticket-grid">
+
+                    <div class="ticket-item">
+
+                        <span>
+                            Customer
+                        </span>
+
+                        <strong>
+                            ${ticket.customer_name || "-"}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="ticket-item">
+
+                        <span>
+                            Email
+                        </span>
+
+                        <strong>
+                            ${ticket.customer_email || "-"}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="ticket-item">
+
+                        <span>
+                            Ticket Type
+                        </span>
+
+                        <strong>
+                            ${ticket.ticket_type || "-"}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="ticket-item">
+
+                        <span>
+                            Category
+                        </span>
+
+                        <strong>
+                            ${ticket.category || "-"}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!--=====================================
+                    TICKET REFERENCE
+                =====================================-->
+
+                <div class="ticket-reference-strip">
+
+                    <span>
+                        TICKET REFERENCE
+                    </span>
+
+                    <code>
+                        ${ticket.ticket_reference || "-"}
+                    </code>
+
+                </div>
+
+
+                <!--=====================================
+                    QR CODE
+                =====================================-->
+
+                <div class="ticket-qr-panel">
+
+                    <img
+                        src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(
+                            ticket.qr_code ||
+                            ticket.ticket_reference ||
+                            ""
+                        )}"
+                        alt="Ticket QR Code"
+                    >
+
+                    <p>
+                        Present this QR code at the
+                        venue entrance.
+                    </p>
+
+                </div>
+
+
+                <!--=====================================
+                    ACTIONS
+                =====================================-->
+
+                <div class="ticket-actions">
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="download-ticket-btn"
+                    >
+                        Download PDF
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-outline"
+                        id="share-ticket-btn"
+                    >
+                        Share Ticket
+                    </button>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    /*-----------------------------------------------
+        DOWNLOAD BUTTON
+    -----------------------------------------------*/
+
+    const downloadButton =
+        document.getElementById(
+            "download-ticket-btn"
+        );
+
+
+    if (downloadButton) {
+
+        downloadButton.addEventListener(
+            "click",
+            () => downloadTicketPDF(ticket)
+        );
+
+    }
+
+
+    /*-----------------------------------------------
+        SHARE BUTTON
+    -----------------------------------------------*/
+
+    const shareButton =
+        document.getElementById(
+            "share-ticket-btn"
+        );
+
+
+    if (shareButton) {
+
+        shareButton.addEventListener(
+            "click",
+            () => shareTicket(ticket)
+        );
 
     }
 
@@ -137,190 +452,265 @@ function renderTicket(ticket) {
 
     ticketContainer.innerHTML = `
 
-    <div class="premium-ticket">
+        <div class="ticket-card">
 
-        <!-- HERO / EVENT BANNER -->
-        <div class="ticket-hero"
-             style="background-image:
-             linear-gradient(90deg, rgba(4,8,20,.95) 0%, rgba(4,8,20,.55) 55%, rgba(4,8,20,.25) 100%),
-             url('${ticket.banner_image}');">
+            <!-- EVENT BANNER -->
 
-            <div class="ticket-brand">
-                <strong>Ticket<span>Fussion</span></strong>
-                <small>YOUR TICKET</small>
-            </div>
-
-            <div class="ticket-confirmed">
-                ✓ CONFIRMED
-            </div>
-
-            <div class="ticket-event-title">
-                <span>${ticket.category || "EVENT"}</span>
-                <h1>${ticket.title}</h1>
-            </div>
-
-            <div class="ticket-event-info">
-
-                <div>
-                    <b>📅</b>
-                    <strong>${ticket.event_date}</strong>
-                    <small>DATE</small>
-                </div>
-
-                <div>
-                    <b>◷</b>
-                    <strong>${ticket.event_time}</strong>
-                    <small>TIME</small>
-                </div>
-
-                <div>
-                    <b>⌖</b>
-                    <strong>${ticket.venue}</strong>
-                    <small>${ticket.city}, ${ticket.country}</small>
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- SEATING -->
-        <div class="ticket-seat-panel">
-
-            <div>
-                <span>SECTION</span>
-                <strong>${ticket.section || "-"}</strong>
-            </div>
-
-            <div>
-                <span>ROW</span>
-                <strong>${ticket.row || "-"}</strong>
-            </div>
-
-            <div>
-                <span>SEAT</span>
-                <strong>${ticket.seat_numbers || "-"}</strong>
-            </div>
-
-        </div>
-
-
-        <!-- CUSTOMER + QR -->
-        <div class="ticket-main-panel">
-
-            <div class="ticket-details">
-
-                <div>
-                    <span>CUSTOMER</span>
-                    <strong>${ticket.customer_name || "-"}</strong>
-                </div>
-
-                <div>
-                    <span>EMAIL</span>
-                    <strong>${ticket.customer_email || "-"}</strong>
-                </div>
-
-                <div>
-                    <span>TICKET TYPE</span>
-                    <strong>${ticket.ticket_type || "-"}</strong>
-                </div>
-
-                <div>
-                    <span>CATEGORY</span>
-                    <strong>${ticket.category || "-"}</strong>
-                </div>
-
-                <div>
-                    <span>TICKET REFERENCE</span>
-                    <strong class="ticket-reference">
-                        ${ticket.ticket_reference}
-                    </strong>
-                </div>
-
-            </div>
-
-
-            <div class="ticket-qr">
+            <div class="ticket-banner">
 
                 <img
-                    src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(ticket.qr_code || ticket.ticket_reference)}"
-                    alt="Ticket QR Code"
+                    src="${ticket.banner_image || ""}"
+                    alt="${ticket.title || "Event"}"
                 >
 
-                <strong>SCAN AT VENUE ENTRY</strong>
+            </div>
 
-                <small>
-                    This QR code is unique to this ticket.
-                </small>
+
+            <!-- TICKET CONTENT -->
+
+            <div class="ticket-content">
+
+
+                <!-- EVENT HEADER -->
+
+                <div class="ticket-event-header">
+
+                    <h1>
+                        ${ticket.title || "Event"}
+                    </h1>
+
+                    <div
+                        class="ticket-status status-${ticket.status || "active"}"
+                    >
+                        ${ticket.status || "ACTIVE"}
+                    </div>
+
+                </div>
+
+
+                <!-- EVENT INFORMATION -->
+
+                <p class="ticket-meta">
+
+                    📍
+                    ${ticket.venue || ""}
+                    ${ticket.city ? ", " + ticket.city : ""}
+                    ${ticket.country ? ", " + ticket.country : ""}
+
+                    <br>
+
+                    📅
+                    ${ticket.event_date || ""}
+
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+
+                    🕒
+                    ${ticket.event_time || ""}
+
+                </p>
+
+
+                <!-- SEAT INFORMATION -->
+
+                <div class="ticket-seat-card">
+
+                    <div>
+
+                        <span>
+                            SECTION
+                        </span>
+
+                        <strong>
+                            ${ticket.section || "-"}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            ROW
+                        </span>
+
+                        <strong>
+                            ${ticket.row || "-"}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            SEAT
+                        </span>
+
+                        <strong>
+                            ${ticket.seat_numbers || "-"}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CUSTOMER DETAILS -->
+
+                <div class="ticket-grid">
+
+                    <div class="ticket-item">
+
+                        <span>
+                            Customer
+                        </span>
+
+                        <strong>
+                            ${ticket.customer_name || "-"}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="ticket-item">
+
+                        <span>
+                            Email
+                        </span>
+
+                        <strong>
+                            ${ticket.customer_email || "-"}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="ticket-item">
+
+                        <span>
+                            Ticket Type
+                        </span>
+
+                        <strong>
+                            ${ticket.ticket_type || "-"}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="ticket-item">
+
+                        <span>
+                            Category
+                        </span>
+
+                        <strong>
+                            ${ticket.category || "-"}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TICKET REFERENCE -->
+
+                <div class="ticket-reference-strip">
+
+                    <span>
+                        TICKET REFERENCE
+                    </span>
+
+                    <code>
+                        ${ticket.ticket_reference || "-"}
+                    </code>
+
+                </div>
+
+
+                <!-- QR CODE -->
+
+                <div class="ticket-qr-panel">
+
+                    <img
+                        src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(
+                            ticket.qr_code ||
+                            ticket.ticket_reference ||
+                            ""
+                        )}"
+                        alt="Ticket QR Code"
+                    >
+
+                    <p>
+                        Present this QR code at the venue entrance.
+                    </p>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="ticket-actions">
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="download-ticket-btn"
+                    >
+                        Download PDF
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-outline"
+                        id="share-ticket-btn"
+                    >
+                        Share Ticket
+                    </button>
+
+                </div>
 
             </div>
 
         </div>
-
-
-        <!-- ACTIONS -->
-        <div class="ticket-actions">
-
-            <button
-                class="btn btn-primary"
-                id="download-ticket-btn">
-
-                ↓ DOWNLOAD PDF
-
-            </button>
-
-            <button
-                class="btn btn-outline"
-                id="share-ticket-btn">
-
-                ↗ SHARE TICKET
-
-            </button>
-
-        </div>
-
-
-        <!-- FOOTER -->
-        <div class="ticket-footer">
-
-            <div>
-                <strong>✓ Secure Ticket</strong>
-                <small>
-                    This ticket is unique and non-transferable.
-                </small>
-            </div>
-
-            <div>
-                <strong>Need help?</strong>
-                <small>support@ticketfussion.com</small>
-            </div>
-
-        </div>
-
-    </div>
 
     `;
 
 
-    /* DOWNLOAD */
+    /*=====================================================
+        DOWNLOAD BUTTON
+    =====================================================*/
 
     const downloadButton =
-        document.getElementById("download-ticket-btn");
+        document.getElementById(
+            "download-ticket-btn"
+        );
+
 
     if (downloadButton) {
 
         downloadButton.addEventListener(
             "click",
-            () => downloadTicketPDF(ticket)
+            () => {
+
+                downloadTicketPDF(ticket);
+
+            }
         );
 
     }
 
 
-    /* SHARE */
+    /*=====================================================
+        SHARE BUTTON
+    =====================================================*/
 
     const shareButton =
-        document.getElementById("share-ticket-btn");
+        document.getElementById(
+            "share-ticket-btn"
+        );
+
 
     if (shareButton) {
 
@@ -329,22 +719,53 @@ function renderTicket(ticket) {
             async () => {
 
                 const shareData = {
-                    title: ticket.title,
-                    text: `My ticket for ${ticket.title}`,
-                    url: window.location.href
+
+                    title:
+                        ticket.title ||
+                        "TicketFussion Ticket",
+
+                    text:
+                        `My ticket for ${
+                            ticket.title ||
+                            "this event"
+                        }`,
+
+                    url:
+                        window.location.href
+
                 };
 
-                if (navigator.share) {
 
-                    await navigator.share(shareData);
+                try {
 
-                } else {
+                    if (
+                        navigator.share
+                    ) {
 
-                    await navigator.clipboard.writeText(
-                        window.location.href
+                        await navigator.share(
+                            shareData
+                        );
+
+                    } else {
+
+                        await navigator.clipboard.writeText(
+                            window.location.href
+                        );
+
+                        alert(
+                            "Ticket link copied."
+                        );
+
+                    }
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "SHARE FAILED:",
+                        error
                     );
-
-                    alert("Ticket link copied.");
 
                 }
 
@@ -356,49 +777,61 @@ function renderTicket(ticket) {
 }
 
 /*=========================================================
-    DOWNLOAD PREMIUM TICKET PDF
+    DOWNLOAD TICKET PDF
 =========================================================*/
 
 async function downloadTicketPDF(ticket) {
 
-    /* LOAD html2canvas */
-    if (!window.html2canvas) {
+    /*=====================================================
+        LOAD jsPDF
+    =====================================================*/
 
-        await new Promise((resolve, reject) => {
+    if (!window.jspdf) {
 
-            const script =
-                document.createElement("script");
+        await new Promise(
+            (resolve, reject) => {
 
-            script.src =
-                "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+                const script =
+                    document.createElement("script");
 
-            script.onload = resolve;
-            script.onerror = reject;
+                script.src =
+                    "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
 
-            document.head.appendChild(script);
+                script.onload = resolve;
 
-        });
+                script.onerror = reject;
+
+                document.head.appendChild(script);
+
+            }
+        );
 
     }
 
 
-    /* LOAD jsPDF */
-    if (!window.jspdf) {
+    /*=====================================================
+        LOAD QR CODE LIBRARY
+    =====================================================*/
 
-        await new Promise((resolve, reject) => {
+    if (!window.QRCode) {
 
-            const script =
-                document.createElement("script");
+        await new Promise(
+            (resolve, reject) => {
 
-            script.src =
-                "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+                const script =
+                    document.createElement("script");
 
-            script.onload = resolve;
-            script.onerror = reject;
+                script.src =
+                    "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
 
-            document.head.appendChild(script);
+                script.onload = resolve;
 
-        });
+                script.onerror = reject;
+
+                document.head.appendChild(script);
+
+            }
+        );
 
     }
 
@@ -406,164 +839,546 @@ async function downloadTicketPDF(ticket) {
     const { jsPDF } = window.jspdf;
 
 
-    /* FIND PREMIUM TICKET */
+    /*=====================================================
+        CREATE PDF
+    =====================================================*/
 
-    const ticketElement =
-        document.querySelector(".premium-ticket");
+    const pdf =
+        new jsPDF({
 
-    if (!ticketElement) {
+            orientation: "portrait",
 
-        alert("Ticket could not be prepared.");
+            unit: "mm",
 
-        return;
+            format: "A4"
 
-    }
-
-
-    /* TEMPORARILY HIDE ACTION BUTTONS */
-
-    const actions =
-        ticketElement.querySelector(".ticket-actions");
-
-    const originalDisplay =
-        actions ? actions.style.display : "";
-
-    if (actions) {
-
-        actions.style.display = "none";
-
-    }
+        });
 
 
-    try {
+    const pageWidth = 210;
 
-        /* CAPTURE TICKET */
 
-        const canvas =
-            await html2canvas(
-                ticketElement,
-                {
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: false,
-                    backgroundColor: "#050914",
-                    logging: false
-                }
+    /*=====================================================
+        COLORS
+    =====================================================*/
+
+    const purple = [88, 48, 255];
+
+    const dark = [17, 17, 17];
+
+    const textDark = [20, 35, 60];
+
+    const muted = [105, 105, 105];
+
+    const light = [245, 247, 251];
+
+    const white = [255, 255, 255];
+
+
+    /*=====================================================
+        PAGE BACKGROUND
+    =====================================================*/
+
+    pdf.setFillColor(
+        ...light
+    );
+
+    pdf.rect(
+        0,
+        0,
+        210,
+        297,
+        "F"
+    );
+
+
+    /*=====================================================
+        PREMIUM TICKET CARD
+    =====================================================*/
+
+    pdf.setFillColor(
+        ...white
+    );
+
+    pdf.roundedRect(
+        12,
+        12,
+        186,
+        273,
+        7,
+        7,
+        "F"
+    );
+
+
+    /*=====================================================
+        EVENT BANNER
+    =====================================================*/
+
+    if (ticket.banner_image) {
+
+        try {
+
+            const banner =
+                await loadImage(
+                    ticket.banner_image
+                );
+
+            pdf.addImage(
+                banner,
+                "JPEG",
+                12,
+                12,
+                186,
+                65
             );
-
-
-        const image =
-            canvas.toDataURL(
-                "image/jpeg",
-                0.95
-            );
-
-
-        /* CREATE PDF */
-
-        const pdf =
-            new jsPDF({
-                orientation: "portrait",
-                unit: "mm",
-                format: "a4"
-            });
-
-
-        const pageWidth =
-            pdf.internal.pageSize.getWidth();
-
-        const pageHeight =
-            pdf.internal.pageSize.getHeight();
-
-
-        /* IMAGE DIMENSIONS */
-
-        const imageWidth =
-            pageWidth - 12;
-
-        const imageHeight =
-            (canvas.height / canvas.width)
-            * imageWidth;
-
-
-        /* CENTER VERTICALLY IF POSSIBLE */
-
-        let y =
-            6;
-
-        if (imageHeight < pageHeight - 12) {
-
-            y =
-                (pageHeight - imageHeight) / 2;
 
         }
 
+        catch (error) {
 
-        /* ADD PREMIUM TICKET */
+            console.warn(
+                "BANNER IMAGE FAILED:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /*=====================================================
+        BANNER OVERLAY
+    =====================================================*/
+
+    pdf.setFillColor(
+        0,
+        0,
+        0,
+        0.35
+    );
+
+
+    /*=====================================================
+        TICKET BRAND
+    =====================================================*/
+
+    pdf.setTextColor(
+        ...white
+    );
+
+    pdf.setFont(
+        "helvetica",
+        "bold"
+    );
+
+    pdf.setFontSize(18);
+
+    pdf.text(
+        "TicketFussion",
+        24,
+        30
+    );
+
+
+    pdf.setFont(
+        "helvetica",
+        "normal"
+    );
+
+    pdf.setFontSize(9);
+
+    pdf.text(
+        "OFFICIAL EVENT TICKET",
+        24,
+        38
+    );
+
+
+    /*=====================================================
+        EVENT TITLE
+    =====================================================*/
+
+    pdf.setTextColor(
+        ...textDark
+    );
+
+    pdf.setFont(
+        "helvetica",
+        "bold"
+    );
+
+    pdf.setFontSize(20);
+
+
+    const title =
+        ticket.title ||
+        "Event";
+
+
+    pdf.text(
+        title,
+        24,
+        94,
+        {
+            maxWidth: 170
+        }
+    );
+
+
+    /*=====================================================
+        EVENT DETAILS
+    =====================================================*/
+
+    pdf.setFont(
+        "helvetica",
+        "normal"
+    );
+
+    pdf.setFontSize(10);
+
+    pdf.setTextColor(
+        ...muted
+    );
+
+
+    pdf.text(
+        `📍 ${ticket.venue || ""}, ${ticket.city || ""}`,
+        24,
+        104
+    );
+
+
+    pdf.text(
+        `📅 ${ticket.event_date || ""}`,
+        24,
+        112
+    );
+
+
+    pdf.text(
+        `🕒 ${ticket.event_time || ""}`,
+        24,
+        120
+    );
+
+
+    /*=====================================================
+        SEAT INFORMATION
+    =====================================================*/
+
+    pdf.setFillColor(
+        ...purple
+    );
+
+    pdf.roundedRect(
+        24,
+        130,
+        162,
+        32,
+        5,
+        5,
+        "F"
+    );
+
+
+    pdf.setTextColor(
+        ...white
+    );
+
+    pdf.setFontSize(8);
+
+
+    pdf.text(
+        "SECTION",
+        35,
+        141
+    );
+
+    pdf.text(
+        "ROW",
+        92,
+        141
+    );
+
+    pdf.text(
+        "SEAT",
+        145,
+        141
+    );
+
+
+    pdf.setFont(
+        "helvetica",
+        "bold"
+    );
+
+    pdf.setFontSize(12);
+
+
+    pdf.text(
+        ticket.section || "-",
+        35,
+        153
+    );
+
+    pdf.text(
+        ticket.row || "-",
+        92,
+        153
+    );
+
+    pdf.text(
+        ticket.seat_numbers || "-",
+        145,
+        153
+    );
+
+
+    /*=====================================================
+        CUSTOMER DETAILS
+    =====================================================*/
+
+    pdf.setTextColor(
+        ...muted
+    );
+
+    pdf.setFont(
+        "helvetica",
+        "normal"
+    );
+
+    pdf.setFontSize(8);
+
+
+    pdf.text(
+        "CUSTOMER",
+        24,
+        175
+    );
+
+    pdf.text(
+        "TICKET TYPE",
+        108,
+        175
+    );
+
+
+    pdf.setTextColor(
+        ...dark
+    );
+
+    pdf.setFont(
+        "helvetica",
+        "bold"
+    );
+
+    pdf.setFontSize(10);
+
+
+    pdf.text(
+        ticket.customer_name || "-",
+        24,
+        182
+    );
+
+
+    pdf.text(
+        ticket.ticket_type || "-",
+        108,
+        182
+    );
+
+
+    /*=====================================================
+        REFERENCE
+    =====================================================*/
+
+    pdf.setFillColor(
+        ...dark
+    );
+
+    pdf.roundedRect(
+        24,
+        192,
+        162,
+        25,
+        5,
+        5,
+        "F"
+    );
+
+
+    pdf.setTextColor(
+        ...white
+    );
+
+    pdf.setFont(
+        "helvetica",
+        "normal"
+    );
+
+    pdf.setFontSize(7);
+
+
+    pdf.text(
+        "TICKET REFERENCE",
+        105,
+        201,
+        {
+            align: "center"
+        }
+    );
+
+
+    pdf.setFont(
+        "helvetica",
+        "bold"
+    );
+
+    pdf.setFontSize(13);
+
+
+    pdf.text(
+        ticket.ticket_reference || "-",
+        105,
+        211,
+        {
+            align: "center"
+        }
+    );
+
+
+    /*=====================================================
+        QR CODE
+    =====================================================*/
+
+    const qrContainer =
+        document.createElement("div");
+
+
+    new QRCode(
+        qrContainer,
+        {
+
+            text:
+                ticket.qr_code ||
+                ticket.ticket_reference,
+
+            width: 180,
+
+            height: 180
+
+        }
+    );
+
+
+    await new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                300
+            )
+    );
+
+
+    const qrCanvas =
+        qrContainer.querySelector(
+            "canvas"
+        );
+
+
+    if (qrCanvas) {
+
+        const qrImage =
+            qrCanvas.toDataURL(
+                "image/png"
+            );
+
 
         pdf.addImage(
-            image,
-            "JPEG",
-            6,
-            y,
-            imageWidth,
-            imageHeight
-        );
-
-
-        /* SAVE */
-
-        pdf.save(
-            `${ticket.ticket_reference || "ticket"}-TicketFussion.pdf`
-        );
-
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Ticket PDF error:",
-            error
-        );
-
-        alert(
-            "Unable to generate the ticket PDF."
+            qrImage,
+            "PNG",
+            75,
+            225,
+            60,
+            60
         );
 
     }
 
 
-    finally {
+    /*=====================================================
+        QR INSTRUCTION
+    =====================================================*/
 
-        /* RESTORE BUTTONS */
+    pdf.setTextColor(
+        ...muted
+    );
 
-        if (actions) {
+    pdf.setFont(
+        "helvetica",
+        "normal"
+    );
 
-            actions.style.display =
-                originalDisplay;
+    pdf.setFontSize(8);
 
+
+    pdf.text(
+        "Present this QR code at the venue entrance.",
+        105,
+        278,
+        {
+            align: "center"
         }
+    );
 
-    }
+
+    /*=====================================================
+        SAVE
+    =====================================================*/
+
+    pdf.save(
+        `${
+            ticket.ticket_reference ||
+            "ticket"
+        }-TicketFussion.pdf`
+    );
 
 }
+
+
+/*=========================================================
+    LOAD IMAGE HELPER
+=========================================================*/
+
+function loadImage(url) {
+
+    return new Promise(
+        (resolve, reject) => {
+
+            const img =
+                new Image();
+
+            img.crossOrigin =
+                "Anonymous";
+
+            img.onload =
+                () => resolve(img);
+
+            img.onerror =
+                reject;
+
+            img.src = url;
+
+        }
+    );
+
+}
+
 
 /*=========================================================
     START
 =========================================================*/
 
-(async () => {
-
-    const customer =
-        await requireCustomer();
-
-    if (!customer) {
-
-        return;
-
-    }
-
-    await loadTicket();
-
-})();
+loadTicket();
