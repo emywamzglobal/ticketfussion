@@ -1609,158 +1609,277 @@ LIMIT 1
    VERIFY PAYMENT
 ========================================================== */
 
+/* ==========================================================
+   VERIFY PAYMENT
+   Paystack → Order → Payment → Ticket → Email
+========================================================== */
+
 async function verifyPayment(reference, env) {
 
-    const response = await fetch(
+    try {
 
-        `https://api.paystack.co/transaction/verify/${reference}`,
+        /* ------------------------------------------------------
+           1. VERIFY PAYMENT WITH PAYSTACK
+        ------------------------------------------------------ */
 
-        {
-
-            headers: {
-
-                Authorization:
-                    `Bearer ${env.PAYSTACK_SECRET_KEY}`
-
+        const response = await fetch(
+            `https://api.paystack.co/transaction/verify/${reference}`,
+            {
+                headers: {
+                    Authorization:
+                        `Bearer ${env.PAYSTACK_SECRET_KEY}`
+                }
             }
+        );
+
+        const data = await response.json();
+
+        if (
+            !data.status ||
+            !data.data ||
+            data.data.status !== "success"
+        ) {
+            return {
+                success: false,
+                message: "Payment not verified."
+            };
+        }
+
+
+        /* ------------------------------------------------------
+           2. GET ORDER
+        ------------------------------------------------------ */
+
+        const order = await getOrderByReference(
+            reference,
+            env
+        );
+
+        if (!order) {
+            return {
+                success: false,
+                message:
+                    "Payment verified, but order was not found."
+            };
+        }
+
+
+        /* ------------------------------------------------------
+           3. MARK ORDER AS PAID
+        ------------------------------------------------------ */
+
+        await env.DB.prepare(`
+            UPDATE orders
+            SET status = 'paid'
+            WHERE order_reference = ?
+        `)
+        .bind(reference)
+        .run();
+
+
+        /* ------------------------------------------------------
+           4. RECORD PAYMENT
+           
+           INSERT OR IGNORE is important because
+           payment_reference is UNIQUE.
+
+           If Paystack verification runs twice,
+           it will NOT stop the ticket process.
+        ------------------------------------------------------ */
+
+        await env.DB.prepare(`
+            INSERT OR IGNORE INTO payments (
+                payment_reference,
+                order_id,
+                gateway,
+                gateway_reference,
+                amount,
+                currency,
+                payment_method,
+                payment_status,
+                paid_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+        `)
+        .bind(
+            reference,
+            order.id,
+            "Paystack",
+            data.data.reference,
+            data.data.amount / 100,
+            data.data.currency,
+            data.data.channel || "card",
+            "success"
+        )
+        .run();
+
+
+        /* ------------------------------------------------------
+           5. CHECK IF TICKET ALREADY EXISTS
+           
+           Prevent duplicate tickets if the callback
+           happens more than once.
+        ------------------------------------------------------ */
+
+        const existingTicket = await env.DB
+            .prepare(`
+                SELECT ticket_reference
+                FROM tickets
+                WHERE order_id = ?
+                LIMIT 1
+            `)
+            .bind(order.id)
+            .first();
+
+
+        /* ------------------------------------------------------
+           6. RETURN EXISTING TICKET
+        ------------------------------------------------------ */
+
+        if (existingTicket) {
+
+            return {
+                success: true,
+                payment: data.data,
+                ticket_reference:
+                    existingTicket.ticket_reference,
+                order
+            };
 
         }
 
-    );
 
-    const data = await response.json();
+        /* ------------------------------------------------------
+           7. GENERATE TICKET REFERENCE
+        ------------------------------------------------------ */
 
-    if (
-        !data.status ||
-        data.data.status !== "success"
-    ) {
+        const ticketReference =
+            "TF-" +
+            crypto.randomUUID()
+                .replace(/-/g, "")
+                .substring(0, 10)
+                .toUpperCase();
+
+
+        /* ------------------------------------------------------
+           8. QR CODE
+        ------------------------------------------------------ */
+
+        const qrCode = ticketReference;
+
+
+        /* ------------------------------------------------------
+           9. CREATE TICKET
+           
+           These values come from getOrderByReference(),
+           which already joins ticket_listings and occurrences.
+        ------------------------------------------------------ */
+
+        await createTicket({
+
+            ticket_reference:
+                ticketReference,
+
+            order_id:
+                order.id,
+
+            ticket_listing_id:
+                order.ticket_listing_id,
+
+            occurrence_id:
+                order.occurrence_id,
+
+            event_id:
+                order.event_id,
+
+            customer_name:
+                order.customer_name,
+
+            customer_email:
+                order.customer_email,
+
+            section:
+                order.section,
+
+            row:
+                order.row,
+
+            seat_numbers:
+                order.seats,
+
+            qr_code:
+                qrCode,
+
+            status:
+                "active"
+
+        }, env);
+
+
+        /* ------------------------------------------------------
+           10. SEND TICKET EMAIL
+           
+           Email failure must NOT undo ticket creation.
+        ------------------------------------------------------ */
+
+        try {
+
+            await sendTicketEmail(
+                order,
+                ticketReference,
+                env
+            );
+
+        } catch (emailError) {
+
+            console.error(
+                "Ticket created but email failed:",
+                emailError
+            );
+
+        }
+
+
+        /* ------------------------------------------------------
+           11. SUCCESS
+        ------------------------------------------------------ */
+
+        return {
+
+            success: true,
+
+            payment:
+                data.data,
+
+            ticket_reference:
+                ticketReference,
+
+            order
+
+        };
+
+    } catch (error) {
+
+        console.error(
+            "PAYMENT VERIFICATION ERROR:",
+            error
+        );
 
         return {
 
             success: false,
 
             message:
-                "Payment not verified."
+                "Payment was received, but ticket processing failed.",
+
+            error:
+                error?.message || String(error)
 
         };
 
     }
 
-    await env.DB.prepare(`
-
-    UPDATE orders
-
-    SET
-
-        status = 'paid'
-
-    WHERE order_reference = ?
-
-`)
-.bind(reference)
-.run();
-
-const order = await getOrderByReference(
-    reference,
-    env
-);
-
-// Check if ticket already exists
-const existingTicket = await env.DB
-    .prepare(`
-
-        SELECT ticket_reference
-
-        FROM tickets
-
-        WHERE order_id = ?
-
-        LIMIT 1
-
-    `)
-    .bind(order.id)
-    .first();
-
-if (existingTicket) {
-
-    return {
-
-        success: true,
-
-        payment: data.data,
-
-        ticket_reference: existingTicket.ticket_reference,
-
-        order
-
-    };
-
 }
-
-// Generate Ticket Reference
-const ticketReference =
-    "TF-" +
-    crypto.randomUUID()
-        .replace(/-/g, "")
-        .substring(0, 10)
-        .toUpperCase();
-
-// QR Code Value
-const qrCode = ticketReference;
-
-// Create Ticket
-await createTicket({
-
-    ticket_reference: ticketReference,
-
-    order_id: order.id,
-
-    ticket_listing_id: order.ticket_listing_id,
-
-    occurrence_id: order.occurrence_id,
-
-    event_id: order.event_id,
-
-    customer_name: order.customer_name,
-
-    customer_email: order.customer_email,
-
-    section: order.section,
-
-    row: order.row,
-
-    seat_numbers: order.seats,
-
-    qr_code: qrCode,
-
-    status: "active"
-
-}, env);
-
-await sendTicketEmail(
-
-    order,
-
-    ticketReference,
-
-    env
-
-);
-
-return {
-
-    success: true,
-
-    payment: data.data,
-
-    ticket_reference: ticketReference,
-
-    order
-
-};
-
-}
-
 /* ==========================================================
    GET ORDER BY REFERENCE
 ========================================================== */
