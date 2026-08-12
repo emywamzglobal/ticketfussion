@@ -1839,8 +1839,6 @@ if (!existingTicket.email_sent_at) {
         );
     }
 }
-
-
 /* ------------------------------------------------------
    8. SUCCESS
 ------------------------------------------------------ */
@@ -1848,48 +1846,25 @@ if (!existingTicket.email_sent_at) {
 return {
     success: true,
     payment: data.data,
-    ticket_reference:
-        existingTicket.ticket_reference,
+    ticket_reference: existingTicket.ticket_reference,
     order
 };
-        /* ------------------------------------------------------
-           11. SUCCESS
-        ------------------------------------------------------ */
 
-        return {
+} catch (error) {
 
-            success: true,
+    console.error(
+        "PAYMENT VERIFICATION ERROR:",
+        error
+    );
 
-            payment:
-                data.data,
-
-            ticket_reference:
-                ticketReference,
-
-            order
-
-        };
-
-    } catch (error) {
-
-        console.error(
-            "PAYMENT VERIFICATION ERROR:",
-            error
-        );
-
-        return {
-
-            success: false,
-
-            message:
-                "Payment was received, but ticket processing failed.",
-
-            error:
-                error?.message || String(error)
-
-        };
-
-    }
+    return {
+        success: false,
+        message:
+            "Payment was received, but ticket processing failed.",
+        error:
+            error?.message || String(error)
+    };
+}
 
 }
 /* ==========================================================
@@ -2072,7 +2047,6 @@ async function generateTicketPdf(
 /* ==========================================================
    SEND TICKET EMAIL
 ========================================================== */
-
 async function sendTicketEmail(
     order,
     ticketReference,
@@ -2084,57 +2058,39 @@ async function sendTicketEmail(
 
     const html = `
 <!DOCTYPE html>
-
 <html>
-
 <head>
-
 <meta charset="UTF-8">
-
 </head>
 
 <body style="margin:0;padding:0;background:#f5f7fb;font-family:Arial,sans-serif;">
 
 <table width="100%" cellpadding="0" cellspacing="0">
-
 <tr>
-
 <td align="center" style="padding:40px 20px;">
 
 <table width="650" cellpadding="0" cellspacing="0"
 style="background:#ffffff;border-radius:12px;overflow:hidden;">
 
 <tr>
+<td style="background:#5B2EFF;padding:30px;text-align:center;color:#fff;">
 
-<td
-style="background:#5B2EFF;
-padding:30px;
-text-align:center;
-color:#fff;">
-
-<h1 style="margin:0;">
-TicketFussion
-</h1>
+<h1 style="margin:0;">TicketFussion</h1>
 
 <p style="margin-top:10px;">
 Your ticket is ready 🎉
 </p>
 
 </td>
-
 </tr>
 
 <tr>
-
 <td style="padding:35px;">
 
-<h2>
-Hi ${order.customer_name},
-</h2>
+<h2>Hi ${order.customer_name},</h2>
 
 <p>
-Thank you for purchasing with
-<strong>TicketFussion</strong>.
+Thank you for purchasing with <strong>TicketFussion</strong>.
 </p>
 
 <p>
@@ -2143,9 +2099,7 @@ Your payment has been confirmed.
 
 <hr>
 
-<h2>
-${order.title || "Your Event"}
-</h2>
+<h2>${order.title || "Your Event"}</h2>
 
 <p>
 📍 ${order.venue || ""}, ${order.city || ""}, ${order.country || ""}
@@ -2159,17 +2113,13 @@ ${order.title || "Your Event"}
 🕗 ${order.event_time || ""}
 </p>
 
-<p>
-🎫 Ticket Reference
-</p>
+<p>🎫 Ticket Reference</p>
 
-<h3>
-${ticketReference}
-</h3>
+<h3>${ticketReference}</h3>
 
 <p>
 Your ticket is securely stored on TicketFussion.
-Click below anytime to access your QR code and entry details.
+Click below to access your QR code and entry details.
 </p>
 
 <p style="text-align:center;margin:40px 0;">
@@ -2192,43 +2142,28 @@ View My Ticket
 <hr>
 
 <p style="color:#666;">
-
-Need help?
-
+Need help?<br>
 support@ticketfussion.com
-
 </p>
 
 <p style="color:#999;font-size:13px;">
-
 © 2026 TicketFussion
-
 <br>
-
 The Global Ticket Marketplace
-
 </p>
 
 </td>
-
 </tr>
 
 </table>
 
 </td>
-
 </tr>
-
 </table>
 
 </body>
-
 </html>
 `;
-
-    /* ======================================================
-       GENERATE PDF
-    ====================================================== */
 
     let pdfBase64;
 
@@ -2253,24 +2188,17 @@ The Global Ticket Marketplace
 
     }
 
-
-    /* ======================================================
-       SEND THROUGH RESEND
-    ====================================================== */
-
     const response = await fetch(
         "https://api.resend.com/emails",
         {
             method: "POST",
 
             headers: {
-
                 Authorization:
                     `Bearer ${env.RESEND_API_KEY}`,
 
                 "Content-Type":
                     "application/json"
-
             },
 
             body: JSON.stringify({
@@ -2297,14 +2225,8 @@ The Global Ticket Marketplace
                 ]
 
             })
-
         }
     );
-
-
-    /* ======================================================
-       CHECK RESEND RESPONSE
-    ====================================================== */
 
     const result =
         await response.json();
@@ -2314,30 +2236,41 @@ The Global Ticket Marketplace
         JSON.stringify(result)
     );
 
-
     if (!response.ok) {
 
         console.error(
             "RESEND EMAIL FAILED:",
             response.status,
-            result
+            JSON.stringify(result)
         );
 
         throw new Error(
-            `Email sending failed: ${JSON.stringify(result)}`
+            `Resend rejected email: ${JSON.stringify(result)}`
         );
 
     }
 
+    /*
+     * IMPORTANT:
+     * Only mark the ticket email as sent after
+     * Resend has accepted the request.
+     */
+
+    await env.DB.prepare(`
+        UPDATE tickets
+        SET email_sent_at = CURRENT_TIMESTAMP
+        WHERE ticket_reference = ?
+    `)
+    .bind(ticketReference)
+    .run();
 
     console.log(
-        "TICKET EMAIL SENT:",
+        "TICKET EMAIL ACCEPTED BY RESEND:",
+        ticketReference,
         result
     );
 
-
     return result;
-
 }
 /* ==========================================================
    ADMIN LOGIN
