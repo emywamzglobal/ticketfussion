@@ -144,7 +144,6 @@ async function loadTicket() {
 
 }
 
-
 /*=========================================================
     RENDER TICKET
 =========================================================*/
@@ -157,7 +156,7 @@ function renderTicket(ticket) {
 
 
             <!--=========================================
-                EVENT BANNER
+                EVENT HERO / BANNER
             =========================================-->
 
             <div class="ticket-banner">
@@ -167,69 +166,106 @@ function renderTicket(ticket) {
                     alt="${ticket.title || "Event"}"
                 >
 
-            </div>
+
+                <!-- Dark overlay for readability -->
+                <div class="ticket-banner-overlay"></div>
 
 
-            <!--=========================================
-                TICKET CONTENT
-            =========================================-->
+                <!-- TicketFussion branding -->
+                <div class="ticket-brand">
 
-            <div class="ticket-content">
+                    <div class="ticket-brand-name">
+                        Ticket<span>Fussion</span>
+                    </div>
 
-
-                <!--=====================================
-                    EVENT HEADER
-                =====================================-->
-
-                <div class="ticket-event-header">
-
-                    <h1>
-                        ${ticket.title || "Event"}
-                    </h1>
-
-
-                    <div
-                        class="ticket-status status-${ticket.status || "active"}"
-                    >
-
-                        ${ticket.status || "ACTIVE"}
-
+                    <div class="ticket-brand-subtitle">
+                        YOUR TICKET
                     </div>
 
                 </div>
 
 
-                <!--=====================================
-                    EVENT INFORMATION
-                =====================================-->
+                <!-- Ticket status -->
+                <div
+                    class="ticket-status status-${ticket.status || "active"}"
+                >
 
-                <p class="ticket-meta">
+                    <span class="status-icon">✓</span>
 
-                    📍
-                    ${ticket.venue || ""}
-                    ${ticket.city ? ", " + ticket.city : ""}
-                    ${ticket.country ? ", " + ticket.country : ""}
+                    ${(
+                        ticket.status ||
+                        "ACTIVE"
+                    ).toUpperCase()}
 
-                    <br>
-
-                    📅
-                    ${ticket.event_date || ""}
-
-                    &nbsp;&nbsp;|&nbsp;&nbsp;
-
-                    🕒
-                    ${ticket.event_time || ""}
-
-                </p>
+                </div>
 
 
+                <!-- Event title -->
+                <div class="ticket-hero-title">
+
+                    <h1>
+                        ${ticket.title || "Event"}
+                    </h1>
+
+                </div>
+
+            </div>
+
+
+            <!--=====================================
+    EVENT INFORMATION
+=====================================-->
+
+<div class="ticket-meta">
+
+    <div class="ticket-meta-item">
+
+        <span class="ticket-meta-label">
+            VENUE
+        </span>
+
+        <strong>
+            ${ticket.venue || ""}
+            ${ticket.city ? ", " + ticket.city : ""}
+            ${ticket.country ? ", " + ticket.country : ""}
+        </strong>
+
+    </div>
+
+
+    <div class="ticket-meta-item">
+
+        <span class="ticket-meta-label">
+            DATE
+        </span>
+
+        <strong>
+            ${ticket.event_date || ""}
+        </strong>
+
+    </div>
+
+
+    <div class="ticket-meta-item">
+
+        <span class="ticket-meta-label">
+            TIME
+        </span>
+
+        <strong>
+            ${ticket.event_time || ""}
+        </strong>
+
+    </div>
+
+</div>
                 <!--=====================================
                     SEAT INFORMATION
                 =====================================-->
 
                 <div class="ticket-seat-card">
 
-                    <div>
+                    <div class="ticket-seat-item">
 
                         <span>
                             SECTION
@@ -242,7 +278,10 @@ function renderTicket(ticket) {
                     </div>
 
 
-                    <div>
+                    <div class="ticket-seat-divider"></div>
+
+
+                    <div class="ticket-seat-item">
 
                         <span>
                             ROW
@@ -255,7 +294,10 @@ function renderTicket(ticket) {
                     </div>
 
 
-                    <div>
+                    <div class="ticket-seat-divider"></div>
+
+
+                    <div class="ticket-seat-item">
 
                         <span>
                             SEAT
@@ -274,71 +316,73 @@ function renderTicket(ticket) {
                     CUSTOMER DETAILS
                 =====================================-->
 
-                <div class="ticket-grid">
+                <div class="ticket-details-card">
 
-                    <div class="ticket-item">
+                    <div class="ticket-grid">
 
-                        <span>
-                            Customer
-                        </span>
+                        <div class="ticket-item">
 
-                        <strong>
-                            ${ticket.customer_name || "-"}
-                        </strong>
+                            <span>
+                                CUSTOMER
+                            </span>
 
-                    </div>
+                            <strong>
+                                ${ticket.customer_name || "-"}
+                            </strong>
 
-
-                    <div class="ticket-item">
-
-                        <span>
-                            Email
-                        </span>
-
-                        <strong>
-                            ${ticket.customer_email || "-"}
-                        </strong>
-
-                    </div>
+                        </div>
 
 
-                    <div class="ticket-item">
+                        <div class="ticket-item">
 
-                        <span>
-                            Ticket Type
-                        </span>
+                            <span>
+                                EMAIL
+                            </span>
 
-                        <strong>
-                            ${ticket.ticket_type || "-"}
-                        </strong>
+                            <strong>
+                                ${ticket.customer_email || "-"}
+                            </strong>
 
-                    </div>
+                        </div>
 
 
-                    <div class="ticket-item">
+                        <div class="ticket-item">
 
-                        <span>
-                            Category
-                        </span>
+                            <span>
+                                TICKET TYPE
+                            </span>
 
-                        <strong>
-                            ${ticket.category || "-"}
-                        </strong>
+                            <strong>
+                                ${ticket.ticket_type || "-"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="ticket-item">
+
+                            <span>
+                                CATEGORY
+                            </span>
+
+                            <strong>
+                                ${ticket.category || "-"}
+                            </strong>
+
+                        </div>
 
                     </div>
 
                 </div>
-
-
-                <!--=====================================
+                                <!--=====================================
                     TICKET REFERENCE
                 =====================================-->
 
                 <div class="ticket-reference-strip">
 
-                    <span>
+                    <div class="ticket-reference-label">
                         TICKET REFERENCE
-                    </span>
+                    </div>
 
                     <code>
                         ${ticket.ticket_reference || "-"}
@@ -353,19 +397,31 @@ function renderTicket(ticket) {
 
                 <div class="ticket-qr-panel">
 
-                    <img
-                        src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(
-                            ticket.qr_code ||
-                            ticket.ticket_reference ||
-                            ""
-                        )}"
-                        alt="Ticket QR Code"
-                    >
+                    <div class="ticket-qr-header">
 
-                    <p>
-                        Present this QR code at the
-                        venue entrance.
-                    </p>
+                        <span class="ticket-qr-title">
+                            SCAN AT VENUE ENTRY
+                        </span>
+
+                        <span class="ticket-qr-subtitle">
+                            Present this QR code at the venue
+                        </span>
+
+                    </div>
+
+
+                    <div class="ticket-qr-box">
+
+                        <img
+                            src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(
+                                ticket.qr_code ||
+                                ticket.ticket_reference ||
+                                ""
+                            )}"
+                            alt="Ticket QR Code"
+                        >
+
+                    </div>
 
                 </div>
 
@@ -381,6 +437,7 @@ function renderTicket(ticket) {
                         class="btn btn-primary"
                         id="download-ticket-btn"
                     >
+                        <span>↓</span>
                         Download PDF
                     </button>
 
@@ -390,6 +447,7 @@ function renderTicket(ticket) {
                         class="btn btn-outline"
                         id="share-ticket-btn"
                     >
+                        <span>↗</span>
                         Share Ticket
                     </button>
 
@@ -401,8 +459,6 @@ function renderTicket(ticket) {
         </div>
 
     `;
-
-
     /*-----------------------------------------------
         DOWNLOAD BUTTON
     -----------------------------------------------*/
@@ -454,7 +510,10 @@ function renderTicket(ticket) {
 
         <div class="ticket-card">
 
-            <!-- EVENT BANNER -->
+
+            <!--=========================================
+                EVENT BANNER
+            =========================================-->
 
             <div class="ticket-banner">
 
@@ -463,15 +522,65 @@ function renderTicket(ticket) {
                     alt="${ticket.title || "Event"}"
                 >
 
+                <div class="ticket-banner-overlay"></div>
+
+
+                <!-- TicketFussion branding -->
+
+                <div class="ticket-brand">
+
+                    <div class="ticket-brand-name">
+                        Ticket<span>Fussion</span>
+                    </div>
+
+                    <div class="ticket-brand-subtitle">
+                        YOUR TICKET
+                    </div>
+
+                </div>
+
+
+                <!-- Status -->
+
+                <div
+                    class="ticket-status status-${ticket.status || "active"}"
+                >
+
+                    <span class="status-icon">
+                        ✓
+                    </span>
+
+                    ${(
+                        ticket.status ||
+                        "ACTIVE"
+                    ).toUpperCase()}
+
+                </div>
+
+
+                <!-- Event title -->
+
+                <div class="ticket-hero-title">
+
+                    <h1>
+                        ${ticket.title || "Event"}
+                    </h1>
+
+                </div>
+
             </div>
 
 
-            <!-- TICKET CONTENT -->
+            <!--=========================================
+                TICKET CONTENT
+            =========================================-->
 
             <div class="ticket-content">
 
 
-                <!-- EVENT HEADER -->
+                <!--=====================================
+                    EVENT INFORMATION
+                =====================================-->
 
                 <div class="ticket-event-header">
 
@@ -479,42 +588,44 @@ function renderTicket(ticket) {
                         ${ticket.title || "Event"}
                     </h1>
 
-                    <div
-                        class="ticket-status status-${ticket.status || "active"}"
-                    >
-                        ${ticket.status || "ACTIVE"}
-                    </div>
-
                 </div>
 
 
-                <!-- EVENT INFORMATION -->
-
                 <p class="ticket-meta">
 
-                    📍
-                    ${ticket.venue || ""}
-                    ${ticket.city ? ", " + ticket.city : ""}
-                    ${ticket.country ? ", " + ticket.country : ""}
+                    <span class="ticket-location">
 
-                    <br>
+                        ${ticket.venue || ""}
+                        ${ticket.city ? ", " + ticket.city : ""}
+                        ${ticket.country ? ", " + ticket.country : ""}
 
-                    📅
-                    ${ticket.event_date || ""}
+                    </span>
 
-                    &nbsp;&nbsp;|&nbsp;&nbsp;
 
-                    🕒
-                    ${ticket.event_time || ""}
+                    <span class="ticket-date">
+
+                        ${ticket.event_date || ""}
+
+                    </span>
+
+
+                    <span class="ticket-time">
+
+                        ${ticket.event_time || ""}
+
+                    </span>
 
                 </p>
 
 
-                <!-- SEAT INFORMATION -->
+                <!--=====================================
+                    SEAT INFORMATION
+                =====================================-->
 
                 <div class="ticket-seat-card">
 
-                    <div>
+
+                    <div class="ticket-seat-item">
 
                         <span>
                             SECTION
@@ -527,7 +638,10 @@ function renderTicket(ticket) {
                     </div>
 
 
-                    <div>
+                    <div class="ticket-seat-divider"></div>
+
+
+                    <div class="ticket-seat-item">
 
                         <span>
                             ROW
@@ -540,7 +654,10 @@ function renderTicket(ticket) {
                     </div>
 
 
-                    <div>
+                    <div class="ticket-seat-divider"></div>
+
+
+                    <div class="ticket-seat-item">
 
                         <span>
                             SEAT
@@ -555,71 +672,82 @@ function renderTicket(ticket) {
                 </div>
 
 
-                <!-- CUSTOMER DETAILS -->
+                <!--=====================================
+                    CUSTOMER DETAILS
+                =====================================-->
 
-                <div class="ticket-grid">
-
-                    <div class="ticket-item">
-
-                        <span>
-                            Customer
-                        </span>
-
-                        <strong>
-                            ${ticket.customer_name || "-"}
-                        </strong>
-
-                    </div>
+                <div class="ticket-details-card">
 
 
-                    <div class="ticket-item">
-
-                        <span>
-                            Email
-                        </span>
-
-                        <strong>
-                            ${ticket.customer_email || "-"}
-                        </strong>
-
-                    </div>
+                    <div class="ticket-grid">
 
 
-                    <div class="ticket-item">
+                        <div class="ticket-item">
 
-                        <span>
-                            Ticket Type
-                        </span>
+                            <span>
+                                CUSTOMER
+                            </span>
 
-                        <strong>
-                            ${ticket.ticket_type || "-"}
-                        </strong>
+                            <strong>
+                                ${ticket.customer_name || "-"}
+                            </strong>
 
-                    </div>
+                        </div>
 
 
-                    <div class="ticket-item">
+                        <div class="ticket-item">
 
-                        <span>
-                            Category
-                        </span>
+                            <span>
+                                EMAIL
+                            </span>
 
-                        <strong>
-                            ${ticket.category || "-"}
-                        </strong>
+                            <strong>
+                                ${ticket.customer_email || "-"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="ticket-item">
+
+                            <span>
+                                TICKET TYPE
+                            </span>
+
+                            <strong>
+                                ${ticket.ticket_type || "-"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="ticket-item">
+
+                            <span>
+                                CATEGORY
+                            </span>
+
+                            <strong>
+                                ${ticket.category || "-"}
+                            </strong>
+
+                        </div>
+
 
                     </div>
 
                 </div>
 
 
-                <!-- TICKET REFERENCE -->
+                <!--=====================================
+                    TICKET REFERENCE
+                =====================================-->
 
                 <div class="ticket-reference-strip">
 
-                    <span>
+                    <div class="ticket-reference-label">
                         TICKET REFERENCE
-                    </span>
+                    </div>
 
                     <code>
                         ${ticket.ticket_reference || "-"}
@@ -628,35 +756,55 @@ function renderTicket(ticket) {
                 </div>
 
 
-                <!-- QR CODE -->
+                <!--=====================================
+                    QR CODE
+                =====================================-->
 
                 <div class="ticket-qr-panel">
 
-                    <img
-                        src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(
-                            ticket.qr_code ||
-                            ticket.ticket_reference ||
-                            ""
-                        )}"
-                        alt="Ticket QR Code"
-                    >
 
-                    <p>
-                        Present this QR code at the venue entrance.
-                    </p>
+                    <div class="ticket-qr-header">
+
+                        <span class="ticket-qr-title">
+                            SCAN AT VENUE ENTRY
+                        </span>
+
+                        <span class="ticket-qr-subtitle">
+                            Present this QR code at the venue
+                        </span>
+
+                    </div>
+
+
+                    <div class="ticket-qr-box">
+
+                        <img
+                            src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(
+                                ticket.qr_code ||
+                                ticket.ticket_reference ||
+                                ""
+                            )}"
+                            alt="Ticket QR Code"
+                        >
+
+                    </div>
 
                 </div>
 
 
-                <!-- ACTIONS -->
+                <!--=====================================
+                    ACTIONS
+                =====================================-->
 
                 <div class="ticket-actions">
+
 
                     <button
                         type="button"
                         class="btn btn-primary"
                         id="download-ticket-btn"
                     >
+                        <span>↓</span>
                         Download PDF
                     </button>
 
@@ -666,17 +814,19 @@ function renderTicket(ticket) {
                         class="btn btn-outline"
                         id="share-ticket-btn"
                     >
+                        <span>↗</span>
                         Share Ticket
                     </button>
 
+
                 </div>
+
 
             </div>
 
         </div>
 
     `;
-
 
     /*=====================================================
         DOWNLOAD BUTTON
@@ -850,12 +1000,12 @@ async function downloadTicketPDF(ticket) {
 
             unit: "mm",
 
-            format: "A4"
+            format: "A5"
 
         });
 
 
-    const pageWidth = 210;
+    const pageWidth = 148;
 
 
     /*=====================================================
@@ -886,8 +1036,8 @@ async function downloadTicketPDF(ticket) {
     pdf.rect(
         0,
         0,
+        148,
         210,
-        297,
         "F"
     );
 
@@ -903,7 +1053,7 @@ async function downloadTicketPDF(ticket) {
     pdf.roundedRect(
         12,
         12,
-        186,
+        124,
         273,
         7,
         7,
@@ -929,7 +1079,7 @@ async function downloadTicketPDF(ticket) {
                 "JPEG",
                 12,
                 12,
-                186,
+                124,
                 65
             );
 
@@ -1025,43 +1175,41 @@ async function downloadTicketPDF(ticket) {
         }
     );
 
+/*=====================================================
+    EVENT DETAILS
+=====================================================*/
 
-    /*=====================================================
-        EVENT DETAILS
-    =====================================================*/
+pdf.setFont(
+    "helvetica",
+    "normal"
+);
 
-    pdf.setFont(
-        "helvetica",
-        "normal"
-    );
+pdf.setFontSize(10);
 
-    pdf.setFontSize(10);
-
-    pdf.setTextColor(
-        ...muted
-    );
-
-
-    pdf.text(
-        `📍 ${ticket.venue || ""}, ${ticket.city || ""}`,
-        24,
-        104
-    );
+pdf.setTextColor(
+    ...muted
+);
 
 
-    pdf.text(
-        `📅 ${ticket.event_date || ""}`,
-        24,
-        112
-    );
+pdf.text(
+    `VENUE: ${ticket.venue || ""}, ${ticket.city || ""}`,
+    24,
+    104
+);
 
 
-    pdf.text(
-        `🕒 ${ticket.event_time || ""}`,
-        24,
-        120
-    );
+pdf.text(
+    `DATE: ${ticket.event_date || ""}`,
+    24,
+    112
+);
 
+
+pdf.text(
+    `TIME: ${ticket.event_time || ""}`,
+    24,
+    120
+);
 
     /*=====================================================
         SEAT INFORMATION
