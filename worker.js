@@ -1920,15 +1920,33 @@ LIMIT 1
 
 }
 
+/* ==========================================================
+   GENERATE TICKET PDF
+   Cloudflare Worker safe
+   No Canvas / No QRCode.toDataURL()
+========================================================== */
+
 async function generateTicketPdf(
     order,
     ticketReference
 ) {
 
-    const qrDataUrl =
-        await QRCode.toDataURL(
-            ticketReference
-        );
+    /* ------------------------------------------------------
+       1. CREATE QR MATRIX
+       ------------------------------------------------------ */
+
+    const qr = QRCode.create(
+        ticketReference,
+        {
+            errorCorrectionLevel: "M"
+        }
+    );
+
+    const qrSize = qr.modules.size;
+
+    /* ------------------------------------------------------
+       2. CREATE PDF
+       ------------------------------------------------------ */
 
     const pdf =
         await PDFDocument.create();
@@ -1941,6 +1959,11 @@ async function generateTicketPdf(
             StandardFonts.Helvetica
         );
 
+
+    /* ------------------------------------------------------
+       3. TICKET CONTENT
+       ------------------------------------------------------ */
+
     page.drawText(
         "TicketFussion",
         {
@@ -1952,7 +1975,7 @@ async function generateTicketPdf(
     );
 
     page.drawText(
-        order.title,
+        order.title || "Event Ticket",
         {
             x: 50,
             y: 690,
@@ -1962,7 +1985,7 @@ async function generateTicketPdf(
     );
 
     page.drawText(
-        `Venue: ${order.venue}`,
+        `Venue: ${order.venue || ""}`,
         {
             x: 50,
             y: 650,
@@ -1972,7 +1995,7 @@ async function generateTicketPdf(
     );
 
     page.drawText(
-        `Date: ${order.event_date}`,
+        `Date: ${order.event_date || ""}`,
         {
             x: 50,
             y: 620,
@@ -1982,7 +2005,7 @@ async function generateTicketPdf(
     );
 
     page.drawText(
-        `Time: ${order.event_time}`,
+        `Time: ${order.event_time || ""}`,
         {
             x: 50,
             y: 590,
@@ -1992,48 +2015,130 @@ async function generateTicketPdf(
     );
 
     page.drawText(
+        `Customer: ${order.customer_name || ""}`,
+        {
+            x: 50,
+            y: 560,
+            size: 12,
+            font
+        }
+    );
+
+    page.drawText(
         `Ticket Ref: ${ticketReference}`,
         {
             x: 50,
-            y: 540,
+            y: 530,
             size: 14,
             font
         }
     );
 
-    const qrBytes = Uint8Array.from(
-        atob(
-            qrDataUrl.split(",")[1]
-        ),
-        c => c.charCodeAt(0)
-    );
 
-    const qrImage =
-        await pdf.embedPng(
-            qrBytes
-        );
+    /* ------------------------------------------------------
+       4. DRAW QR CODE DIRECTLY
+       NO CANVAS
+       ------------------------------------------------------ */
 
-    page.drawImage(
-        qrImage,
-        {
-            x: 350,
-            y: 500,
-            width: 180,
-            height: 180
+    const qrDisplaySize = 180;
+
+    const qrX = 350;
+    const qrY = 300;
+
+    const moduleSize =
+        qrDisplaySize / qrSize;
+
+
+    /* ------------------------------------------------------
+       WHITE QR BACKGROUND
+       ------------------------------------------------------ */
+
+    page.drawRectangle({
+        x: qrX - 10,
+        y: qrY - 10,
+        width: qrDisplaySize + 20,
+        height: qrDisplaySize + 20,
+        color: {
+            type: "RGB",
+            red: 1,
+            green: 1,
+            blue: 1
         }
-    );
+    });
+
+
+    /* ------------------------------------------------------
+       DRAW DARK QR MODULES
+       ------------------------------------------------------ */
+
+    for (let row = 0; row < qrSize; row++) {
+
+        for (let col = 0; col < qrSize; col++) {
+
+            if (
+                qr.modules.get(
+                    row,
+                    col
+                )
+            ) {
+
+                page.drawRectangle({
+
+                    x:
+                        qrX +
+                        (col * moduleSize),
+
+                    y:
+                        qrY +
+                        (
+                            (qrSize - 1 - row)
+                            * moduleSize
+                        ),
+
+                    width:
+                        moduleSize + 0.2,
+
+                    height:
+                        moduleSize + 0.2,
+
+                    color: {
+                        type: "RGB",
+                        red: 0,
+                        green: 0,
+                        blue: 0
+                    }
+
+                });
+
+            }
+
+        }
+
+    }
+
+
+    /* ------------------------------------------------------
+       5. SAVE PDF
+       ------------------------------------------------------ */
 
     const pdfBytes =
-    await pdf.save();
+        await pdf.save();
+
+
+    /* ------------------------------------------------------
+       6. CONVERT PDF TO BASE64
+       ------------------------------------------------------ */
 
     let binary = "";
 
-    for (const byte of pdfBytes) {
-    binary += String.fromCharCode(byte);
+    for (
+        const byte of pdfBytes
+    ) {
+        binary +=
+            String.fromCharCode(byte);
     }
 
     return btoa(binary);
-
 }
 
 /* ==========================================================
