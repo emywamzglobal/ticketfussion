@@ -1716,15 +1716,66 @@ async function verifyPayment(reference, env) {
 
 
         /* ------------------------------------------------------
-           5. CHECK IF TICKET ALREADY EXISTS
-           
-           Prevent duplicate tickets if the callback
-           happens more than once.
-        ------------------------------------------------------ */
+   5. CHECK IF TICKET ALREADY EXISTS
+------------------------------------------------------ */
 
-        const existingTicket = await env.DB
+let existingTicket = await env.DB
+    .prepare(`
+        SELECT
+            ticket_reference,
+            email_sent_at
+        FROM tickets
+        WHERE order_id = ?
+        LIMIT 1
+    `)
+    .bind(order.id)
+    .first();
+
+
+/* ------------------------------------------------------
+   6. CREATE TICKET ONLY IF IT DOES NOT EXIST
+------------------------------------------------------ */
+
+if (!existingTicket) {
+
+    const ticketReference =
+        "TF-" +
+        crypto.randomUUID()
+            .replace(/-/g, "")
+            .substring(0, 10)
+            .toUpperCase();
+
+    const qrCode = ticketReference;
+
+    try {
+
+        await createTicket({
+            ticket_reference: ticketReference,
+            order_id: order.id,
+            ticket_listing_id: order.ticket_listing_id,
+            occurrence_id: order.occurrence_id,
+            event_id: order.event_id,
+            customer_name: order.customer_name,
+            customer_email: order.customer_email,
+            section: order.section,
+            row: order.row,
+            seat_numbers: order.seats,
+            qr_code: qrCode,
+            status: "active"
+        }, env);
+
+    } catch (ticketError) {
+
+        /*
+         * Another request may have created the ticket
+         * at the same time. Re-read it instead of failing.
+         */
+
+        existingTicket = await env.DB
             .prepare(`
-                SELECT ticket_reference
+                SELECT
+                    ticket_reference,
+                    email_sent_at
                 FROM tickets
                 WHERE order_id = ?
                 LIMIT 1
@@ -1732,115 +1783,75 @@ async function verifyPayment(reference, env) {
             .bind(order.id)
             .first();
 
-
-        /* ------------------------------------------------------
-           6. RETURN EXISTING TICKET
-        ------------------------------------------------------ */
-
-        if (existingTicket) {
-
-            return {
-                success: true,
-                payment: data.data,
-                ticket_reference:
-                    existingTicket.ticket_reference,
-                order
-            };
-
+        if (!existingTicket) {
+            throw ticketError;
         }
+    }
+
+    if (!existingTicket) {
+        existingTicket = {
+            ticket_reference: ticketReference,
+            email_sent_at: null
+        };
+    }
+}
 
 
-        /* ------------------------------------------------------
-           7. GENERATE TICKET REFERENCE
-        ------------------------------------------------------ */
+/* ------------------------------------------------------
+   7. SEND EMAIL ONLY IF NOT ALREADY SENT
+------------------------------------------------------ */
 
-        const ticketReference =
-            "TF-" +
-            crypto.randomUUID()
-                .replace(/-/g, "")
-                .substring(0, 10)
-                .toUpperCase();
+if (!existingTicket.email_sent_at) {
 
+    try {
 
-        /* ------------------------------------------------------
-           8. QR CODE
-        ------------------------------------------------------ */
+        await sendTicketEmail(
+            order,
+            existingTicket.ticket_reference,
+            env
+        );
 
-        const qrCode = ticketReference;
+        /*
+         * Mark email as successfully sent.
+         */
 
+        await env.DB.prepare(`
+            UPDATE tickets
+            SET email_sent_at = CURRENT_TIMESTAMP
+            WHERE order_id = ?
+        `)
+        .bind(order.id)
+        .run();
 
-        /* ------------------------------------------------------
-           9. CREATE TICKET
-           
-           These values come from getOrderByReference(),
-           which already joins ticket_listings and occurrences.
-        ------------------------------------------------------ */
+    } catch (emailError) {
 
-        await createTicket({
+        /*
+         * Ticket exists.
+         * Email failed.
+         *
+         * A later verification can retry the email
+         * without creating another ticket.
+         */
 
-            ticket_reference:
-                ticketReference,
-
-            order_id:
-                order.id,
-
-            ticket_listing_id:
-                order.ticket_listing_id,
-
-            occurrence_id:
-                order.occurrence_id,
-
-            event_id:
-                order.event_id,
-
-            customer_name:
-                order.customer_name,
-
-            customer_email:
-                order.customer_email,
-
-            section:
-                order.section,
-
-            row:
-                order.row,
-
-            seat_numbers:
-                order.seats,
-
-            qr_code:
-                qrCode,
-
-            status:
-                "active"
-
-        }, env);
+        console.error(
+            "TICKET EMAIL FAILED:",
+            emailError
+        );
+    }
+}
 
 
-        /* ------------------------------------------------------
-           10. SEND TICKET EMAIL
-           
-           Email failure must NOT undo ticket creation.
-        ------------------------------------------------------ */
+/* ------------------------------------------------------
+   8. SUCCESS
+------------------------------------------------------ */
 
-        try {
-
-            await sendTicketEmail(
-                order,
-                ticketReference,
-                env
-            );
-
-        } catch (emailError) {
-
-            console.error(
-                "Ticket created but email failed:",
-                emailError
-            );
-
-        }
-
-
+return {
+    success: true,
+    payment: data.data,
+    ticket_reference:
+        existingTicket.ticket_reference,
+    order
+};
         /* ------------------------------------------------------
            11. SUCCESS
         ------------------------------------------------------ */
@@ -2046,13 +2057,15 @@ async function generateTicketPdf(
     );
 
     const pdfBytes =
-        await pdf.save();
+    await pdf.save();
 
-    return Buffer.from(
-        pdfBytes
-    ).toString(
-        "base64"
-    );
+    let binary = "";
+
+    for (const byte of pdfBytes) {
+    binary += String.fromCharCode(byte);
+    }
+
+    return btoa(binary);
 
 }
 
