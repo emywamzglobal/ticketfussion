@@ -1801,9 +1801,16 @@ if (!existingTicket) {
    7. SEND EMAIL ONLY IF NOT ALREADY SENT
 ------------------------------------------------------ */
 
-if (existingTicket) {
+if (existingTicket && !existingTicket.email_sent_at) {
 
     try {
+
+        console.log(
+            "ABOUT TO SEND TICKET EMAIL:",
+            order.id,
+            existingTicket.ticket_reference,
+            order.customer_email
+        );
 
         await sendTicketEmail(
             order,
@@ -1811,27 +1818,12 @@ if (existingTicket) {
             env
         );
 
-        /*
-         * Mark email as successfully sent.
-         */
-
-        await env.DB.prepare(`
-            UPDATE tickets
-            SET email_sent_at = CURRENT_TIMESTAMP
-            WHERE order_id = ?
-        `)
-        .bind(order.id)
-        .run();
+        console.log(
+            "TICKET EMAIL FUNCTION FINISHED:",
+            existingTicket.ticket_reference
+        );
 
     } catch (emailError) {
-
-        /*
-         * Ticket exists.
-         * Email failed.
-         *
-         * A later verification can retry the email
-         * without creating another ticket.
-         */
 
         console.error(
             "TICKET EMAIL FAILED:",
