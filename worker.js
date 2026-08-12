@@ -2059,10 +2059,6 @@ async function generateTicketPdf(
    SEND TICKET EMAIL
 ========================================================== */
 
-/* ==========================================================
-   SEND TICKET EMAIL
-========================================================== */
-
 async function sendTicketEmail(
     order,
     ticketReference,
