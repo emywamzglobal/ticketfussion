@@ -360,17 +360,6 @@ if (url.pathname === "/api/tickets" && request.method === "GET") {
 
 }
 
-// Get Single Ticket
-if (url.pathname.startsWith("/api/tickets/") && request.method === "GET") {
-
-    const id = url.pathname.split("/").pop();
-
-    const ticket = await getTicket(id, env);
-
-    return Response.json(ticket);
-
-}
-
 // Get Ticket By Reference
 if (
     request.method === "GET" &&
@@ -383,6 +372,18 @@ if (
         reference,
         env
     );
+
+    return Response.json(ticket);
+
+}
+
+
+// Get Single Ticket
+if (url.pathname.startsWith("/api/tickets/") && request.method === "GET") {
+
+    const id = url.pathname.split("/").pop();
+
+    const ticket = await getTicket(id, env);
 
     return Response.json(ticket);
 
@@ -1608,10 +1609,6 @@ LIMIT 1
 
 /* ==========================================================
    VERIFY PAYMENT
-========================================================== */
-
-/* ==========================================================
-   VERIFY PAYMENT
    Paystack → Order → Payment → Ticket → Email
 ========================================================== */
 
@@ -1733,69 +1730,61 @@ let existingTicket = await env.DB
 
 
 /* ------------------------------------------------------
-   6. CREATE TICKET ONLY IF IT DOES NOT EXIST
+   6. EXISTING TICKET
+   If the ticket already exists, do NOT create another one.
+   Simply resend the existing ticket email + PDF.
 ------------------------------------------------------ */
 
-if (!existingTicket) {
+if (existingTicket) {
 
-    const ticketReference =
-        "TF-" +
-        crypto.randomUUID()
-            .replace(/-/g, "")
-            .substring(0, 10)
-            .toUpperCase();
-
-    const qrCode = ticketReference;
+    console.log(
+        "EXISTING TICKET FOUND — RESENDING EMAIL:",
+        existingTicket.ticket_reference
+    );
 
     try {
 
-        await createTicket({
-            ticket_reference: ticketReference,
-            order_id: order.id,
-            ticket_listing_id: order.ticket_listing_id,
-            occurrence_id: order.occurrence_id,
-            event_id: order.event_id,
-            customer_name: order.customer_name,
-            customer_email: order.customer_email,
-            section: order.section,
-            row: order.row,
-            seat_numbers: order.seats,
-            qr_code: qrCode,
-            status: "active"
-        }, env);
+        await sendTicketEmail(
+            order,
+            existingTicket.ticket_reference,
+            env
+        );
 
-    } catch (ticketError) {
+        console.log(
+            "EXISTING TICKET EMAIL RESENT:",
+            existingTicket.ticket_reference
+        );
 
-        /*
-         * Another request may have created the ticket
-         * at the same time. Re-read it instead of failing.
-         */
-
-        existingTicket = await env.DB
-            .prepare(`
-                SELECT
-                    ticket_reference,
-                    email_sent_at
-                FROM tickets
-                WHERE order_id = ?
-                LIMIT 1
-            `)
-            .bind(order.id)
-            .first();
-
-        if (!existingTicket) {
-            throw ticketError;
-        }
-    }
-
-    if (!existingTicket) {
-        existingTicket = {
-            ticket_reference: ticketReference,
-            email_sent_at: null
+        return {
+            success: true,
+            payment: data.data,
+            ticket_reference:
+                existingTicket.ticket_reference,
+            order,
+            email_sent: true
         };
-    }
-}
 
+    } catch (error) {
+
+        console.error(
+            "EXISTING TICKET EMAIL FAILED:",
+            error
+        );
+
+        return {
+            success: true,
+            payment: data.data,
+            ticket_reference:
+                existingTicket.ticket_reference,
+            order,
+            email_sent: false,
+            email_error:
+                error?.message || String(error)
+        };
+
+    }
+
+}
 
 /* ------------------------------------------------------
    7. SEND EMAIL ONLY IF NOT ALREADY SENT
