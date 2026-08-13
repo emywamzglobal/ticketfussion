@@ -1277,7 +1277,7 @@ const title =
 pdf.text(
     title,
     17,
-    82,
+    38,
     {
         maxWidth: 114
     }
