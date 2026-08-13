@@ -1086,8 +1086,8 @@ pdf.roundedRect(
     7,
     "S"
 );
-    /*=====================================================
-    EVENT BANNER
+   /*=====================================================
+    EVENT HERO / BANNER
 =====================================================*/
 
 if (ticket.banner_image) {
@@ -1099,78 +1099,18 @@ if (ticket.banner_image) {
                 ticket.banner_image
             );
 
-
         /*---------------------------------------------
-            CONVERT BANNER TO JPEG
-        ---------------------------------------------*/
-
-        const bannerCanvas =
-            document.createElement("canvas");
-
-
-        bannerCanvas.width =
-            banner.naturalWidth ||
-            banner.width;
-
-
-        bannerCanvas.height =
-            banner.naturalHeight ||
-            banner.height;
-
-
-        const bannerContext =
-            bannerCanvas.getContext("2d");
-
-
-        bannerContext.drawImage(
-            banner,
-            0,
-            0,
-            bannerCanvas.width,
-            bannerCanvas.height
-        );
-
-
-        const bannerImage =
-            bannerCanvas.toDataURL(
-                "image/jpeg",
-                0.92
-            );
-
-
-        /*---------------------------------------------
-            ADD BANNER TO PDF
+            BANNER IMAGE
         ---------------------------------------------*/
 
         pdf.addImage(
-            bannerImage,
+            banner,
             "JPEG",
             8,
             8,
             132,
             65
         );
-
-
-        /*---------------------------------------------
-            DARK BANNER OVERLAY
-        ---------------------------------------------*/
-
-        pdf.setFillColor(
-            0,
-            0,
-            0
-        );
-
-
-        pdf.rect(
-            8,
-            8,
-            132,
-            65,
-            "F"
-        );
-
 
     }
 
@@ -1184,9 +1124,30 @@ if (ticket.banner_image) {
     }
 
 }
-  /*=====================================================
-    TICKET BRAND
-=====================================================*/
+
+
+/*---------------------------------------------
+    DARK BANNER OVERLAY
+---------------------------------------------*/
+
+pdf.setFillColor(
+    0,
+    0,
+    0
+);
+
+pdf.rect(
+    8,
+    8,
+    132,
+    65,
+    "F"
+);
+
+
+/*---------------------------------------------
+    TICKETFUSSION BRAND
+---------------------------------------------*/
 
 pdf.setTextColor(
     ...white
@@ -1206,22 +1167,12 @@ pdf.text(
 );
 
 
-/*---------------------------------------------
-    Brand Subtitle
----------------------------------------------*/
-
 pdf.setFont(
     "helvetica",
     "normal"
 );
 
 pdf.setFontSize(7);
-
-pdf.setTextColor(
-    220,
-    220,
-    230
-);
 
 pdf.text(
     "YOUR TICKET",
@@ -1231,7 +1182,7 @@ pdf.text(
 
 
 /*---------------------------------------------
-    Status Badge
+    TICKET STATUS
 ---------------------------------------------*/
 
 const status =
@@ -1246,12 +1197,12 @@ pdf.setFillColor(
 );
 
 pdf.roundedRect(
-    105,
-    18,
-    25,
-    10,
-    5,
-    5,
+    112,
+    16,
+    28,
+    12,
+    6,
+    6,
     "F"
 );
 
@@ -1265,24 +1216,24 @@ pdf.setFont(
     "bold"
 );
 
-pdf.setFontSize(6);
+pdf.setFontSize(7);
 
 pdf.text(
     status,
-    117.5,
-    24.5,
+    126,
+    23.5,
     {
         align: "center"
     }
 );
 
 
-/*=====================================================
+/*---------------------------------------------
     EVENT TITLE
-=====================================================*/
+---------------------------------------------*/
 
 pdf.setTextColor(
-    ...textDark
+    ...white
 );
 
 pdf.setFont(
@@ -1300,10 +1251,10 @@ const title =
 
 pdf.text(
     title,
-    14,
-    84,
+    17,
+    61,
     {
-        maxWidth: 120
+        maxWidth: 114
     }
 );
 /*=====================================================
