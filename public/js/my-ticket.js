@@ -1099,12 +1099,49 @@ if (ticket.banner_image) {
                 ticket.banner_image
             );
 
+
         /*---------------------------------------------
-            BANNER IMAGE
+            CONVERT IMAGE FOR jsPDF
+        ---------------------------------------------*/
+
+        const canvas =
+            document.createElement("canvas");
+
+
+        canvas.width =
+            banner.naturalWidth ||
+            banner.width;
+
+
+        canvas.height =
+            banner.naturalHeight ||
+            banner.height;
+
+
+        const context =
+            canvas.getContext("2d");
+
+
+        context.drawImage(
+            banner,
+            0,
+            0
+        );
+
+
+        const bannerData =
+            canvas.toDataURL(
+                "image/jpeg",
+                0.92
+            );
+
+
+        /*---------------------------------------------
+            RENDER EVENT BANNER
         ---------------------------------------------*/
 
         pdf.addImage(
-            banner,
+            bannerData,
             "JPEG",
             8,
             8,
@@ -1116,16 +1153,14 @@ if (ticket.banner_image) {
 
     catch (error) {
 
-        console.warn(
-            "BANNER IMAGE FAILED:",
+        console.error(
+            "PDF BANNER FAILED:",
             error
         );
 
     }
 
 }
-
-
 /*---------------------------------------------
     DARK BANNER OVERLAY
 ---------------------------------------------*/
