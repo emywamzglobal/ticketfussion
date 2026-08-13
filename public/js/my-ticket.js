@@ -1009,107 +1009,162 @@ async function downloadTicketPDF(ticket) {
 
 
     /*=====================================================
-        COLORS
-    =====================================================*/
+    COLORS
+=====================================================*/
 
-    const purple = [88, 48, 255];
+const purple = [125, 55, 255];
 
-    const dark = [17, 17, 17];
+const purpleLight = [165, 95, 255];
 
-    const textDark = [20, 35, 60];
+const dark = [7, 12, 22];
 
-    const muted = [105, 105, 105];
+const darkCard = [12, 19, 31];
 
-    const light = [245, 247, 251];
+const textDark = [245, 245, 250];
 
-    const white = [255, 255, 255];
+const muted = [165, 170, 185];
+
+const border = [42, 48, 65];
+
+const white = [255, 255, 255];
 
 
+/*=====================================================
+    PAGE BACKGROUND
+=====================================================*/
+
+pdf.setFillColor(
+    ...dark
+);
+
+pdf.rect(
+    0,
+    0,
+    148,
+    210,
+    "F"
+);
+
+
+/*=====================================================
+    PREMIUM TICKET CARD
+=====================================================*/
+
+pdf.setFillColor(
+    ...darkCard
+);
+
+pdf.roundedRect(
+    8,
+    8,
+    132,
+    194,
+    7,
+    7,
+    "F"
+);
+
+
+/*=====================================================
+    PREMIUM CARD BORDER
+=====================================================*/
+
+pdf.setDrawColor(
+    ...border
+);
+
+pdf.setLineWidth(
+    0.5
+);
+
+pdf.roundedRect(
+    8,
+    8,
+    132,
+    194,
+    7,
+    7,
+    "S"
+);
     /*=====================================================
-        PAGE BACKGROUND
-    =====================================================*/
+    EVENT BANNER
+=====================================================*/
 
-    pdf.setFillColor(
-        ...light
-    );
+if (ticket.banner_image) {
 
-    pdf.rect(
-        0,
-        0,
-        148,
-        210,
-        "F"
-    );
+    try {
 
-
-    /*=====================================================
-        PREMIUM TICKET CARD
-    =====================================================*/
-
-    pdf.setFillColor(
-        ...white
-    );
-
-    pdf.roundedRect(
-        8,
-        8,
-        132,
-        194,
-        7,
-        7,
-        "F"
-    );
-
-
-    /*=====================================================
-        EVENT BANNER
-    =====================================================*/
-
-    if (ticket.banner_image) {
-
-        try {
-
-            const banner =
-                await loadImage(
-                    ticket.banner_image
-                );
-
-            pdf.addImage(
-                banner,
-                "JPEG",
-                8,
-                8,
-                132,
-                65
+        const banner =
+            await loadImage(
+                ticket.banner_image
             );
 
-        }
 
-        catch (error) {
+        /*---------------------------------------------
+            Banner Image
+        ---------------------------------------------*/
 
-            console.warn(
-                "BANNER IMAGE FAILED:",
-                error
-            );
+        pdf.addImage(
+            banner,
+            "JPEG",
+            8,
+            8,
+            132,
+            65
+        );
 
-        }
+
+        /*---------------------------------------------
+            Premium Dark Overlay
+        ---------------------------------------------*/
+
+        pdf.setFillColor(
+            0,
+            0,
+            0
+        );
+
+        pdf.rect(
+            8,
+            8,
+            132,
+            65,
+            "F"
+        );
+
+
+        /*---------------------------------------------
+            Bottom Gradient-Like Dark Area
+        ---------------------------------------------*/
+
+        pdf.setFillColor(
+            8,
+            12,
+            22
+        );
+
+        pdf.rect(
+            8,
+            53,
+            132,
+            20,
+            "F"
+        );
 
     }
 
+    catch (error) {
 
-    /*=====================================================
-        BANNER OVERLAY
-    =====================================================*/
+        console.warn(
+            "BANNER IMAGE FAILED:",
+            error
+        );
 
-    pdf.setFillColor(
-        0,
-        0,
-        0,
-        0.35
-    );
+    }
 
+}
 
-    /*=====================================================
+  /*=====================================================
     TICKET BRAND
 =====================================================*/
 
@@ -1131,6 +1186,10 @@ pdf.text(
 );
 
 
+/*---------------------------------------------
+    Brand Subtitle
+---------------------------------------------*/
+
 pdf.setFont(
     "helvetica",
     "normal"
@@ -1138,10 +1197,63 @@ pdf.setFont(
 
 pdf.setFontSize(7);
 
+pdf.setTextColor(
+    220,
+    220,
+    230
+);
+
 pdf.text(
     "YOUR TICKET",
     17,
     32
+);
+
+
+/*---------------------------------------------
+    Status Badge
+---------------------------------------------*/
+
+const status =
+    (
+        ticket.status ||
+        "ACTIVE"
+    ).toUpperCase();
+
+
+pdf.setFillColor(
+    ...purple
+);
+
+pdf.roundedRect(
+    105,
+    18,
+    25,
+    10,
+    5,
+    5,
+    "F"
+);
+
+
+pdf.setTextColor(
+    ...white
+);
+
+pdf.setFont(
+    "helvetica",
+    "bold"
+);
+
+pdf.setFontSize(6);
+
+pdf.text(
+    status,
+    117.5,
+    24.5,
+    {
+        align: "center"
+    }
 );
 
 
@@ -1174,7 +1286,6 @@ pdf.text(
         maxWidth: 120
     }
 );
-
 /*=====================================================
     EVENT DETAILS
 =====================================================*/
@@ -1184,7 +1295,7 @@ pdf.setFont(
     "normal"
 );
 
-pdf.setFontSize(9);
+pdf.setFontSize(8.5);
 
 pdf.setTextColor(
     ...muted
@@ -1192,23 +1303,91 @@ pdf.setTextColor(
 
 
 pdf.text(
-    `VENUE: ${ticket.venue || ""}, ${ticket.city || ""}`,
+    `VENUE`,
     14,
     96
 );
 
+pdf.setTextColor(
+    ...textDark
+);
+
+pdf.setFont(
+    "helvetica",
+    "bold"
+);
 
 pdf.text(
-    `DATE: ${ticket.event_date || ""}`,
+    `${ticket.venue || ""}${ticket.city ? ", " + ticket.city : ""}`,
     14,
-    104
+    102,
+    {
+        maxWidth: 120
+    }
 );
 
 
+pdf.setFont(
+    "helvetica",
+    "normal"
+);
+
+pdf.setFontSize(8);
+
+pdf.setTextColor(
+    ...muted
+);
+
 pdf.text(
-    `TIME: ${ticket.event_time || ""}`,
+    `DATE`,
     14,
-    112
+    110
+);
+
+pdf.setTextColor(
+    ...textDark
+);
+
+pdf.setFont(
+    "helvetica",
+    "bold"
+);
+
+pdf.text(
+    ticket.event_date || "-",
+    14,
+    116
+);
+
+
+pdf.setFont(
+    "helvetica",
+    "normal"
+);
+
+pdf.setTextColor(
+    ...muted
+);
+
+pdf.text(
+    `TIME`,
+    78,
+    110
+);
+
+pdf.setTextColor(
+    ...textDark
+);
+
+pdf.setFont(
+    "helvetica",
+    "bold"
+);
+
+pdf.text(
+    ticket.event_time || "-",
+    78,
+    116
 );
 
 
@@ -1222,7 +1401,7 @@ pdf.setFillColor(
 
 pdf.roundedRect(
     14,
-    120,
+    123,
     120,
     30,
     5,
@@ -1240,25 +1419,25 @@ pdf.setFont(
     "normal"
 );
 
-pdf.setFontSize(7);
+pdf.setFontSize(6.5);
 
 
 pdf.text(
     "SECTION",
     28,
-    130
+    133
 );
 
 pdf.text(
     "ROW",
     68,
-    130
+    133
 );
 
 pdf.text(
     "SEAT",
     108,
-    130
+    133
 );
 
 
@@ -1273,52 +1452,48 @@ pdf.setFontSize(11);
 pdf.text(
     ticket.section || "-",
     28,
-    141
+    144
 );
 
 pdf.text(
     ticket.row || "-",
     68,
-    141
+    144
 );
 
 pdf.text(
     ticket.seat_numbers || "-",
     108,
-    141
+    144
 );
     /*=====================================================
     CUSTOMER DETAILS
 =====================================================*/
-
-pdf.setTextColor(
-    ...muted
-);
 
 pdf.setFont(
     "helvetica",
     "normal"
 );
 
-pdf.setFontSize(7);
+pdf.setFontSize(6.5);
+
+pdf.setTextColor(
+    ...muted
+);
 
 
 pdf.text(
     "CUSTOMER",
     14,
-    162
+    163
 );
 
 pdf.text(
     "TICKET TYPE",
     82,
-    162
+    163
 );
 
-
-pdf.setTextColor(
-    ...dark
-);
 
 pdf.setFont(
     "helvetica",
@@ -1327,11 +1502,15 @@ pdf.setFont(
 
 pdf.setFontSize(9);
 
+pdf.setTextColor(
+    ...textDark
+);
+
 
 pdf.text(
     ticket.customer_name || "-",
     14,
-    169,
+    170,
     {
         maxWidth: 58
     }
@@ -1341,7 +1520,7 @@ pdf.text(
 pdf.text(
     ticket.ticket_type || "-",
     82,
-    169,
+    170,
     {
         maxWidth: 52
     }
@@ -1353,7 +1532,7 @@ pdf.text(
 =====================================================*/
 
 pdf.setFillColor(
-    ...dark
+    ...purple
 );
 
 pdf.roundedRect(
@@ -1376,7 +1555,7 @@ pdf.setFont(
     "normal"
 );
 
-pdf.setFontSize(6.5);
+pdf.setFontSize(6);
 
 
 pdf.text(
@@ -1406,91 +1585,90 @@ pdf.text(
         maxWidth: 108
     }
 );
-    /*=====================================================
-        QR CODE
-    =====================================================*/
+   /*=====================================================
+    QR CODE
+=====================================================*/
 
-    const qrContainer =
-        document.createElement("div");
-
-
-    new QRCode(
-        qrContainer,
-        {
-
-            text:
-                ticket.qr_code ||
-                ticket.ticket_reference,
-
-            width: 180,
-
-            height: 180
-
-        }
-    );
+const qrContainer =
+    document.createElement("div");
 
 
-    await new Promise(
-        resolve =>
-            setTimeout(
-                resolve,
-                300
-            )
-    );
+new QRCode(
+    qrContainer,
+    {
 
+        text:
+            ticket.qr_code ||
+            ticket.ticket_reference ||
+            "",
 
-    const qrCanvas =
-        qrContainer.querySelector(
-            "canvas"
-        );
+        width: 180,
 
-
-    if (qrCanvas) {
-
-        const qrImage =
-            qrCanvas.toDataURL(
-                "image/png"
-            );
-
-
-        pdf.addImage(
-            qrImage,
-            "PNG",
-            75,
-            225,
-            60,
-            60
-        );
+        height: 180
 
     }
+);
 
 
-    /*=====================================================
-        QR INSTRUCTION
-    =====================================================*/
-
-    pdf.setTextColor(
-        ...muted
-    );
-
-    pdf.setFont(
-        "helvetica",
-        "normal"
-    );
-
-    pdf.setFontSize(8);
+await new Promise(
+    resolve =>
+        setTimeout(
+            resolve,
+            300
+        )
+);
 
 
-    pdf.text(
-        "Present this QR code at the venue entrance.",
-        105,
-        278,
-        {
-            align: "center"
-        }
+const qrCanvas =
+    qrContainer.querySelector(
+        "canvas"
     );
 
 
+if (qrCanvas) {
+
+    const qrImage =
+        qrCanvas.toDataURL(
+            "image/png"
+        );
+
+
+    pdf.addImage(
+        qrImage,
+        "PNG",
+        108,
+        157,
+        20,
+        20
+    );
+
+}
+
+
+/*=====================================================
+    QR INSTRUCTION
+=====================================================*/
+
+pdf.setTextColor(
+    ...muted
+);
+
+pdf.setFont(
+    "helvetica",
+    "normal"
+);
+
+pdf.setFontSize(5.5);
+
+
+pdf.text(
+    "SCAN AT VENUE ENTRY",
+    118,
+    180,
+    {
+        align: "center"
+    }
+);
     /*=====================================================
         SAVE
     =====================================================*/
