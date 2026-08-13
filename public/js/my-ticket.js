@@ -1656,10 +1656,10 @@ if (qrCanvas) {
     pdf.addImage(
         qrImage,
         "PNG",
-        112,
-        151,
-        18,
-        18
+        72,
+        166,
+        32,
+        32
     );
 
 }
