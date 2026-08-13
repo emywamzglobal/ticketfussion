@@ -1233,7 +1233,9 @@ pdf.roundedRect(
 
 
 pdf.setTextColor(
-    ...white
+    70,
+    70,
+    80
 );
 
 pdf.setFont(
@@ -1258,7 +1260,9 @@ pdf.text(
 ---------------------------------------------*/
 
 pdf.setTextColor(
-    ...white
+    20,
+    20,
+    25
 );
 
 pdf.setFont(
