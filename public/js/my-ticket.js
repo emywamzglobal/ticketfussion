@@ -1087,7 +1087,7 @@ pdf.roundedRect(
     "S"
 );
     /*=====================================================
-    EVENT HERO / BANNER
+    EVENT BANNER
 =====================================================*/
 
 if (ticket.banner_image) {
@@ -1099,18 +1099,78 @@ if (ticket.banner_image) {
                 ticket.banner_image
             );
 
+
         /*---------------------------------------------
-            BANNER IMAGE
+            CONVERT BANNER TO JPEG
+        ---------------------------------------------*/
+
+        const bannerCanvas =
+            document.createElement("canvas");
+
+
+        bannerCanvas.width =
+            banner.naturalWidth ||
+            banner.width;
+
+
+        bannerCanvas.height =
+            banner.naturalHeight ||
+            banner.height;
+
+
+        const bannerContext =
+            bannerCanvas.getContext("2d");
+
+
+        bannerContext.drawImage(
+            banner,
+            0,
+            0,
+            bannerCanvas.width,
+            bannerCanvas.height
+        );
+
+
+        const bannerImage =
+            bannerCanvas.toDataURL(
+                "image/jpeg",
+                0.92
+            );
+
+
+        /*---------------------------------------------
+            ADD BANNER TO PDF
         ---------------------------------------------*/
 
         pdf.addImage(
-            banner,
+            bannerImage,
             "JPEG",
             8,
             8,
             132,
             65
         );
+
+
+        /*---------------------------------------------
+            DARK BANNER OVERLAY
+        ---------------------------------------------*/
+
+        pdf.setFillColor(
+            0,
+            0,
+            0
+        );
+
+
+        pdf.rect(
+            8,
+            8,
+            132,
+            65,
+            "F"
+        );
+
 
     }
 
@@ -1124,30 +1184,9 @@ if (ticket.banner_image) {
     }
 
 }
-
-
-/*---------------------------------------------
-    DARK BANNER OVERLAY
----------------------------------------------*/
-
-pdf.setFillColor(
-    0,
-    0,
-    0
-);
-
-pdf.rect(
-    8,
-    8,
-    132,
-    65,
-    "F"
-);
-
-
-/*---------------------------------------------
-    TICKETFUSSION BRAND
----------------------------------------------*/
+  /*=====================================================
+    TICKET BRAND
+=====================================================*/
 
 pdf.setTextColor(
     ...white
@@ -1167,12 +1206,22 @@ pdf.text(
 );
 
 
+/*---------------------------------------------
+    Brand Subtitle
+---------------------------------------------*/
+
 pdf.setFont(
     "helvetica",
     "normal"
 );
 
 pdf.setFontSize(7);
+
+pdf.setTextColor(
+    220,
+    220,
+    230
+);
 
 pdf.text(
     "YOUR TICKET",
@@ -1182,7 +1231,7 @@ pdf.text(
 
 
 /*---------------------------------------------
-    TICKET STATUS
+    Status Badge
 ---------------------------------------------*/
 
 const status =
@@ -1197,12 +1246,12 @@ pdf.setFillColor(
 );
 
 pdf.roundedRect(
-    112,
-    16,
-    28,
-    12,
-    6,
-    6,
+    105,
+    18,
+    25,
+    10,
+    5,
+    5,
     "F"
 );
 
@@ -1216,24 +1265,24 @@ pdf.setFont(
     "bold"
 );
 
-pdf.setFontSize(7);
+pdf.setFontSize(6);
 
 pdf.text(
     status,
-    126,
-    23.5,
+    117.5,
+    24.5,
     {
         align: "center"
     }
 );
 
 
-/*---------------------------------------------
+/*=====================================================
     EVENT TITLE
----------------------------------------------*/
+=====================================================*/
 
 pdf.setTextColor(
-    ...white
+    ...textDark
 );
 
 pdf.setFont(
@@ -1251,10 +1300,10 @@ const title =
 
 pdf.text(
     title,
-    17,
-    61,
+    14,
+    84,
     {
-        maxWidth: 114
+        maxWidth: 120
     }
 );
 /*=====================================================
@@ -1666,14 +1715,21 @@ function loadImage(url) {
             const img =
                 new Image();
 
-            img.crossOrigin =
-                "Anonymous";
-
             img.onload =
                 () => resolve(img);
 
             img.onerror =
-                reject;
+                (error) => {
+
+                    console.error(
+                        "IMAGE LOAD FAILED:",
+                        url,
+                        error
+                    );
+
+                    reject(error);
+
+                };
 
             img.src = url;
 
@@ -1681,10 +1737,3 @@ function loadImage(url) {
     );
 
 }
-
-
-/*=========================================================
-    START
-=========================================================*/
-
-loadTicket();
