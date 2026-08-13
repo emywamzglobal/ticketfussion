@@ -1270,12 +1270,15 @@ pdf.setFont(
 
 pdf.setFontSize(16);
 
-/* Calculate title badge width */
 const titleWidth =
     Math.min(
-        pdf.getTextWidth(title) + 14,
+        pdf.getTextWidth(title) + 16,
         105
     );
+
+/* Center the title badge */
+const titleX =
+    (148 - titleWidth) / 2;
 
 /* Purple title badge */
 pdf.setFillColor(
@@ -1283,8 +1286,8 @@ pdf.setFillColor(
 );
 
 pdf.roundedRect(
-    14,
-    101,
+    titleX,
+    103,
     titleWidth,
     12,
     6,
@@ -1292,15 +1295,18 @@ pdf.roundedRect(
     "F"
 );
 
-/* Title */
+/* Title text */
 pdf.setTextColor(
     ...white
 );
 
 pdf.text(
     title,
-    21,
-    109
+    74,
+    111,
+    {
+        align: "center"
+    }
 );
 
 /*=====================================================
