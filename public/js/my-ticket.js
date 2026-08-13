@@ -1158,7 +1158,7 @@ console.log("BANNER URL:", ticket.banner_image);
             8,
             8,
             132,
-            65
+            50
         );
 
     }
