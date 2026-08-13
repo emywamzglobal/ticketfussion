@@ -1090,56 +1090,53 @@ pdf.roundedRect(
     EVENT HERO / BANNER
 =====================================================*/
 
+const HERO_X = 8;
+const HERO_Y = 8;
+const HERO_W = 132;
+const HERO_H = 65;
+
 if (ticket.banner_image) {
 
     try {
 
         const banner = await new Promise((resolve, reject) => {
 
-    const img = new Image();
+            const img = new Image();
 
-    img.crossOrigin = "anonymous";
+            img.crossOrigin = "anonymous";
 
-    img.onload = () => resolve(img);
+            img.onload = () => resolve(img);
 
-    img.onerror = () =>
-        reject(new Error("Banner image failed to load"));
+            img.onerror = () =>
+                reject(new Error("Banner image failed to load"));
 
-    img.src = ticket.banner_image;
+            img.src = ticket.banner_image;
+        });
 
-});
-
-console.log("BANNER URL:", ticket.banner_image);
+        console.log("BANNER URL:", ticket.banner_image);
 
 
         /*---------------------------------------------
             CONVERT IMAGE FOR jsPDF
         ---------------------------------------------*/
 
-        const canvas =
-            document.createElement("canvas");
-
+        const canvas = document.createElement("canvas");
 
         canvas.width =
             banner.naturalWidth ||
             banner.width;
 
-
         canvas.height =
             banner.naturalHeight ||
             banner.height;
 
-
-        const context =
-            canvas.getContext("2d");
-
+        const context = canvas.getContext("2d");
 
         context.drawImage(
             banner,
             0,
             0
         );
-
 
         const bannerData =
             canvas.toDataURL(
@@ -1149,139 +1146,188 @@ console.log("BANNER URL:", ticket.banner_image);
 
 
         /*---------------------------------------------
-            RENDER EVENT BANNER
+            RENDER HERO IMAGE
         ---------------------------------------------*/
 
         pdf.addImage(
             bannerData,
             "JPEG",
-            8,
-            8,
-            132,
-            50
+            HERO_X,
+            HERO_Y,
+            HERO_W,
+            HERO_H
+        );
+
+
+        /*---------------------------------------------
+            DARK HERO OVERLAY
+            Makes white text readable on any banner
+        ---------------------------------------------*/
+
+        try {
+
+            pdf.saveGraphicsState();
+
+            pdf.setGState(
+                new pdf.GState({
+                    opacity: 0.35
+                })
+            );
+
+            pdf.setFillColor(
+                0,
+                0,
+                0
+            );
+
+            pdf.rect(
+                HERO_X,
+                HERO_Y,
+                HERO_W,
+                HERO_H,
+                "F"
+            );
+
+            pdf.restoreGraphicsState();
+
+        } catch (overlayError) {
+
+            console.warn(
+                "Hero transparency unavailable:",
+                overlayError
+            );
+        }
+
+
+        /*---------------------------------------------
+            TICKETFUSSION BRAND
+        ---------------------------------------------*/
+
+        pdf.setTextColor(
+            ...white
+        );
+
+        pdf.setFont(
+            "helvetica",
+            "bold"
+        );
+
+        pdf.setFontSize(16);
+
+        pdf.text(
+            "TicketFussion",
+            HERO_X + 9,
+            HERO_Y + 17
+        );
+
+
+        pdf.setFont(
+            "helvetica",
+            "normal"
+        );
+
+        pdf.setFontSize(7);
+
+        pdf.text(
+            "YOUR TICKET",
+            HERO_X + 9,
+            HERO_Y + 24
+        );
+
+
+        /*---------------------------------------------
+            TICKET STATUS
+        ---------------------------------------------*/
+
+        const status =
+            (
+                ticket.status ||
+                "ACTIVE"
+            ).toUpperCase();
+
+
+        pdf.setFillColor(
+            ...purple
+        );
+
+        pdf.roundedRect(
+            HERO_X + HERO_W - 36,
+            HERO_Y + 8,
+            28,
+            12,
+            6,
+            6,
+            "F"
+        );
+
+
+        pdf.setTextColor(
+            ...white
+        );
+
+        pdf.setFont(
+            "helvetica",
+            "bold"
+        );
+
+        pdf.setFontSize(7);
+
+        pdf.text(
+            status,
+            HERO_X + HERO_W - 22,
+            HERO_Y + 15.5,
+            {
+                align: "center"
+            }
+        );
+
+
+        /*---------------------------------------------
+            EVENT TITLE
+            Bottom of hero — OVER the banner
+        ---------------------------------------------*/
+
+        const title =
+            ticket.title ||
+            "Event";
+
+
+        pdf.setTextColor(
+            ...white
+        );
+
+        pdf.setFont(
+            "helvetica",
+            "bold"
+        );
+
+        pdf.setFontSize(18);
+
+
+        pdf.text(
+            title,
+            HERO_X + 9,
+            HERO_Y + HERO_H - 8,
+            {
+                maxWidth: HERO_W - 18
+            }
         );
 
     }
 
     catch (error) {
-    console.error("PDF BANNER FAILED:", error);
-    alert("BANNER FAILED: " + error.message);
-}
 
-}
+        console.error(
+            "PDF BANNER FAILED:",
+            error
+        );
 
-/*---------------------------------------------
-    TICKETFUSSION BRAND
----------------------------------------------*/
-
-pdf.setTextColor(
-    ...white
-);
-
-pdf.setFont(
-    "helvetica",
-    "bold"
-);
-
-pdf.setFontSize(16);
-
-pdf.text(
-    "TicketFussion",
-    17,
-    25
-);
-
-
-pdf.setFont(
-    "helvetica",
-    "normal"
-);
-
-pdf.setFontSize(7);
-
-pdf.text(
-    "YOUR TICKET",
-    17,
-    32
-);
-
-
-/*---------------------------------------------
-    TICKET STATUS
----------------------------------------------*/
-
-const status =
-    (
-        ticket.status ||
-        "ACTIVE"
-    ).toUpperCase();
-
-
-pdf.setFillColor(
-    ...purple
-);
-
-pdf.roundedRect(
-    112,
-    16,
-    28,
-    12,
-    6,
-    6,
-    "F"
-);
-
-
-pdf.setTextColor(
-    ...white
-);
-
-pdf.setFont(
-    "helvetica",
-    "bold"
-);
-
-pdf.setFontSize(7);
-
-pdf.text(
-    status,
-    126,
-    23.5,
-    {
-        align: "center"
+        alert(
+            "BANNER FAILED: " +
+            error.message
+        );
     }
-);
-
-
-/*---------------------------------------------
-    EVENT TITLE
----------------------------------------------*/
-
-pdf.setTextColor(
-    ...white
-);
-
-pdf.setFont(
-    "helvetica",
-    "bold"
-);
-
-pdf.setFontSize(18);
-
-
-const title =
-    ticket.title ||
-    "Event";
-
-
-pdf.text(
-    title,
-    17,
-    38,
-    {
-        maxWidth: 114
-    }
-);
+}
 /*=====================================================
     EVENT DETAILS
 =====================================================*/
