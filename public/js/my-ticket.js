@@ -1183,29 +1183,30 @@ pdf.setFont(
     "bold"
 );
 
-pdf.setFontSize(16);
+pdf.setFontSize(14);
 
 pdf.text(
     "TicketFussion",
     17,
-    25
+    20
 );
-
 
 pdf.setFont(
     "helvetica",
     "normal"
 );
 
-pdf.setFontSize(7);
+pdf.setFontSize(6);
+
+pdf.setTextColor(
+    ...white
+);
 
 pdf.text(
     "YOUR TICKET",
     17,
-    32
+    26
 );
-
-
 /*---------------------------------------------
     TICKET STATUS
 ---------------------------------------------*/
@@ -1259,32 +1260,48 @@ pdf.text(
     EVENT TITLE
 ---------------------------------------------*/
 
-pdf.setTextColor(
-    20,
-    20,
-    25
-);
+const title =
+    ticket.title ||
+    "Event";
 
 pdf.setFont(
     "helvetica",
     "bold"
 );
 
-pdf.setFontSize(18);
+pdf.setFontSize(16);
 
+/* Calculate title width */
+const titleWidth =
+    Math.min(
+        pdf.getTextWidth(title) + 14,
+        105
+    );
 
-const title =
-    ticket.title ||
-    "Event";
+/* Title badge */
+pdf.setFillColor(
+    ...purple
+);
 
+pdf.roundedRect(
+    14,
+    36,
+    titleWidth,
+    12,
+    6,
+    6,
+    "F"
+);
+
+/* Title text */
+pdf.setTextColor(
+    ...white
+);
 
 pdf.text(
     title,
-    17,
-    66,
-    {
-        maxWidth: 114
-    }
+    21,
+    44
 );
 /*=====================================================
     EVENT DETAILS
