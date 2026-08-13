@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { PDFDocument, StandardFonts } from "pdf-lib";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import QRCode from "qrcode";
 export default {
   async fetch(request, env) {
@@ -1911,158 +1911,1193 @@ LIMIT 1
 
 /* ==========================================================
    GENERATE TICKET PDF
+   TicketFussion
+   A5 PDF
    Cloudflare Worker safe
-   No Canvas / No QRCode.toDataURL()
+   No Canvas
+   No browser APIs
 ========================================================== */
 
 async function generateTicketPdf(
-    order,
-    ticketReference
+    ticketReference,
+    env
 ) {
 
-    /* ------------------------------------------------------
-       1. CREATE QR MATRIX
-       ------------------------------------------------------ */
+    /* ======================================================
+       1. GET THE ACTUAL TICKET
+    ====================================================== */
 
-    const qr = QRCode.create(
-        ticketReference,
-        {
-            errorCorrectionLevel: "M"
-        }
-    );
+    const ticket =
+        await getTicketByReference(
+            ticketReference,
+            env
+        );
 
-    const qrSize = qr.modules.size;
 
-    /* ------------------------------------------------------
-       2. CREATE PDF
-       ------------------------------------------------------ */
+    if (!ticket) {
+
+        throw new Error(
+            "Ticket not found for PDF generation."
+        );
+
+    }
+
+
+    /* ======================================================
+       2. CREATE QR MATRIX
+    ====================================================== */
+
+    const qr =
+        QRCode.create(
+            ticketReference,
+            {
+                errorCorrectionLevel: "M"
+            }
+        );
+
+
+    const qrSize =
+        qr.modules.size;
+
+
+    /* ======================================================
+       3. CREATE A5 PDF
+       A5 = 148 × 210 mm
+       PDF points = 419.53 × 595.28
+    ====================================================== */
 
     const pdf =
         await PDFDocument.create();
 
-    const page =
-        pdf.addPage([600, 800]);
 
-    const font =
+    const pageWidth =
+        419.53;
+
+    const pageHeight =
+        595.28;
+
+
+    const page =
+        pdf.addPage([
+            pageWidth,
+            pageHeight
+        ]);
+
+
+    /* ======================================================
+       4. FONTS
+    ====================================================== */
+
+    const regularFont =
         await pdf.embedFont(
             StandardFonts.Helvetica
         );
 
 
-    /* ------------------------------------------------------
-       3. TICKET CONTENT
-       ------------------------------------------------------ */
+    const boldFont =
+        await pdf.embedFont(
+            StandardFonts.HelveticaBold
+        );
+
+
+    /* ======================================================
+       5. COLORS
+    ====================================================== */
+
+    const purple =
+        rgb(
+            91 / 255,
+            46 / 255,
+            255 / 255
+        );
+
+
+    const dark =
+        rgb(
+            7 / 255,
+            12 / 255,
+            22 / 255
+        );
+
+
+    const darkCard =
+        rgb(
+            12 / 255,
+            19 / 255,
+            31 / 255
+        );
+
+
+    const textLight =
+        rgb(
+            245 / 255,
+            245 / 255,
+            250 / 255
+        );
+
+
+    const muted =
+        rgb(
+            165 / 255,
+            170 / 255,
+            185 / 255
+        );
+
+
+    const border =
+        rgb(
+            42 / 255,
+            48 / 255,
+            65 / 255
+        );
+
+
+    const white =
+        rgb(
+            1,
+            1,
+            1
+        );
+
+
+    const black =
+        rgb(
+            0,
+            0,
+            0
+        );
+
+
+    /* ======================================================
+       6. PAGE BACKGROUND
+    ====================================================== */
+
+    page.drawRectangle({
+
+        x: 0,
+        y: 0,
+
+        width:
+            pageWidth,
+
+        height:
+            pageHeight,
+
+        color:
+            dark
+
+    });
+
+
+    /* ======================================================
+       7. MAIN TICKET CARD
+    ====================================================== */
+
+    const margin =
+        22;
+
+
+    const cardWidth =
+        pageWidth -
+        (margin * 2);
+
+
+    page.drawRectangle({
+
+        x:
+            margin,
+
+        y:
+            margin,
+
+        width:
+            cardWidth,
+
+        height:
+            pageHeight -
+            (margin * 2),
+
+        color:
+            darkCard
+
+    });
+
+
+    /* ======================================================
+       8. EVENT BANNER
+    ====================================================== */
+
+    const bannerX =
+        margin;
+
+    const bannerY =
+        pageHeight -
+        margin -
+        155;
+
+    const bannerWidth =
+        cardWidth;
+
+    const bannerHeight =
+        155;
+
+
+    let bannerEmbedded =
+        false;
+
+
+    if (ticket.banner_image) {
+
+        try {
+
+            const bannerResponse =
+                await fetch(
+                    ticket.banner_image
+                );
+
+
+            if (
+                bannerResponse.ok
+            ) {
+
+                const bannerBytes =
+                    await bannerResponse.arrayBuffer();
+
+
+                const contentType =
+                    (
+                        bannerResponse.headers.get(
+                            "content-type"
+                        ) ||
+                        ""
+                    ).toLowerCase();
+
+
+                let bannerImage;
+
+
+                if (
+                    contentType.includes(
+                        "png"
+                    ) ||
+                    ticket.banner_image
+                        .toLowerCase()
+                        .includes(".png")
+                ) {
+
+                    bannerImage =
+                        await pdf.embedPng(
+                            bannerBytes
+                        );
+
+                }
+
+                else {
+
+                    bannerImage =
+                        await pdf.embedJpg(
+                            bannerBytes
+                        );
+
+                }
+
+
+                const imageWidth =
+                    bannerImage.width;
+
+                const imageHeight =
+                    bannerImage.height;
+
+
+                const imageRatio =
+                    imageWidth /
+                    imageHeight;
+
+
+                const bannerRatio =
+                    bannerWidth /
+                    bannerHeight;
+
+
+                let drawWidth =
+                    bannerWidth;
+
+                let drawHeight =
+                    bannerHeight;
+
+
+                if (
+                    imageRatio >
+                    bannerRatio
+                ) {
+
+                    drawHeight =
+                        bannerHeight;
+
+                    drawWidth =
+                        drawHeight *
+                        imageRatio;
+
+                }
+
+                else {
+
+                    drawWidth =
+                        bannerWidth;
+
+                    drawHeight =
+                        drawWidth /
+                        imageRatio;
+
+                }
+
+
+                const imageX =
+                    bannerX +
+                    (
+                        bannerWidth -
+                        drawWidth
+                    ) / 2;
+
+
+                const imageY =
+                    bannerY +
+                    (
+                        bannerHeight -
+                        drawHeight
+                    ) / 2;
+
+
+                page.drawImage(
+                    bannerImage,
+                    {
+                        x:
+                            imageX,
+
+                        y:
+                            imageY,
+
+                        width:
+                            drawWidth,
+
+                        height:
+                            drawHeight
+                    }
+                );
+
+
+                bannerEmbedded =
+                    true;
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "PDF BANNER FAILED:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* ======================================================
+       9. BANNER FALLBACK
+    ====================================================== */
+
+    if (!bannerEmbedded) {
+
+        page.drawRectangle({
+
+            x:
+                bannerX,
+
+            y:
+                bannerY,
+
+            width:
+                bannerWidth,
+
+            height:
+                bannerHeight,
+
+            color:
+                purple
+
+        });
+
+    }
+
+
+    /* ======================================================
+       10. BANNER DARK OVERLAY
+    ====================================================== */
+
+    page.drawRectangle({
+
+        x:
+            bannerX,
+
+        y:
+            bannerY,
+
+        width:
+            bannerWidth,
+
+        height:
+            bannerHeight,
+
+        color:
+            black,
+
+        opacity:
+            0.35
+
+    });
+
+
+    /* ======================================================
+       11. TICKETFUSSION BRAND
+    ====================================================== */
 
     page.drawText(
         "TicketFussion",
         {
-            x: 50,
-            y: 740,
-            size: 24,
-            font
+
+            x:
+                bannerX + 16,
+
+            y:
+                bannerY +
+                bannerHeight -
+                30,
+
+            size:
+                17,
+
+            font:
+                boldFont,
+
+            color:
+                white
+
         }
     );
+
 
     page.drawText(
-        order.title || "Event Ticket",
+        "YOUR TICKET",
         {
-            x: 50,
-            y: 690,
-            size: 18,
-            font
-        }
-    );
 
-    page.drawText(
-        `Venue: ${order.venue || ""}`,
-        {
-            x: 50,
-            y: 650,
-            size: 12,
-            font
-        }
-    );
+            x:
+                bannerX + 16,
 
-    page.drawText(
-        `Date: ${order.event_date || ""}`,
-        {
-            x: 50,
-            y: 620,
-            size: 12,
-            font
-        }
-    );
+            y:
+                bannerY +
+                bannerHeight -
+                44,
 
-    page.drawText(
-        `Time: ${order.event_time || ""}`,
-        {
-            x: 50,
-            y: 590,
-            size: 12,
-            font
-        }
-    );
+            size:
+                7,
 
-    page.drawText(
-        `Customer: ${order.customer_name || ""}`,
-        {
-            x: 50,
-            y: 560,
-            size: 12,
-            font
-        }
-    );
+            font:
+                regularFont,
 
-    page.drawText(
-        `Ticket Ref: ${ticketReference}`,
-        {
-            x: 50,
-            y: 530,
-            size: 14,
-            font
+            color:
+                white
+
         }
     );
 
 
-    /* ------------------------------------------------------
-       4. DRAW QR CODE DIRECTLY
-       NO CANVAS
-       ------------------------------------------------------ */
+    /* ======================================================
+       12. STATUS
+    ====================================================== */
 
-    const qrDisplaySize = 180;
+    const status =
+        (
+            ticket.status ||
+            "ACTIVE"
+        ).toUpperCase();
 
-    const qrX = 350;
-    const qrY = 300;
-
-    const moduleSize =
-        qrDisplaySize / qrSize;
-
-
-    /* ------------------------------------------------------
-       WHITE QR BACKGROUND
-       ------------------------------------------------------ */
 
     page.drawRectangle({
-        x: qrX - 10,
-        y: qrY - 10,
-        width: qrDisplaySize + 20,
-        height: qrDisplaySize + 20,
-        color: {
-            type: "RGB",
-            red: 1,
-            green: 1,
-            blue: 1
-        }
+
+        x:
+            bannerX +
+            bannerWidth -
+            82,
+
+        y:
+            bannerY +
+            bannerHeight -
+            42,
+
+        width:
+            66,
+
+        height:
+            24,
+
+        color:
+            purple
+
     });
 
 
-    /* ------------------------------------------------------
-       DRAW DARK QR MODULES
-       ------------------------------------------------------ */
+    page.drawText(
+        status,
+        {
 
-    for (let row = 0; row < qrSize; row++) {
+            x:
+                bannerX +
+                bannerWidth -
+                49,
 
-        for (let col = 0; col < qrSize; col++) {
+            y:
+                bannerY +
+                bannerHeight -
+                34,
+
+            size:
+                7,
+
+            font:
+                boldFont,
+
+            color:
+                white
+
+        }
+    );
+
+
+    /* ======================================================
+       13. EVENT TITLE
+    ====================================================== */
+
+    const eventTitle =
+        ticket.title ||
+        "Event";
+
+
+    page.drawText(
+        eventTitle,
+        {
+
+            x:
+                bannerX + 16,
+
+            y:
+                bannerY + 27,
+
+            size:
+                19,
+
+            font:
+                boldFont,
+
+            color:
+                white,
+
+            maxWidth:
+                bannerWidth - 32
+
+        }
+    );
+
+
+    /* ======================================================
+       14. EVENT DETAILS
+    ====================================================== */
+
+    let currentY =
+        bannerY -
+        25;
+
+
+    page.drawText(
+        "EVENT DETAILS",
+        {
+
+            x:
+                margin + 14,
+
+            y:
+                currentY,
+
+            size:
+                8,
+
+            font:
+                boldFont,
+
+            color:
+                purple
+
+        }
+    );
+
+
+    currentY -= 18;
+
+
+    page.drawText(
+        "VENUE",
+        {
+
+            x:
+                margin + 14,
+
+            y:
+                currentY,
+
+            size:
+                7,
+
+            font:
+                boldFont,
+
+            color:
+                muted
+
+        }
+    );
+
+
+    page.drawText(
+        `${
+            ticket.venue || "-"
+        }${
+            ticket.city
+                ? ", " + ticket.city
+                : ""
+        }`,
+        {
+
+            x:
+                margin + 14,
+
+            y:
+                currentY - 13,
+
+            size:
+                10,
+
+            font:
+                regularFont,
+
+            color:
+                textLight
+
+        }
+    );
+
+
+    page.drawText(
+        "DATE",
+        {
+
+            x:
+                margin + 210,
+
+            y:
+                currentY,
+
+            size:
+                7,
+
+            font:
+                boldFont,
+
+            color:
+                muted
+
+        }
+    );
+
+
+    page.drawText(
+        ticket.event_date ||
+        "-",
+        {
+
+            x:
+                margin + 210,
+
+            y:
+                currentY - 13,
+
+            size:
+                10,
+
+            font:
+                regularFont,
+
+            color:
+                textLight
+
+        }
+    );
+
+
+    currentY -= 42;
+
+
+    page.drawText(
+        "TIME",
+        {
+
+            x:
+                margin + 14,
+
+            y:
+                currentY,
+
+            size:
+                7,
+
+            font:
+                boldFont,
+
+            color:
+                muted
+
+        }
+    );
+
+
+    page.drawText(
+        ticket.event_time ||
+        "-",
+        {
+
+            x:
+                margin + 14,
+
+            y:
+                currentY - 13,
+
+            size:
+                10,
+
+            font:
+                regularFont,
+
+            color:
+                textLight
+
+        }
+    );
+
+
+    /* ======================================================
+       15. SEAT INFORMATION CARD
+    ====================================================== */
+
+    const seatCardY =
+        currentY -
+        58;
+
+
+    page.drawRectangle({
+
+        x:
+            margin + 10,
+
+        y:
+            seatCardY,
+
+        width:
+            cardWidth - 20,
+
+        height:
+            62,
+
+        color:
+            dark
+
+    });
+
+
+    page.drawText(
+        "SECTION",
+        {
+
+            x:
+                margin + 22,
+
+            y:
+                seatCardY + 43,
+
+            size:
+                7,
+
+            font:
+                boldFont,
+
+            color:
+                muted
+
+        }
+    );
+
+
+    page.drawText(
+        ticket.section ||
+        "-",
+        {
+
+            x:
+                margin + 22,
+
+            y:
+                seatCardY + 23,
+
+            size:
+                14,
+
+            font:
+                boldFont,
+
+            color:
+                white
+
+        }
+    );
+
+
+    page.drawText(
+        "ROW",
+        {
+
+            x:
+                margin + 135,
+
+            y:
+                seatCardY + 43,
+
+            size:
+                7,
+
+            font:
+                boldFont,
+
+            color:
+                muted
+
+        }
+    );
+
+
+    page.drawText(
+        ticket.row ||
+        "-",
+        {
+
+            x:
+                margin + 135,
+
+            y:
+                seatCardY + 23,
+
+            size:
+                14,
+
+            font:
+                boldFont,
+
+            color:
+                white
+
+        }
+    );
+
+
+    page.drawText(
+        "SEAT",
+        {
+
+            x:
+                margin + 245,
+
+            y:
+                seatCardY + 43,
+
+            size:
+                7,
+
+            font:
+                boldFont,
+
+            color:
+                muted
+
+        }
+    );
+
+
+    page.drawText(
+        ticket.seat_numbers ||
+        "-",
+        {
+
+            x:
+                margin + 245,
+
+            y:
+                seatCardY + 23,
+
+            size:
+                14,
+
+            font:
+                boldFont,
+
+            color:
+                white
+
+        }
+    );
+
+
+    /* ======================================================
+       16. CUSTOMER DETAILS
+    ====================================================== */
+
+    const detailsY =
+        seatCardY -
+        24;
+
+
+    page.drawText(
+        "CUSTOMER",
+        {
+
+            x:
+                margin + 14,
+
+            y:
+                detailsY,
+
+            size:
+                7,
+
+            font:
+                boldFont,
+
+            color:
+                muted
+
+        }
+    );
+
+
+    page.drawText(
+        ticket.customer_name ||
+        "-",
+        {
+
+            x:
+                margin + 14,
+
+            y:
+                detailsY - 14,
+
+            size:
+                10,
+
+            font:
+                boldFont,
+
+            color:
+                textLight
+
+        }
+    );
+
+
+    page.drawText(
+        "TICKET TYPE",
+        {
+
+            x:
+                margin + 210,
+
+            y:
+                detailsY,
+
+            size:
+                7,
+
+            font:
+                boldFont,
+
+            color:
+                muted
+
+        }
+    );
+
+
+    page.drawText(
+        ticket.ticket_type ||
+        "-",
+        {
+
+            x:
+                margin + 210,
+
+            y:
+                detailsY - 14,
+
+            size:
+                10,
+
+            font:
+                regularFont,
+
+            color:
+                textLight
+
+        }
+    );
+
+
+    /* ======================================================
+       17. TICKET REFERENCE
+    ====================================================== */
+
+    const referenceY =
+        detailsY -
+        45;
+
+
+    page.drawRectangle({
+
+        x:
+            margin + 10,
+
+        y:
+            referenceY,
+
+        width:
+            cardWidth - 20,
+
+        height:
+            34,
+
+        color:
+            dark
+
+    });
+
+
+    page.drawText(
+        "TICKET REFERENCE",
+        {
+
+            x:
+                margin + 20,
+
+            y:
+                referenceY + 21,
+
+            size:
+                7,
+
+            font:
+                boldFont,
+
+            color:
+                muted
+
+        }
+    );
+
+
+    page.drawText(
+        ticketReference,
+        {
+
+            x:
+                margin + 20,
+
+            y:
+                referenceY + 8,
+
+            size:
+                11,
+
+            font:
+                boldFont,
+
+            color:
+                white
+
+        }
+    );
+
+
+    /* ======================================================
+       18. QR CODE
+    ====================================================== */
+
+    const qrDisplaySize =
+        105;
+
+
+    const qrX =
+        pageWidth -
+        margin -
+        qrDisplaySize -
+        14;
+
+
+    const qrY =
+        margin + 18;
+
+
+    page.drawRectangle({
+
+        x:
+            qrX - 10,
+
+        y:
+            qrY - 10,
+
+        width:
+            qrDisplaySize + 20,
+
+        height:
+            qrDisplaySize + 20,
+
+        color:
+            white
+
+    });
+
+
+    const moduleSize =
+        qrDisplaySize /
+        qrSize;
+
+
+    for (
+        let row = 0;
+        row < qrSize;
+        row++
+    ) {
+
+        for (
+            let col = 0;
+            col < qrSize;
+            col++
+        ) {
 
             if (
                 qr.modules.get(
@@ -2075,27 +3110,32 @@ async function generateTicketPdf(
 
                     x:
                         qrX +
-                        (col * moduleSize),
+                        (
+                            col *
+                            moduleSize
+                        ),
 
                     y:
                         qrY +
                         (
-                            (qrSize - 1 - row)
-                            * moduleSize
+                            (
+                                qrSize -
+                                1 -
+                                row
+                            ) *
+                            moduleSize
                         ),
 
                     width:
-                        moduleSize + 0.2,
+                        moduleSize +
+                        0.2,
 
                     height:
-                        moduleSize + 0.2,
+                        moduleSize +
+                        0.2,
 
-                    color: {
-                        type: "RGB",
-                        red: 0,
-                        green: 0,
-                        blue: 0
-                    }
+                    color:
+                        black
 
                 });
 
@@ -2106,30 +3146,111 @@ async function generateTicketPdf(
     }
 
 
-    /* ------------------------------------------------------
-       5. SAVE PDF
-       ------------------------------------------------------ */
+    /* ======================================================
+       19. QR LABEL
+    ====================================================== */
+
+    page.drawText(
+        "SCAN AT VENUE ENTRY",
+        {
+
+            x:
+                margin + 14,
+
+            y:
+                qrY + 62,
+
+            size:
+                9,
+
+            font:
+                boldFont,
+
+            color:
+                purple
+
+        }
+    );
+
+
+    page.drawText(
+        "Present this QR code",
+        {
+
+            x:
+                margin + 14,
+
+            y:
+                qrY + 47,
+
+            size:
+                8,
+
+            font:
+                regularFont,
+
+            color:
+                muted
+
+        }
+    );
+
+
+    page.drawText(
+        "at the venue.",
+        {
+
+            x:
+                margin + 14,
+
+            y:
+                qrY + 35,
+
+            size:
+                8,
+
+            font:
+                regularFont,
+
+            color:
+                muted
+
+        }
+    );
+
+
+    /* ======================================================
+       20. SAVE PDF
+    ====================================================== */
 
     const pdfBytes =
         await pdf.save();
 
 
-    /* ------------------------------------------------------
-       6. CONVERT PDF TO BASE64
-       ------------------------------------------------------ */
+    /* ======================================================
+       21. CONVERT TO BASE64
+    ====================================================== */
 
     let binary = "";
+
 
     for (
         const byte of pdfBytes
     ) {
+
         binary +=
-            String.fromCharCode(byte);
+            String.fromCharCode(
+                byte
+            );
+
     }
 
-    return btoa(binary);
-}
 
+    return btoa(
+        binary
+    );
+
+}
 /* ==========================================================
    SEND TICKET EMAIL
 ========================================================== */
@@ -2257,8 +3378,8 @@ The Global Ticket Marketplace
 
         pdfBase64 =
             await generateTicketPdf(
-                order,
-                ticketReference
+                ticketReference,
+                env
             );
 
             console.log(
