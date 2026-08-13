@@ -1255,7 +1255,6 @@ pdf.text(
     }
 );
 
-
 /*---------------------------------------------
     EVENT TITLE
 ---------------------------------------------*/
@@ -1271,21 +1270,21 @@ pdf.setFont(
 
 pdf.setFontSize(16);
 
-/* Calculate title width */
+/* Calculate title badge width */
 const titleWidth =
     Math.min(
         pdf.getTextWidth(title) + 14,
         105
     );
 
-/* Title badge */
+/* Purple title badge */
 pdf.setFillColor(
     ...purple
 );
 
 pdf.roundedRect(
     14,
-    36,
+    101,
     titleWidth,
     12,
     6,
@@ -1293,7 +1292,7 @@ pdf.roundedRect(
     "F"
 );
 
-/* Title text */
+/* Title */
 pdf.setTextColor(
     ...white
 );
@@ -1301,8 +1300,9 @@ pdf.setTextColor(
 pdf.text(
     title,
     21,
-    44
+    109
 );
+
 /*=====================================================
     EVENT DETAILS
 =====================================================*/
