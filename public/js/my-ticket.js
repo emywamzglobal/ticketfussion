@@ -1094,12 +1094,22 @@ if (ticket.banner_image) {
 
     try {
 
-        const banner =
-            await loadImage(
-                ticket.banner_image
-            );
+        const banner = await new Promise((resolve, reject) => {
 
-            console.log("BANNER URL:", ticket.banner_image);
+    const img = new Image();
+
+    img.crossOrigin = "anonymous";
+
+    img.onload = () => resolve(img);
+
+    img.onerror = () =>
+        reject(new Error("Banner image failed to load"));
+
+    img.src = ticket.banner_image;
+
+});
+
+console.log("BANNER URL:", ticket.banner_image);
 
 
         /*---------------------------------------------
