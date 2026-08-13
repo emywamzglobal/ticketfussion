@@ -1099,6 +1099,8 @@ if (ticket.banner_image) {
                 ticket.banner_image
             );
 
+            console.log("BANNER URL:", ticket.banner_image);
+
 
         /*---------------------------------------------
             CONVERT IMAGE FOR jsPDF
@@ -1152,13 +1154,9 @@ if (ticket.banner_image) {
     }
 
     catch (error) {
-
-        console.error(
-            "PDF BANNER FAILED:",
-            error
-        );
-
-    }
+    console.error("PDF BANNER FAILED:", error);
+    alert("BANNER FAILED: " + error.message);
+}
 
 }
 
