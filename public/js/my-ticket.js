@@ -926,23 +926,103 @@ function renderTicket(ticket) {
 
 }
 
+/*=========================================================
+    DOWNLOAD TICKET PDF
+=========================================================*/
+
+async function downloadTicketPDF(ticket) {
+
     /*=====================================================
-        PREMIUM A5 PAGE
+        LOAD jsPDF
     =====================================================*/
 
+    if (!window.jspdf) {
+
+        await new Promise(
+            (resolve, reject) => {
+
+                const script =
+                    document.createElement("script");
+
+                script.src =
+                    "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+
+                script.onload = resolve;
+
+                script.onerror = reject;
+
+                document.head.appendChild(script);
+
+            }
+        );
+
+    }
+
+
+    /*=====================================================
+        LOAD QR CODE LIBRARY
+    =====================================================*/
+
+    if (!window.QRCode) {
+
+        await new Promise(
+            (resolve, reject) => {
+
+                const script =
+                    document.createElement("script");
+
+                script.src =
+                    "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
+
+                script.onload = resolve;
+
+                script.onerror = reject;
+
+                document.head.appendChild(script);
+
+            }
+        );
+
+    }
+
+
+    const { jsPDF } = window.jspdf;
+
+
+    /*=====================================================
+        CREATE PDF
+    =====================================================*/
+
+    const pdf =
+        new jsPDF({
+
+            orientation: "portrait",
+
+            unit: "mm",
+
+            format: "A5"
+
+        });
+
+
     const pageWidth = 148;
-    const pageHeight = 210;
+
+
+    /*=====================================================
+        COLORS
+    =====================================================*/
 
     const purple = [88, 48, 255];
-    const purpleLight = [145, 82, 255];
 
-    const pageDark = [5, 9, 18];
-    const cardDark = [10, 16, 28];
-    const cardBorder = [35, 43, 58];
+    const dark = [17, 17, 17];
+
+    const textDark = [20, 35, 60];
+
+    const muted = [105, 105, 105];
+
+    const light = [245, 247, 251];
 
     const white = [255, 255, 255];
-    const softWhite = [225, 229, 238];
-    const muted = [155, 163, 178];
 
 
     /*=====================================================
@@ -950,33 +1030,33 @@ function renderTicket(ticket) {
     =====================================================*/
 
     pdf.setFillColor(
-        ...pageDark
+        ...light
     );
 
     pdf.rect(
         0,
         0,
-        pageWidth,
-        pageHeight,
+        148,
+        210,
         "F"
     );
 
 
     /*=====================================================
-        MAIN TICKET CARD
+        PREMIUM TICKET CARD
     =====================================================*/
 
     pdf.setFillColor(
-        ...cardDark
+        ...white
     );
 
     pdf.roundedRect(
-        6,
-        6,
-        136,
-        198,
-        6,
-        6,
+        8,
+        8,
+        132,
+        194,
+        7,
+        7,
         "F"
     );
 
@@ -997,10 +1077,10 @@ function renderTicket(ticket) {
             pdf.addImage(
                 banner,
                 "JPEG",
-                6,
-                6,
-                136,
-                58
+                8,
+                8,
+                132,
+                65
             );
 
         }
@@ -1018,26 +1098,19 @@ function renderTicket(ticket) {
 
 
     /*=====================================================
-        BANNER DARK OVERLAY
+        BANNER OVERLAY
     =====================================================*/
 
     pdf.setFillColor(
-        5,
-        9,
-        18
-    );
-
-    pdf.rect(
-        6,
-        6,
-        136,
-        58,
-        "F"
+        0,
+        0,
+        0,
+        0.35
     );
 
 
     /*=====================================================
-        TICKETFUSSION BRAND
+        TICKET BRAND
     =====================================================*/
 
     pdf.setTextColor(
@@ -1049,84 +1122,26 @@ function renderTicket(ticket) {
         "bold"
     );
 
-    pdf.setFontSize(15);
+    pdf.setFontSize(16);
 
     pdf.text(
         "TicketFussion",
-        14,
-        20
+        17,
+        25
     );
 
-
-    pdf.setTextColor(
-        ...purpleLight
-    );
-
-    pdf.text(
-        "Fussion",
-        14 + pdf.getTextWidth("Ticket"),
-        20
-    );
-
-
-    pdf.setTextColor(
-        ...white
-    );
 
     pdf.setFont(
         "helvetica",
         "normal"
     );
 
-    pdf.setFontSize(6.5);
+    pdf.setFontSize(7);
 
     pdf.text(
         "YOUR TICKET",
-        14,
-        27
-    );
-
-
-    /*=====================================================
-        STATUS PILL
-    =====================================================*/
-
-    pdf.setFillColor(
-        ...purple
-    );
-
-    pdf.roundedRect(
-        105,
-        13,
-        28,
-        10,
-        5,
-        5,
-        "F"
-    );
-
-
-    pdf.setTextColor(
-        ...white
-    );
-
-    pdf.setFont(
-        "helvetica",
-        "bold"
-    );
-
-    pdf.setFontSize(6.5);
-
-    pdf.text(
-        (
-            ticket.status ||
-            "ACTIVE"
-        ).toUpperCase(),
-        119,
-        19.5,
-        {
-            align: "center"
-        }
+        17,
+        32
     );
 
 
@@ -1135,7 +1150,7 @@ function renderTicket(ticket) {
     =====================================================*/
 
     pdf.setTextColor(
-        ...white
+        ...textDark
     );
 
     pdf.setFont(
@@ -1143,7 +1158,7 @@ function renderTicket(ticket) {
         "bold"
     );
 
-    pdf.setFontSize(21);
+    pdf.setFontSize(18);
 
 
     const title =
@@ -1154,9 +1169,9 @@ function renderTicket(ticket) {
     pdf.text(
         title,
         14,
-        50,
+        84,
         {
-            maxWidth: 115
+            maxWidth: 120
         }
     );
 
@@ -1170,268 +1185,114 @@ function renderTicket(ticket) {
         "normal"
     );
 
-    pdf.setFontSize(7);
-
-    pdf.setTextColor(
-        ...softWhite
-    );
-
-
-    /* VENUE */
-
-    pdf.text(
-        `${ticket.venue || ""}${ticket.city ? ", " + ticket.city : ""}`,
-        14,
-        57,
-        {
-            maxWidth: 70
-        }
-    );
-
-
-    /* DATE */
-
-    pdf.text(
-        ticket.event_date || "",
-        91,
-        57,
-        {
-            maxWidth: 42
-        }
-    );
-
-
-    /* TIME */
-
-    pdf.text(
-        ticket.event_time || "",
-        91,
-        62
-    );
-
-
-    /*=====================================================
-        SEAT INFORMATION CARD
-    =====================================================*/
-
-    pdf.setFillColor(
-        14,
-        21,
-        34
-    );
-
-    pdf.roundedRect(
-        12,
-        70,
-        124,
-        29,
-        5,
-        5,
-        "F"
-    );
-
-
-    pdf.setDrawColor(
-        ...cardBorder
-    );
-
-    pdf.setLineWidth(
-        0.3
-    );
-
-    pdf.roundedRect(
-        12,
-        70,
-        124,
-        29,
-        5,
-        5,
-        "S"
-    );
-
-
-    /* DIVIDERS */
-
-    pdf.setDrawColor(
-        45,
-        53,
-        68
-    );
-
-    pdf.line(
-        53,
-        76,
-        53,
-        93
-    );
-
-    pdf.line(
-        94,
-        76,
-        94,
-        93
-    );
-
-
-    /* LABELS */
-
-    pdf.setTextColor(
-        ...purpleLight
-    );
-
-    pdf.setFont(
-        "helvetica",
-        "bold"
-    );
-
-    pdf.setFontSize(6);
-
-
-    pdf.text(
-        "SECTION",
-        32.5,
-        79,
-        {
-            align: "center"
-        }
-    );
-
-    pdf.text(
-        "ROW",
-        73.5,
-        79,
-        {
-            align: "center"
-        }
-    );
-
-    pdf.text(
-        "SEAT",
-        115,
-        79,
-        {
-            align: "center"
-        }
-    );
-
-
-    /* VALUES */
-
-    pdf.setTextColor(
-        ...white
-    );
-
-    pdf.setFontSize(12);
-
-
-    pdf.text(
-        ticket.section || "-",
-        32.5,
-        91,
-        {
-            align: "center"
-        }
-    );
-
-    pdf.text(
-        ticket.row || "-",
-        73.5,
-        91,
-        {
-            align: "center"
-        }
-    );
-
-    pdf.text(
-        ticket.seat_numbers || "-",
-        115,
-        91,
-        {
-            align: "center"
-        }
-    );
-
-
-    /*=====================================================
-        CUSTOMER INFORMATION CARD
-    =====================================================*/
-
-    pdf.setFillColor(
-        14,
-        21,
-        34
-    );
-
-    pdf.roundedRect(
-        12,
-        104,
-        124,
-        45,
-        5,
-        5,
-        "F"
-    );
-
-
-    pdf.setDrawColor(
-        ...cardBorder
-    );
-
-    pdf.roundedRect(
-        12,
-        104,
-        124,
-        45,
-        5,
-        5,
-        "S"
-    );
-
-
-    /* CUSTOMER */
+    pdf.setFontSize(9);
 
     pdf.setTextColor(
         ...muted
     );
 
-    pdf.setFont(
-        "helvetica",
-        "normal"
-    );
 
-    pdf.setFontSize(6);
+    pdf.text(
+        `VENUE: ${ticket.venue || ""}, ${ticket.city || ""}`,
+        14,
+        96
+    );
 
 
     pdf.text(
-        "CUSTOMER",
-        18,
+        `DATE: ${ticket.event_date || ""}`,
+        14,
+        104
+    );
+
+
+    pdf.text(
+        `TIME: ${ticket.event_time || ""}`,
+        14,
         112
     );
 
 
+    /*=====================================================
+        SEAT INFORMATION
+    =====================================================*/
+
+    pdf.setFillColor(
+        ...purple
+    );
+
+    pdf.roundedRect(
+        14,
+        120,
+        120,
+        30,
+        5,
+        5,
+        "F"
+    );
+
+
     pdf.setTextColor(
         ...white
     );
 
     pdf.setFont(
         "helvetica",
-        "bold"
+        "normal"
     );
 
-    pdf.setFontSize(8.5);
+    pdf.setFontSize(7);
 
 
     pdf.text(
-        ticket.customer_name || "-",
-        18,
-        118,
-        {
-            maxWidth: 65
-        }
+        "SECTION",
+        28,
+        130
+    );
+
+    pdf.text(
+        "ROW",
+        68,
+        130
+    );
+
+    pdf.text(
+        "SEAT",
+        108,
+        130
     );
 
 
-    /* EMAIL */
+    pdf.setFont(
+        "helvetica",
+        "bold"
+    );
+
+    pdf.setFontSize(11);
+
+
+    pdf.text(
+        ticket.section || "-",
+        28,
+        141
+    );
+
+    pdf.text(
+        ticket.row || "-",
+        68,
+        141
+    );
+
+    pdf.text(
+        ticket.seat_numbers || "-",
+        108,
+        141
+    );
+
+
+    /*=====================================================
+        CUSTOMER DETAILS
+    =====================================================*/
 
     pdf.setTextColor(
         ...muted
@@ -1442,43 +1303,70 @@ function renderTicket(ticket) {
         "normal"
     );
 
-    pdf.setFontSize(6);
+    pdf.setFontSize(7);
+
 
     pdf.text(
-        "EMAIL",
-        18,
-        127
+        "CUSTOMER",
+        14,
+        162
+    );
+
+    pdf.text(
+        "TICKET TYPE",
+        82,
+        162
     );
 
 
     pdf.setTextColor(
-        ...softWhite
+        ...dark
     );
 
-    pdf.setFontSize(7);
+    pdf.setFont(
+        "helvetica",
+        "bold"
+    );
+
+    pdf.setFontSize(9);
+
 
     pdf.text(
-        ticket.customer_email || "-",
-        18,
-        133,
+        ticket.customer_name || "-",
+        14,
+        169,
         {
-            maxWidth: 65
+            maxWidth: 58
         }
     );
 
 
-    /* TICKET TYPE */
-
-    pdf.setTextColor(
-        ...muted
+    pdf.text(
+        ticket.ticket_type || "-",
+        82,
+        169,
+        {
+            maxWidth: 52
+        }
     );
 
-    pdf.setFontSize(6);
 
-    pdf.text(
-        "TICKET TYPE",
-        18,
-        142
+    /*=====================================================
+        REFERENCE
+    =====================================================*/
+
+    pdf.setFillColor(
+        ...dark
+    );
+
+    pdf.roundedRect(
+        14,
+        176,
+        120,
+        20,
+        5,
+        5,
+        "F"
     );
 
 
@@ -1488,17 +1376,37 @@ function renderTicket(ticket) {
 
     pdf.setFont(
         "helvetica",
+        "normal"
+    );
+
+    pdf.setFontSize(6.5);
+
+
+    pdf.text(
+        "TICKET REFERENCE",
+        74,
+        184,
+        {
+            align: "center"
+        }
+    );
+
+
+    pdf.setFont(
+        "helvetica",
         "bold"
     );
 
-    pdf.setFontSize(7.5);
+    pdf.setFontSize(9);
+
 
     pdf.text(
-        ticket.ticket_type || "-",
-        18,
-        147,
+        ticket.ticket_reference || "-",
+        74,
+        191,
         {
-            maxWidth: 65
+            align: "center",
+            maxWidth: 108
         }
     );
 
@@ -1551,135 +1459,20 @@ function renderTicket(ticket) {
             );
 
 
-        /* WHITE QR BOX */
-
-        pdf.setFillColor(
-            ...white
-        );
-
-        pdf.roundedRect(
-            99,
-            108,
-            30,
-            30,
-            3,
-            3,
-            "F"
-        );
-
-
-        /* QR */
-
         pdf.addImage(
             qrImage,
             "PNG",
-            101,
-            110,
-            26,
-            26
-        );
-
-
-        /* PURPLE ACCENT */
-
-        pdf.setFillColor(
-            ...purple
-        );
-
-        pdf.roundedRect(
-            99,
-            138,
-            30,
-            7,
-            2,
-            2,
-            "F"
-        );
-
-
-        pdf.setTextColor(
-            ...white
-        );
-
-        pdf.setFont(
-            "helvetica",
-            "bold"
-        );
-
-        pdf.setFontSize(4.5);
-
-        pdf.text(
-            "SCAN AT VENUE",
-            114,
-            142.5,
-            {
-                align: "center"
-            }
+            58,
+            158,
+            32,
+            32
         );
 
     }
 
 
     /*=====================================================
-        TICKET REFERENCE
-    =====================================================*/
-
-    pdf.setFillColor(
-        ...purple
-    );
-
-    pdf.roundedRect(
-        12,
-        154,
-        124,
-        20,
-        5,
-        5,
-        "F"
-    );
-
-
-    pdf.setTextColor(
-        ...white
-    );
-
-    pdf.setFont(
-        "helvetica",
-        "normal"
-    );
-
-    pdf.setFontSize(5.5);
-
-    pdf.text(
-        "TICKET REFERENCE",
-        74,
-        161,
-        {
-            align: "center"
-        }
-    );
-
-
-    pdf.setFont(
-        "helvetica",
-        "bold"
-    );
-
-    pdf.setFontSize(9);
-
-    pdf.text(
-        ticket.ticket_reference || "-",
-        74,
-        169,
-        {
-            align: "center",
-            maxWidth: 108
-        }
-    );
-
-
-    /*=====================================================
-        FOOTER
+        QR INSTRUCTION
     =====================================================*/
 
     pdf.setTextColor(
@@ -1691,37 +1484,31 @@ function renderTicket(ticket) {
         "normal"
     );
 
-    pdf.setFontSize(5.5);
+    pdf.setFontSize(6.5);
+
 
     pdf.text(
-        "Present this ticket and QR code at the venue entrance.",
+        "Present this QR code at the venue entrance.",
         74,
-        184,
+        195,
         {
             align: "center"
         }
     );
 
 
-    pdf.setTextColor(
-        ...purpleLight
+    /*=====================================================
+        SAVE PDF
+    =====================================================*/
+
+    pdf.save(
+        `${
+            ticket.ticket_reference ||
+            "ticket"
+        }-TicketFussion.pdf`
     );
 
-    pdf.setFont(
-        "helvetica",
-        "bold"
-    );
-
-    pdf.setFontSize(6);
-
-    pdf.text(
-        "TicketFussion • Official Event Ticket",
-        74,
-        193,
-        {
-            align: "center"
-        }
-    );
+}
     /*=====================================================
         SAVE
     =====================================================*/
