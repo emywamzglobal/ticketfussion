@@ -1158,7 +1158,7 @@ console.log("BANNER URL:", ticket.banner_image);
             8,
             8,
             132,
-            50
+            65
         );
 
     }
@@ -1277,7 +1277,7 @@ const title =
 pdf.text(
     title,
     17,
-    68,
+    66,
     {
         maxWidth: 114
     }
