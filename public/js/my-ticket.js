@@ -1103,40 +1103,35 @@ if (ticket.banner_image) {
 
 
         /*---------------------------------------------
-            CONVERT IMAGE FOR jsPDF
-        ---------------------------------------------*/
+    FETCH BANNER FOR jsPDF
+---------------------------------------------*/
 
-        const canvas =
-            document.createElement("canvas");
+const response = await fetch(ticket.banner_image);
 
+if (!response.ok) {
+    throw new Error("Banner fetch failed: " + response.status);
+}
 
-        canvas.width =
-            banner.naturalWidth ||
-            banner.width;
+const blob = await response.blob();
 
+const bannerUrl = URL.createObjectURL(blob);
 
-        canvas.height =
-            banner.naturalHeight ||
-            banner.height;
+const banner = await loadImage(bannerUrl);
 
+/*---------------------------------------------
+    RENDER EVENT BANNER
+---------------------------------------------*/
 
-        const context =
-            canvas.getContext("2d");
+pdf.addImage(
+    banner,
+    "JPEG",
+    8,
+    8,
+    132,
+    65
+);
 
-
-        context.drawImage(
-            banner,
-            0,
-            0
-        );
-
-
-        const bannerData =
-            canvas.toDataURL(
-                "image/jpeg",
-                0.92
-            );
-
+URL.revokeObjectURL(bannerUrl);
 
         /*---------------------------------------------
             RENDER EVENT BANNER
