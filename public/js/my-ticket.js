@@ -1101,11 +1101,49 @@ if (ticket.banner_image) {
 
 
         /*---------------------------------------------
-            Banner Image
+            CONVERT BANNER TO JPEG
+        ---------------------------------------------*/
+
+        const bannerCanvas =
+            document.createElement("canvas");
+
+
+        bannerCanvas.width =
+            banner.naturalWidth ||
+            banner.width;
+
+
+        bannerCanvas.height =
+            banner.naturalHeight ||
+            banner.height;
+
+
+        const bannerContext =
+            bannerCanvas.getContext("2d");
+
+
+        bannerContext.drawImage(
+            banner,
+            0,
+            0,
+            bannerCanvas.width,
+            bannerCanvas.height
+        );
+
+
+        const bannerImage =
+            bannerCanvas.toDataURL(
+                "image/jpeg",
+                0.92
+            );
+
+
+        /*---------------------------------------------
+            ADD BANNER TO PDF
         ---------------------------------------------*/
 
         pdf.addImage(
-            banner,
+            bannerImage,
             "JPEG",
             8,
             8,
@@ -1115,7 +1153,7 @@ if (ticket.banner_image) {
 
 
         /*---------------------------------------------
-            Premium Dark Overlay
+            DARK BANNER OVERLAY
         ---------------------------------------------*/
 
         pdf.setFillColor(
@@ -1123,6 +1161,7 @@ if (ticket.banner_image) {
             0,
             0
         );
+
 
         pdf.rect(
             8,
@@ -1132,24 +1171,6 @@ if (ticket.banner_image) {
             "F"
         );
 
-
-        /*---------------------------------------------
-            Bottom Gradient-Like Dark Area
-        ---------------------------------------------*/
-
-        pdf.setFillColor(
-            8,
-            12,
-            22
-        );
-
-        pdf.rect(
-            8,
-            53,
-            132,
-            20,
-            "F"
-        );
 
     }
 
@@ -1163,7 +1184,6 @@ if (ticket.banner_image) {
     }
 
 }
-
   /*=====================================================
     TICKET BRAND
 =====================================================*/
@@ -1636,10 +1656,10 @@ if (qrCanvas) {
     pdf.addImage(
         qrImage,
         "PNG",
-        108,
-        157,
-        20,
-        20
+        112,
+        151,
+        18,
+        18
     );
 
 }
@@ -1658,13 +1678,13 @@ pdf.setFont(
     "normal"
 );
 
-pdf.setFontSize(5.5);
+pdf.setFontSize(5);
 
 
 pdf.text(
     "SCAN AT VENUE ENTRY",
-    118,
-    180,
+    121,
+    173,
     {
         align: "center"
     }
