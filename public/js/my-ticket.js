@@ -1255,9 +1255,9 @@ pdf.text(
     }
 );
 
-/*---------------------------------------------
+/*=====================================================
     EVENT TITLE
----------------------------------------------*/
+=====================================================*/
 
 const title =
     ticket.title ||
@@ -1276,18 +1276,21 @@ const titleWidth =
         105
     );
 
-/* Center the title badge */
 const titleX =
     (148 - titleWidth) / 2;
 
-/* Purple title badge */
+
+/*---------------------------------------------
+    TITLE BADGE
+---------------------------------------------*/
+
 pdf.setFillColor(
     ...purple
 );
 
 pdf.roundedRect(
     titleX,
-    103,
+    104,
     titleWidth,
     12,
     6,
@@ -1295,7 +1298,11 @@ pdf.roundedRect(
     "F"
 );
 
-/* Title text */
+
+/*---------------------------------------------
+    TITLE TEXT
+---------------------------------------------*/
+
 pdf.setTextColor(
     ...white
 );
@@ -1303,7 +1310,7 @@ pdf.setTextColor(
 pdf.text(
     title,
     74,
-    111,
+    112,
     {
         align: "center"
     }
@@ -1318,21 +1325,20 @@ pdf.setFont(
     "normal"
 );
 
-pdf.setFontSize(8.5);
+pdf.setFontSize(8);
 
 pdf.setTextColor(
     ...muted
 );
 
+/*---------------------------------------------
+    VENUE
+---------------------------------------------*/
 
 pdf.text(
-    `VENUE`,
-    14,
-    96
-);
-
-pdf.setTextColor(
-    ...textDark
+    "VENUE",
+    17,
+    78
 );
 
 pdf.setFont(
@@ -1340,15 +1346,25 @@ pdf.setFont(
     "bold"
 );
 
+pdf.setFontSize(9);
+
+pdf.setTextColor(
+    ...white
+);
+
 pdf.text(
-    `${ticket.venue || ""}${ticket.city ? ", " + ticket.city : ""}`,
-    14,
-    102,
+    ticket.venue || "Venue",
+    17,
+    85,
     {
-        maxWidth: 120
+        maxWidth: 55
     }
 );
 
+
+/*---------------------------------------------
+    DATE
+---------------------------------------------*/
 
 pdf.setFont(
     "helvetica",
@@ -1362,13 +1378,9 @@ pdf.setTextColor(
 );
 
 pdf.text(
-    `DATE`,
-    14,
-    110
-);
-
-pdf.setTextColor(
-    ...textDark
+    "DATE",
+    17,
+    93
 );
 
 pdf.setFont(
@@ -1376,30 +1388,38 @@ pdf.setFont(
     "bold"
 );
 
-pdf.text(
-    ticket.event_date || "-",
-    14,
-    116
+pdf.setFontSize(9);
+
+pdf.setTextColor(
+    ...white
 );
 
+pdf.text(
+    ticket.date || "",
+    17,
+    100
+);
+
+
+/*---------------------------------------------
+    TIME
+---------------------------------------------*/
 
 pdf.setFont(
     "helvetica",
     "normal"
 );
 
+pdf.setFontSize(8);
+
 pdf.setTextColor(
     ...muted
 );
 
 pdf.text(
-    `TIME`,
-    78,
-    110
-);
-
-pdf.setTextColor(
-    ...textDark
+    "TIME",
+    93,
+    93
 );
 
 pdf.setFont(
@@ -1407,10 +1427,16 @@ pdf.setFont(
     "bold"
 );
 
+pdf.setFontSize(9);
+
+pdf.setTextColor(
+    ...white
+);
+
 pdf.text(
-    ticket.event_time || "-",
-    78,
-    116
+    ticket.time || "",
+    93,
+    100
 );
 
 
