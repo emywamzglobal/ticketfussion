@@ -1158,7 +1158,7 @@ console.log("BANNER URL:", ticket.banner_image);
             8,
             8,
             132,
-            65
+            50
         );
 
     }
@@ -1255,9 +1255,9 @@ pdf.text(
     }
 );
 
-/*=====================================================
+/*---------------------------------------------
     EVENT TITLE
-=====================================================*/
+---------------------------------------------*/
 
 const title =
     ticket.title ||
@@ -1268,21 +1268,16 @@ pdf.setFont(
     "bold"
 );
 
-pdf.setFontSize(16);
+pdf.setFontSize(14);
 
 const titleWidth =
     Math.min(
-        pdf.getTextWidth(title) + 16,
-        105
+        pdf.getTextWidth(title) + 20,
+        100
     );
 
 const titleX =
     (148 - titleWidth) / 2;
-
-
-/*---------------------------------------------
-    TITLE BADGE
----------------------------------------------*/
 
 pdf.setFillColor(
     ...purple
@@ -1290,18 +1285,13 @@ pdf.setFillColor(
 
 pdf.roundedRect(
     titleX,
-    104,
+    125,
     titleWidth,
     12,
     6,
     6,
     "F"
 );
-
-
-/*---------------------------------------------
-    TITLE TEXT
----------------------------------------------*/
 
 pdf.setTextColor(
     ...white
@@ -1310,12 +1300,11 @@ pdf.setTextColor(
 pdf.text(
     title,
     74,
-    112,
+    133,
     {
         align: "center"
     }
 );
-
 /*=====================================================
     EVENT DETAILS
 =====================================================*/
