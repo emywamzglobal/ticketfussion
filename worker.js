@@ -194,7 +194,7 @@ if (url.pathname === "/sitemap.xml") {
             status,
             created_at
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
     `)
     .bind(
         reference,
