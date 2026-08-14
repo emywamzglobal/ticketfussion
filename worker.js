@@ -189,6 +189,7 @@ if (url.pathname === "/sitemap.xml") {
             customer_phone,
             customer_country,
             quantity,
+            seats,
             amount,
             status,
             created_at
@@ -205,6 +206,7 @@ if (url.pathname === "/sitemap.xml") {
         body.customer_phone,
         body.customer_country,
         body.quantity,
+        body.seats,
         body.amount,
         "pending"
     )
@@ -2073,6 +2075,75 @@ let existingTicket = await env.DB
 
 if (!existingTicket) {
 
+    const selectedSeats =
+    String(order.seats || "")
+        .split(",")
+        .map(seat => seat.trim())
+        .filter(Boolean);
+
+if (
+    selectedSeats.length !== Number(order.quantity)
+) {
+    throw new Error(
+        "Selected seats do not match ticket quantity."
+    );
+}
+
+const listing =
+    await env.DB
+        .prepare(`
+            SELECT
+                seats,
+                quantity
+            FROM ticket_listings
+            WHERE id = ?
+        `)
+        .bind(order.ticket_listing_id)
+        .first();
+
+if (!listing) {
+    throw new Error(
+        "Ticket listing not found."
+    );
+}
+
+const availableSeats =
+    String(listing.seats || "")
+        .split(",")
+        .map(seat => seat.trim())
+        .filter(Boolean);
+
+const unavailableSeats =
+    selectedSeats.filter(
+        seat => !availableSeats.includes(seat)
+    );
+
+if (unavailableSeats.length) {
+    throw new Error(
+        `Seat(s) no longer available: ${unavailableSeats.join(", ")}`
+    );
+}
+
+const remainingSeats =
+    availableSeats.filter(
+        seat => !selectedSeats.includes(seat)
+    );
+
+await env.DB
+    .prepare(`
+        UPDATE ticket_listings
+        SET
+            seats = ?,
+            quantity = ?
+        WHERE id = ?
+    `)
+    .bind(
+        remainingSeats.join(", "),
+        remainingSeats.length,
+        order.ticket_listing_id
+    )
+    .run();
+
     const ticketReference =
         "TF-" +
         crypto.randomUUID()
@@ -2299,13 +2370,13 @@ SELECT
     o.customer_phone,
     o.customer_country,
     o.quantity,
+    o.seats,
     o.amount,
     o.status,
 
     tl.ticket_type,
     tl.section,
     tl.row,
-    tl.seats,
     tl.delivery_method,
     tl.occurrence_id,
 

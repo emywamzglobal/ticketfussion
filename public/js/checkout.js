@@ -126,6 +126,10 @@ async function initialiseCheckout() {
 
     const ticketId = params.get("ticket");
 
+    const selectedSeats =
+    new URLSearchParams(window.location.search)
+        .get("seats");
+
     if (!ticketId) {
 
         alert("No ticket selected.");
@@ -610,6 +614,9 @@ async function createOrder() {
 
         quantity:
             selectedQuantity,
+            
+        seats: 
+            selectedSeats,
 
         amount:
             total

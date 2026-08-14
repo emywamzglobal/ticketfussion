@@ -114,7 +114,7 @@ async function loadTickets() {
         const listings =
             await listingResponse.json();
 
-            await loadExchangeRates();
+        await loadExchangeRates();
 
         renderPage(
             occurrence,
@@ -151,34 +151,24 @@ function renderPage(
 <section class="tickets-header container">
 
     <h1>
-
         Tickets
-
     </h1>
 
     <p>
-
         ${formatDate(occurrence.event_date)}
-
     </p>
 
     <p>
-
         ${occurrence.event_time}
-
     </p>
 
     <p>
-
         ${occurrence.venue}
-
     </p>
 
     <p>
-
         ${occurrence.city},
         ${occurrence.country}
-
     </p>
 
 </section>
@@ -204,54 +194,96 @@ function renderListings(listings) {
         return `
 
 <p>
-
-No tickets available.
-
+    No tickets available.
 </p>
 
 `;
 
     }
 
-    return listings.map(ticket => `
+    return listings.map(ticket => {
+
+        const availableSeats =
+            parseSeats(ticket.seats);
+
+        const hasSeats =
+            availableSeats.length > 0;
+
+        return `
 
 <div class="ticket-card">
 
     <div>
 
         <h3>
-
             ${ticket.ticket_type}
-
         </h3>
 
         <p>
-
             Section:
             ${ticket.section || "-"}
-
         </p>
 
         <p>
-
             Row:
             ${ticket.row || "-"}
-
         </p>
 
         <p>
-
             Quantity:
             ${ticket.quantity}
-
         </p>
 
-        <p>
+        ${
+            hasSeats
+                ? `
+                <div class="seat-selection">
 
-            Delivery:
-            ${ticket.delivery_method}
+                    <p>
+                        <strong>
+                            Select your seats
+                        </strong>
+                    </p>
 
-        </p>
+                    <div
+                        class="seat-grid"
+                        id="seat-grid-${ticket.id}"
+                    >
+
+                        ${availableSeats.map(
+                            seat => `
+
+                            <button
+                                type="button"
+                                class="seat-button"
+                                data-listing-id="${ticket.id}"
+                                data-seat="${escapeHtml(seat)}"
+                                onclick="toggleSeat(
+                                    ${ticket.id},
+                                    '${escapeJs(seat)}',
+                                    ${Number(ticket.quantity) || 0}
+                                )"
+                            >
+
+                                ${escapeHtml(seat)}
+
+                            </button>
+
+                            `
+                        ).join("")}
+
+                    </div>
+
+                    <p
+                        id="seat-count-${ticket.id}"
+                    >
+                        0 seat(s) selected
+                    </p>
+
+                </div>
+                `
+                : ""
+        }
 
     </div>
 
@@ -260,27 +292,301 @@ No tickets available.
         <h2>
 
             ${getCurrencySymbol(
-            getCurrency()
+                getCurrency()
             )}
+
             ${convertPrice(
-            ticket.price
-           )}
+                ticket.price
+            )}
 
         </h2>
 
-        <a
-            href="checkout.html?ticket=${ticket.id}"
-            class="btn btn-primary">
+        ${
+            hasSeats
+                ? `
 
-            Buy Now
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    id="buy-button-${ticket.id}"
+                    onclick="buySelectedSeats(
+                        ${ticket.id},
+                        ${Number(ticket.quantity) || 0}
+                    )"
+                >
 
-        </a>
+                    Buy Now
+
+                </button>
+
+                `
+                : `
+
+                <a
+                    href="checkout.html?ticket=${ticket.id}"
+                    class="btn btn-primary"
+                >
+
+                    Buy Now
+
+                </a>
+
+                `
+        }
 
     </div>
 
 </div>
 
-`).join("");
+`;
+
+    }).join("");
+
+}
+
+/* ==========================================================
+   PARSE AVAILABLE SEATS
+========================================================== */
+
+function parseSeats(seats) {
+
+    if (!seats) {
+
+        return [];
+
+    }
+
+    if (Array.isArray(seats)) {
+
+        return seats
+            .map(seat => String(seat).trim())
+            .filter(Boolean);
+
+    }
+
+    return String(seats)
+        .split(",")
+        .map(seat => seat.trim())
+        .filter(Boolean);
+
+}
+
+/* ==========================================================
+   SEAT SELECTION
+========================================================== */
+
+const selectedSeats = {};
+
+/**
+ * Toggle a seat selection.
+ */
+function toggleSeat(
+    listingId,
+    seat,
+    maximumSeats
+) {
+
+    if (!selectedSeats[listingId]) {
+
+        selectedSeats[listingId] = [];
+
+    }
+
+    const seats =
+        selectedSeats[listingId];
+
+    const existingIndex =
+        seats.indexOf(seat);
+
+    /*
+     * Seat already selected.
+     * Remove it.
+     */
+    if (existingIndex !== -1) {
+
+        seats.splice(
+            existingIndex,
+            1
+        );
+
+    }
+
+    /*
+     * Seat not selected.
+     * Add it if the customer
+     * has not reached the quantity.
+     */
+    else {
+
+        if (
+            seats.length >= maximumSeats
+        ) {
+
+            alert(
+                `You can select a maximum of ${maximumSeats} seat(s).`
+            );
+
+            return;
+
+        }
+
+        seats.push(seat);
+
+    }
+
+    updateSeatDisplay(
+        listingId
+    );
+
+}
+
+/**
+ * Update visual seat state
+ * and selected-seat counter.
+ */
+function updateSeatDisplay(
+    listingId
+) {
+
+    const seats =
+        selectedSeats[listingId] || [];
+
+    const buttons =
+        document.querySelectorAll(
+            `.seat-button[data-listing-id="${listingId}"]`
+        );
+
+    buttons.forEach(button => {
+
+        const seat =
+            button.dataset.seat;
+
+        if (
+            seats.includes(seat)
+        ) {
+
+            button.classList.add(
+                "selected"
+            );
+
+        }
+
+        else {
+
+            button.classList.remove(
+                "selected"
+            );
+
+        }
+
+    });
+
+    const counter =
+        document.getElementById(
+            `seat-count-${listingId}`
+        );
+
+    if (counter) {
+
+        counter.textContent =
+            `${seats.length} seat(s) selected`;
+
+    }
+
+}
+
+/* ==========================================================
+   BUY SELECTED SEATS
+========================================================== */
+
+function buySelectedSeats(
+    listingId,
+    maximumSeats
+) {
+
+    const seats =
+        selectedSeats[listingId] || [];
+
+    if (!seats.length) {
+
+        alert(
+            "Please select at least one seat."
+        );
+
+        return;
+
+    }
+
+    if (
+        seats.length > maximumSeats
+    ) {
+
+        alert(
+            `You can select a maximum of ${maximumSeats} seat(s).`
+        );
+
+        return;
+
+    }
+
+    /*
+     * Pass the selected seats to checkout.
+     *
+     * The checkout/payment backend will later
+     * verify that these seats are still available
+     * before permanently removing them.
+     */
+    const seatParameter =
+        encodeURIComponent(
+            seats.join(",")
+        );
+
+    window.location.href =
+        `checkout.html?ticket=${listingId}&seats=${seatParameter}`;
+
+}
+
+/* ==========================================================
+   HTML SAFETY HELPERS
+========================================================== */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+function escapeJs(value) {
+
+    return String(value)
+        .replace(
+            /\\/g,
+            "\\\\"
+        )
+        .replace(
+            /'/g,
+            "\\'"
+        );
 
 }
 
