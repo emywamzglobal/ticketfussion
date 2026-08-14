@@ -3067,7 +3067,7 @@ async function generateTicketPdf(
 
     const referenceY =
         detailsY -
-        45;
+        65;
 
 
     page.drawRectangle({
