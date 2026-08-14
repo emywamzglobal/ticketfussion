@@ -81,22 +81,66 @@ const timezones =
 const timezoneSelect =
     document.getElementById("timezone");
 
+const timezoneSearch =
+    document.getElementById("timezone-search");
+
 if (timezoneSelect) {
 
-    timezones.forEach(timezone => {
+    function populateTimezones(filter = "") {
 
-        const option =
-            document.createElement("option");
+        const currentValue =
+            timezoneSelect.value;
 
-        option.value =
-            timezone;
+        timezoneSelect.innerHTML =
+            '<option value="">Select Timezone</option>';
 
-        option.textContent =
-            timezone;
+        const search =
+            filter.trim().toLowerCase();
 
-        timezoneSelect.appendChild(option);
+        timezones
+            .filter(timezone =>
+                timezone.toLowerCase().includes(search)
+            )
+            .forEach(timezone => {
 
-    });
+                const option =
+                    document.createElement("option");
+
+                option.value =
+                    timezone;
+
+                option.textContent =
+                    timezone;
+
+                timezoneSelect.appendChild(option);
+
+            });
+
+        if (
+            currentValue &&
+            timezones.includes(currentValue)
+        ) {
+            timezoneSelect.value =
+                currentValue;
+        }
+    }
+
+    populateTimezones();
+
+    if (timezoneSearch) {
+
+        timezoneSearch.addEventListener(
+            "input",
+            () => {
+
+                populateTimezones(
+                    timezoneSearch.value
+                );
+
+            }
+        );
+
+    }
 
 }
 

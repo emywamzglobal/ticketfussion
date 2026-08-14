@@ -244,9 +244,17 @@
 
             <div class="form-group">
                  <label for="timezone">Timezone</label>
-                 <select id="timezone" required>
-                 <option value="">Select Timezone</option>
-                 </select>
+
+                 <input
+                   type="text"
+                   id="timezone-search"
+                   placeholder="Search timezone..."
+                   autocomplete="off"
+                >
+
+                <select id="timezone" required>
+                <option value="">Select Timezone</option>
+                </select>
             </div>
 
             <div class="form-group">
