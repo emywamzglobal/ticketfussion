@@ -78,72 +78,116 @@ async function loadEvents() {
 const timezones =
     Intl.supportedValuesOf("timeZone");
 
-const timezoneSelect =
+const timezoneInput =
     document.getElementById("timezone");
 
-const timezoneSearch =
-    document.getElementById("timezone-search");
+const timezoneSuggestions =
+    document.getElementById(
+        "timezone-suggestions"
+    );
 
-if (timezoneSelect) {
+if (
+    timezoneInput &&
+    timezoneSuggestions
+) {
 
-    function populateTimezones(filter = "") {
+    function showTimezoneSuggestions(
+        search = ""
+    ) {
 
-        const currentValue =
-            timezoneSelect.value;
+        const query =
+            search
+                .trim()
+                .toLowerCase();
 
-        timezoneSelect.innerHTML =
-            '<option value="">Select Timezone</option>';
+        const matches =
+            timezones
+                .filter(timezone =>
+                    timezone
+                        .toLowerCase()
+                        .includes(query)
+                )
+                .slice(0, 20);
 
-        const search =
-            filter.trim().toLowerCase();
+        timezoneSuggestions.innerHTML =
+            matches.map(
+                timezone => `
+                    <div
+                        class="timezone-option"
+                        data-timezone="${timezone}"
+                    >
+                        ${timezone}
+                    </div>
+                `
+            ).join("");
 
-        timezones
-            .filter(timezone =>
-                timezone.toLowerCase().includes(search)
-            )
-            .forEach(timezone => {
-
-                const option =
-                    document.createElement("option");
-
-                option.value =
-                    timezone;
-
-                option.textContent =
-                    timezone;
-
-                timezoneSelect.appendChild(option);
-
-            });
-
-        if (
-            currentValue &&
-            timezones.includes(currentValue)
-        ) {
-            timezoneSelect.value =
-                currentValue;
-        }
+        timezoneSuggestions.style.display =
+            matches.length
+                ? "block"
+                : "none";
     }
 
-    populateTimezones();
+    timezoneInput.addEventListener(
+        "focus",
+        () => {
 
-    if (timezoneSearch) {
+            showTimezoneSuggestions(
+                timezoneInput.value
+            );
 
-        timezoneSearch.addEventListener(
-            "input",
-            () => {
+        }
+    );
 
-                populateTimezones(
-                    timezoneSearch.value
+    timezoneInput.addEventListener(
+        "input",
+        () => {
+
+            showTimezoneSuggestions(
+                timezoneInput.value
+            );
+
+        }
+    );
+
+    timezoneSuggestions.addEventListener(
+        "click",
+        event => {
+
+            const option =
+                event.target.closest(
+                    ".timezone-option"
                 );
 
-            }
-        );
+            if (!option) return;
 
-    }
+            timezoneInput.value =
+                option.dataset.timezone;
+
+            timezoneSuggestions.style.display =
+                "none";
+
+        }
+    );
+
+    document.addEventListener(
+        "click",
+        event => {
+
+            if (
+                !event.target.closest(
+                    ".timezone-picker"
+                )
+            ) {
+
+                timezoneSuggestions.style.display =
+                    "none";
+
+            }
+
+        }
+    );
 
 }
-
 /* ==========================================================
    CREATE OCCURRENCE
 ========================================================== */

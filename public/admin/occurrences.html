@@ -242,20 +242,25 @@
                     required>
             </div>
 
-            <div class="form-group">
-                 <label for="timezone">Timezone</label>
+            <div class="form-group timezone-picker">
 
-                 <input
-                   type="text"
-                   id="timezone-search"
-                   placeholder="Search timezone..."
-                   autocomplete="off"
-                >
+    <label for="timezone">Timezone</label>
 
-                <select id="timezone" required>
-                <option value="">Select Timezone</option>
-                </select>
-            </div>
+    <input
+        type="text"
+        id="timezone"
+        name="timezone"
+        placeholder="Search timezone..."
+        autocomplete="off"
+        required
+    >
+
+    <div
+        id="timezone-suggestions"
+        class="timezone-suggestions"
+    ></div>
+
+</div>
 
             <div class="form-group">
                 <label for="about_event">About Event</label>
