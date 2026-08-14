@@ -512,6 +512,9 @@ function renderPricingSummary() {
 
 async function createOrder() {
 
+    const selectedSeats =
+    new URLSearchParams(window.location.search).get("seats") || "";
+
     const firstName = document
         .getElementById("first-name")
         .value
