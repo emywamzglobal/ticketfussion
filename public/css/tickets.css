@@ -215,6 +215,7 @@ p[id^="seat-count-"] {
     object-fit: contain;
     object-position: left center;
     border-radius: 16px;
+    margin-left: 0;
     transition:
         transform 0.3s ease,
         box-shadow 0.3s ease;
