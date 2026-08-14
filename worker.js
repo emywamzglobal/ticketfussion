@@ -1,6 +1,118 @@
 import bcrypt from "bcryptjs";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import QRCode from "qrcode";
+
+/* ==========================================================
+   OCCURRENCE TIMEZONE HELPERS
+========================================================== */
+
+/**
+ * Convert an occurrence's local date/time + IANA timezone
+ * into the correct UTC Date.
+ *
+ * Example:
+ * 2026-08-14 20:00
+ * America/New_York
+ *
+ * becomes the corresponding UTC instant.
+ */
+function occurrenceDateToUTC(
+    eventDate,
+    eventTime,
+    timezone
+) {
+
+    if (!eventDate || !eventTime || !timezone) {
+        return null;
+    }
+
+    const [year, month, day] =
+        eventDate.split("-").map(Number);
+
+    const [hour, minute, second = 0] =
+        eventTime.split(":").map(Number);
+
+    /*
+     * Start by treating the local occurrence time
+     * as if it were UTC.
+     */
+    let timestamp =
+        Date.UTC(
+            year,
+            month - 1,
+            day,
+            hour,
+            minute,
+            second
+        );
+
+    /*
+     * Correct the timestamp using the actual IANA
+     * timezone offset.
+     */
+    for (let i = 0; i < 3; i++) {
+
+        const parts =
+            new Intl.DateTimeFormat(
+                "en-US",
+                {
+                    timeZone: timezone,
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hourCycle: "h23"
+                }
+            ).formatToParts(
+                new Date(timestamp)
+            );
+
+        const values = {};
+
+        for (const part of parts) {
+
+            if (
+                part.type !== "literal"
+            ) {
+                values[part.type] =
+                    Number(part.value);
+            }
+
+        }
+
+        const timezoneLocalTimestamp =
+            Date.UTC(
+                values.year,
+                values.month - 1,
+                values.day,
+                values.hour,
+                values.minute,
+                values.second
+            );
+
+        const requestedLocalTimestamp =
+            Date.UTC(
+                year,
+                month - 1,
+                day,
+                hour,
+                minute,
+                second
+            );
+
+        const difference =
+            requestedLocalTimestamp -
+            timezoneLocalTimestamp;
+
+        timestamp += difference;
+
+    }
+
+    return new Date(timestamp);
+
+}
 export default {
   async fetch(request, env) {
 
@@ -706,6 +818,8 @@ if (
 
 }
 
+
+
 // ==========================
 // WEBSITE
 // ==========================
@@ -715,115 +829,329 @@ return env.ASSETS.fetch(request);
 
 async scheduled(event, env, ctx) {
 
-    const now = new Date().toISOString();
+    const now = new Date();
 
-    // 24–12 hours before event
-    await env.DB.prepare(`
-        UPDATE occurrences
-        SET status = 'limited'
-        WHERE status = 'active'
-        AND datetime(event_date || ' ' || event_time)
-        BETWEEN datetime(?, '+12 hours')
-        AND datetime(?, '+24 hours')
-    `)
-    .bind(now, now)
-    .run();
+    /*
+     * Get all occurrences.
+     *
+     * Each occurrence has its own:
+     * event_date
+     * event_time
+     * timezone
+     */
+    const { results: occurrences } =
+        await env.DB
+            .prepare(`
+                SELECT
+                    id,
+                    event_date,
+                    event_time,
+                    timezone,
+                    status
+                FROM occurrences
+            `)
+            .all();
 
-    await env.DB.prepare(`
-        UPDATE ticket_listings
-        SET status = 'limited'
-        WHERE occurrence_id IN (
-            SELECT id
-            FROM occurrences
-            WHERE status = 'limited'
-        )
-    `)
-    .run();
 
-    // Less than 12 hours before event
-    await env.DB.prepare(`
-        UPDATE occurrences
-        SET status = 'closed'
-        WHERE status IN ('active', 'limited')
-        AND datetime(event_date || ' ' || event_time)
-        <= datetime(?, '+12 hours')
-        AND datetime(event_date || ' ' || event_time)
-        > datetime(?)
-    `)
-    .bind(now, now)
-    .run();
+    /*
+     * Process every occurrence according
+     * to its own local timezone.
+     */
+    for (const occurrence of occurrences) {
 
-    await env.DB.prepare(`
-        UPDATE ticket_listings
-        SET status = 'closed'
-        WHERE occurrence_id IN (
-            SELECT id
-            FROM occurrences
-            WHERE status = 'closed'
-        )
-    `)
-    .run();
+        const eventUTC =
+            occurrenceDateToUTC(
+                occurrence.event_date,
+                occurrence.event_time,
+                occurrence.timezone
+            );
 
-    // Event passed
-    await env.DB.prepare(`
-        UPDATE occurrences
-        SET status = 'completed'
-        WHERE status = 'closed'
-        AND datetime(event_date || ' ' || event_time)
-        <= datetime(?)
-    `)
-    .bind(now)
-    .run();
 
-    // 24 hours after event
-    await env.DB.prepare(`
-        UPDATE occurrences
-        SET status = 'archived'
-        WHERE status = 'completed'
-        AND datetime(event_date || ' ' || event_time)
-        <= datetime(?, '-24 hours')
-    `)
-    .bind(now)
-    .run();
+        /*
+         * Never guess if timezone is missing.
+         */
+        if (!eventUTC) {
 
-    await env.DB.prepare(`
-        UPDATE ticket_listings
-        SET status = 'archived'
-        WHERE occurrence_id IN (
-            SELECT id
-            FROM occurrences
-            WHERE status = 'archived'
-        )
-    `)
-    .run();
+            console.error(
+                `Occurrence ${occurrence.id} has no valid timezone.`
+            );
 
-    // Delete after 30 days
-    await env.DB.prepare(`
-        DELETE FROM ticket_listings
-        WHERE status = 'archived'
-        AND occurrence_id IN (
-            SELECT id
-            FROM occurrences
-            WHERE status = 'archived'
-            AND datetime(event_date || ' ' || event_time)
-            < datetime(?, '-30 days')
-        )
-    `)
-    .bind(now)
-    .run();
+            continue;
 
-    await env.DB.prepare(`
-        DELETE FROM occurrences
-        WHERE status = 'archived'
-        AND datetime(event_date || ' ' || event_time)
-        < datetime(?, '-30 days')
-    `)
-    .bind(now)
-    .run();
+        }
+
+
+        /*
+         * Hours remaining until the event.
+         */
+        const millisecondsUntilEvent =
+            eventUTC.getTime() -
+            now.getTime();
+
+        const hoursUntilEvent =
+            millisecondsUntilEvent /
+            (1000 * 60 * 60);
+
+
+        /* ======================================================
+           EVENT HAS PASSED
+        ====================================================== */
+
+        if (hoursUntilEvent <= 0) {
+
+            /*
+             * 24+ hours after event
+             * → ARCHIVED
+             */
+            if (hoursUntilEvent <= -24) {
+
+                await env.DB
+                    .prepare(`
+                        UPDATE occurrences
+
+                        SET status = 'archived'
+
+                        WHERE id = ?
+                    `)
+                    .bind(
+                        occurrence.id
+                    )
+                    .run();
+
+
+                await env.DB
+                    .prepare(`
+                        UPDATE ticket_listings
+
+                        SET status = 'archived'
+
+                        WHERE occurrence_id = ?
+                    `)
+                    .bind(
+                        occurrence.id
+                    )
+                    .run();
+
+            }
+
+
+            /*
+             * Event has passed but is less
+             * than 24 hours old
+             * → COMPLETED
+             */
+            else {
+
+                await env.DB
+                    .prepare(`
+                        UPDATE occurrences
+
+                        SET status = 'completed'
+
+                        WHERE id = ?
+                    `)
+                    .bind(
+                        occurrence.id
+                    )
+                    .run();
+
+            }
+
+
+            continue;
+
+        }
+
+
+        /* ======================================================
+           LESS THAN 12 HOURS BEFORE EVENT
+        ====================================================== */
+
+        if (hoursUntilEvent <= 12) {
+
+            await env.DB
+                .prepare(`
+                    UPDATE occurrences
+
+                    SET status = 'closed'
+
+                    WHERE id = ?
+                `)
+                .bind(
+                    occurrence.id
+                )
+                .run();
+
+
+            await env.DB
+                .prepare(`
+                    UPDATE ticket_listings
+
+                    SET status = 'closed'
+
+                    WHERE occurrence_id = ?
+                `)
+                .bind(
+                    occurrence.id
+                )
+                .run();
+
+
+            continue;
+
+        }
+
+
+        /* ======================================================
+           12–24 HOURS BEFORE EVENT
+        ====================================================== */
+
+        if (hoursUntilEvent <= 24) {
+
+            await env.DB
+                .prepare(`
+                    UPDATE occurrences
+
+                    SET status = 'limited'
+
+                    WHERE id = ?
+                `)
+                .bind(
+                    occurrence.id
+                )
+                .run();
+
+
+            await env.DB
+                .prepare(`
+                    UPDATE ticket_listings
+
+                    SET status = 'limited'
+
+                    WHERE occurrence_id = ?
+                `)
+                .bind(
+                    occurrence.id
+                )
+                .run();
+
+
+            continue;
+
+        }
+
+
+        /* ======================================================
+           MORE THAN 24 HOURS BEFORE EVENT
+        ====================================================== */
+
+        await env.DB
+            .prepare(`
+                UPDATE occurrences
+
+                SET status = 'active'
+
+                WHERE id = ?
+            `)
+            .bind(
+                occurrence.id
+            )
+            .run();
+
+    }
+
+
+    /* ==========================================================
+       DELETE DATA 30 DAYS AFTER THE EVENT
+    ========================================================== */
+
+    /*
+     * We do this separately because the 30-day calculation
+     * must also use the occurrence's actual timezone.
+     */
+
+    const { results: archivedOccurrences } =
+        await env.DB
+            .prepare(`
+                SELECT
+                    id,
+                    event_date,
+                    event_time,
+                    timezone
+                FROM occurrences
+                WHERE status = 'archived'
+            `)
+            .all();
+
+
+    for (const occurrence of archivedOccurrences) {
+
+        const eventUTC =
+            occurrenceDateToUTC(
+                occurrence.event_date,
+                occurrence.event_time,
+                occurrence.timezone
+            );
+
+
+        if (!eventUTC) {
+
+            console.error(
+                `Archived occurrence ${occurrence.id} has no valid timezone.`
+            );
+
+            continue;
+
+        }
+
+
+        /*
+         * 30 days after the actual event time.
+         */
+        const thirtyDaysAfterEvent =
+            new Date(
+                eventUTC.getTime() +
+                (30 * 24 * 60 * 60 * 1000)
+            );
+
+
+        if (now >= thirtyDaysAfterEvent) {
+
+            /*
+             * Delete ticket listings first.
+             */
+            await env.DB
+                .prepare(`
+                    DELETE FROM ticket_listings
+
+                    WHERE occurrence_id = ?
+                `)
+                .bind(
+                    occurrence.id
+                )
+                .run();
+
+
+            /*
+             * Then delete the occurrence.
+             */
+            await env.DB
+                .prepare(`
+                    DELETE FROM occurrences
+
+                    WHERE id = ?
+                `)
+                .bind(
+                    occurrence.id
+                )
+                .run();
+
+        }
+
+    }
 
 }
-
-};
+}
 /* ==========================================================
    EVENTS
 ========================================================== */
@@ -970,6 +1298,10 @@ async function deleteEvent(id, env) {
    OCCURRENCES
 ========================================================== */
 
+/* ==========================================================
+   OCCURRENCES
+========================================================== */
+
 /**
  * Create Occurrence
  */
@@ -986,7 +1318,8 @@ async function createOccurrence(request, env) {
         city,
         country,
         event_date,
-        event_time
+        event_time,
+        timezone
     } = request;
 
     const result = await env.DB
@@ -1003,11 +1336,13 @@ async function createOccurrence(request, env) {
                 city,
                 country,
                 event_date,
-                event_time
+                event_time,
+                timezone,
+                status
 
             )
 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `)
         .bind(
 
@@ -1021,13 +1356,14 @@ async function createOccurrence(request, env) {
             city,
             country,
             event_date,
-            event_time
+            event_time,
+            timezone,
+            "active"
 
         )
         .run();
 
     return result;
-
 }
 
 /**
@@ -1085,7 +1421,8 @@ async function updateOccurrence(id, request, env) {
         city,
         country,
         event_date,
-        event_time
+        event_time,
+        timezone
     } = request;
 
     const result = await env.DB
@@ -1104,7 +1441,8 @@ async function updateOccurrence(id, request, env) {
                 city = ?,
                 country = ?,
                 event_date = ?,
-                event_time = ?
+                event_time = ?,
+                timezone = ?
 
             WHERE id = ?
         `)
@@ -1121,6 +1459,7 @@ async function updateOccurrence(id, request, env) {
             country,
             event_date,
             event_time,
+            timezone,
             id
 
         )
@@ -1147,7 +1486,6 @@ async function deleteOccurrence(id, env) {
     return result;
 
 }
-
 /* ==========================================================
    TICKET LISTINGS
 ========================================================== */

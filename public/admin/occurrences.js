@@ -72,6 +72,35 @@ async function loadEvents() {
 }
 
 /* ==========================================================
+   LOAD IANA TIMEZONES
+========================================================== */
+
+const timezones =
+    Intl.supportedValuesOf("timeZone");
+
+const timezoneSelect =
+    document.getElementById("timezone");
+
+if (timezoneSelect) {
+
+    timezones.forEach(timezone => {
+
+        const option =
+            document.createElement("option");
+
+        option.value =
+            timezone;
+
+        option.textContent =
+            timezone;
+
+        timezoneSelect.appendChild(option);
+
+    });
+
+}
+
+/* ==========================================================
    CREATE OCCURRENCE
 ========================================================== */
 
@@ -86,7 +115,8 @@ async function createOccurrence(e) {
 
     if (venueLayoutFile) {
 
-        const uploadFormData = new FormData();
+        const uploadFormData =
+            new FormData();
 
         uploadFormData.append(
             "file",
@@ -116,34 +146,61 @@ async function createOccurrence(e) {
             document.getElementById("event_id").value,
 
         about_event:
-            document.getElementById("about_event").value.trim(),
+            document
+                .getElementById("about_event")
+                .value
+                .trim(),
 
         event_gallery:
             "",
 
         event_information:
-            document.getElementById("event_information").value.trim(),
+            document
+                .getElementById("event_information")
+                .value
+                .trim(),
 
         venue:
-            document.getElementById("venue").value.trim(),
+            document
+                .getElementById("venue")
+                .value
+                .trim(),
 
         venue_information:
-            document.getElementById("venue_information").value.trim(),
+            document
+                .getElementById("venue_information")
+                .value
+                .trim(),
 
         venue_layout:
             venueLayoutUrl,
 
         city:
-            document.getElementById("city").value.trim(),
+            document
+                .getElementById("city")
+                .value
+                .trim(),
 
         country:
-            document.getElementById("country").value.trim(),
+            document
+                .getElementById("country")
+                .value
+                .trim(),
 
         event_date:
-            document.getElementById("event_date").value,
+            document
+                .getElementById("event_date")
+                .value,
 
         event_time:
-            document.getElementById("event_time").value
+            document
+                .getElementById("event_time")
+                .value,
+
+        timezone:
+            document
+                .getElementById("timezone")
+                .value
 
     };
 
@@ -192,6 +249,7 @@ async function createOccurrence(e) {
     }
 
 }
+
 /* ==========================================================
    LOAD OCCURRENCES LIST
 ========================================================== */
@@ -238,9 +296,7 @@ async function loadOccurrencesList() {
                     <div class="record-info">
 
                         <strong>
-
                             ${occurrence.venue}
-
                         </strong>
 
                         <br>
@@ -252,6 +308,10 @@ async function loadOccurrencesList() {
 
                         ${occurrence.event_date}
                         ${occurrence.event_time}
+
+                        <br>
+
+                        ${occurrence.timezone || ""}
 
                     </div>
 
