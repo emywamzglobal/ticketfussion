@@ -347,28 +347,25 @@ function renderListings(listings) {
 /* ==========================================================
    PARSE AVAILABLE SEATS
 ========================================================== */
-
 function parseSeats(seats) {
 
     if (!seats) {
-
         return [];
-
     }
 
     if (Array.isArray(seats)) {
-
         return seats
             .map(seat => String(seat).trim())
             .filter(Boolean);
-
     }
 
     return String(seats)
-        .split(",")
+        .replace(/```[a-zA-Z]*\s*/g, "")
+        .replace(/```/g, "")
+        .trim()
+        .split(/[,\s]+/)
         .map(seat => seat.trim())
         .filter(Boolean);
-
 }
 
 /* ==========================================================
