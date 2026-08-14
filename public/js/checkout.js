@@ -188,33 +188,29 @@ async function initialiseCheckout() {
 function bindEvents() {
 
     document
-
         .getElementById("complete-order")
-
         .addEventListener(
-
             "click",
-
             createOrder
-
         );
 
-        document
-    .getElementById("quantity")
-    .addEventListener("change", function () {
+    const seats =
+        new URLSearchParams(window.location.search)
+            .get("seats");
 
-        selectedQuantity = Number(this.value);
+    if (seats) {
+
+        selectedQuantity =
+            seats.split(",").filter(Boolean).length;
 
         document.getElementById("selected-quantity").textContent =
             selectedQuantity;
 
         renderPricingSummary();
 
-    });
+    }
 
 }
-
-
 /* ==========================================================
    DATE FORMATTER
 ========================================================== */
@@ -356,29 +352,61 @@ function renderSelectedTicket() {
 
 function renderQuantitySelector() {
 
-    const select = document.getElementById("quantity");
+    const select =
+        document.getElementById("quantity");
 
-    select.innerHTML = "";
+    const seats =
+        new URLSearchParams(window.location.search)
+            .get("seats");
 
-    const max = Number(checkoutData.quantity);
+    if (seats) {
 
-    for (let i = 1; i <= max; i++) {
+        const count =
+            seats.split(",").filter(Boolean).length;
 
-        const option = document.createElement("option");
+        selectedQuantity = count;
 
-        option.value = i;
+        select.innerHTML = `
+            <option value="${count}" selected>
+                ${count}
+            </option>
+        `;
 
-        option.textContent = i;
+        select.disabled = true;
 
-        select.appendChild(option);
+        document.getElementById(
+            "selected-quantity"
+        ).textContent = count;
 
+        return;
     }
 
-    document.getElementById("available-seats").textContent =
-        `${max} ticket(s) available`;
+    /* General admission */
+    select.innerHTML = "";
+
+    const max =
+        Number(checkoutData.quantity);
+
+    for (
+        let i = 1;
+        i <= max;
+        i++
+    ) {
+
+        const option =
+            document.createElement("option");
+
+        option.value = i;
+        option.textContent = i;
+
+        if (i === selectedQuantity) {
+            option.selected = true;
+        }
+
+        select.appendChild(option);
+    }
 
 }
-
 /* ==========================================================
    PRICING SUMMARY
 ========================================================== */
