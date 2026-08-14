@@ -72,3 +72,162 @@
     gap:1.5rem;
 
 }
+
+/* ==========================================================
+   TICKET SEAT SELECTION
+========================================================== */
+
+.seat-selection {
+    margin-top: 24px;
+    padding: 20px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+}
+
+.seat-selection > p:first-child {
+    margin: 0 0 16px;
+    font-size: 16px;
+    color: #0f172a;
+}
+
+/* Seat grid */
+
+.seat-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fill,
+        minmax(52px, 1fr)
+    );
+    gap: 10px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Individual seat */
+
+.seat-button {
+    position: relative;
+
+    min-width: 52px;
+    height: 44px;
+
+    padding: 0 8px;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #0f172a;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+/* Hover */
+
+.seat-button:hover {
+    background: #eff6ff;
+    border-color: #2563eb;
+    color: #1d4ed8;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 3px 8px rgba(15, 23, 42, 0.10);
+}
+
+/* Keyboard focus */
+
+.seat-button:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.25);
+    outline-offset: 2px;
+}
+
+/* Selected seat */
+
+.seat-button.selected {
+    background: #2563eb;
+    border-color: #1d4ed8;
+    color: #ffffff;
+
+    box-shadow:
+        0 4px 10px rgba(37, 99, 235, 0.25);
+
+    transform: translateY(-1px);
+}
+
+/* Selected hover */
+
+.seat-button.selected:hover {
+    background: #1d4ed8;
+    border-color: #1e40af;
+    color: #ffffff;
+}
+
+/* Selected check mark */
+
+.seat-button.selected::before {
+    content: "✓";
+
+    position: absolute;
+
+    top: 3px;
+    right: 5px;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/* Selected seat counter */
+
+.seat-selection
+p[id^="seat-count-"] {
+    margin: 16px 0 0;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    color: #475569;
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+
+    .seat-selection {
+        padding: 14px;
+    }
+
+    .seat-grid {
+        grid-template-columns:
+            repeat(
+                auto-fill,
+                minmax(46px, 1fr)
+            );
+
+        gap: 7px;
+    }
+
+    .seat-button {
+        min-width: 46px;
+        height: 40px;
+
+        padding: 0 5px;
+
+        font-size: 12px;
+    }
+
+}
