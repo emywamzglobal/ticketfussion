@@ -215,6 +215,20 @@ function renderListings(listings) {
 
     <div>
 
+        ${
+            ticket.venue_layout
+                ? `
+                <div class="venue-layout">
+                    <img
+                        src="${escapeHtml(ticket.venue_layout)}"
+                        alt="Venue Layout"
+                        loading="lazy"
+                    >
+                </div>
+                `
+                : ""
+        }
+
         <h3>
             ${ticket.ticket_type}
         </h3>
@@ -343,7 +357,6 @@ function renderListings(listings) {
     }).join("");
 
 }
-
 /* ==========================================================
    PARSE AVAILABLE SEATS
 ========================================================== */

@@ -77,61 +77,157 @@ async function publishTicketListing(event) {
 
     event.preventDefault();
 
-    const payload = {
-
-        occurrence_id:
-            Number(document.getElementById("occurrence_id").value),
-
-        ticket_type:
-            document.getElementById("ticket_type").value,
-
-        section:
-            document.getElementById("section").value,
-
-        row:
-            document.getElementById("row").value,
-
-        seats:
-            document.getElementById("seats").value,
-
-        quantity:
-            Number(document.getElementById("quantity").value),
-
-        price:
-            Number(document.getElementById("price").value),
-
-        delivery_method:
-            document.getElementById("delivery_method").value
-
-    };
-
     try {
 
-        const response =
-            await fetch("/api/ticket-listings", {
+        /* ==========================================
+           UPLOAD VENUE LAYOUT TO R2
+        ========================================== */
 
-                method: "POST",
+        let venueLayoutUrl = "";
 
-                headers: {
+        const venueLayoutFile =
+            document.getElementById("venue_layout").files[0];
 
-                    "Content-Type": "application/json"
+        if (venueLayoutFile) {
 
-                },
+            const uploadFormData =
+                new FormData();
 
-                body: JSON.stringify(payload)
+            uploadFormData.append(
+                "file",
+                venueLayoutFile
+            );
 
-            });
+            const uploadResponse =
+                await fetch(
+                    "/api/upload",
+                    {
+                        method: "POST",
+                        body: uploadFormData
+                    }
+                );
 
-        if (!response.ok) {
+            if (!uploadResponse.ok) {
 
-            throw new Error();
+                throw new Error(
+                    "Venue layout upload failed."
+                );
+
+            }
+
+            const uploadResult =
+                await uploadResponse.json();
+
+            venueLayoutUrl =
+                uploadResult.url;
 
         }
 
-        alert("Ticket listing published successfully.");
+
+        /* ==========================================
+           TICKET LISTING PAYLOAD
+        ========================================== */
+
+        const payload = {
+
+            occurrence_id:
+                Number(
+                    document
+                        .getElementById("occurrence_id")
+                        .value
+                ),
+
+            ticket_type:
+                document
+                    .getElementById("ticket_type")
+                    .value,
+
+            section:
+                document
+                    .getElementById("section")
+                    .value,
+
+            row:
+                document
+                    .getElementById("row")
+                    .value,
+
+            seats:
+                document
+                    .getElementById("seats")
+                    .value,
+
+            quantity:
+                Number(
+                    document
+                        .getElementById("quantity")
+                        .value
+                ),
+
+            price:
+                Number(
+                    document
+                        .getElementById("price")
+                        .value
+                ),
+
+            delivery_method:
+                document
+                    .getElementById("delivery_method")
+                    .value,
+
+            venue_layout:
+                venueLayoutUrl
+
+        };
+
+
+        /* ==========================================
+           CREATE TICKET LISTING
+        ========================================== */
+
+        const response =
+            await fetch(
+                "/api/ticket-listings",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify(payload)
+
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to publish ticket listing."
+            );
+
+        }
+
+
+        /* ==========================================
+           SUCCESS
+        ========================================== */
+
+        alert(
+            "Ticket listing published successfully."
+        );
 
         document
-            .getElementById("ticket-listing-form")
+            .getElementById(
+                "ticket-listing-form"
+            )
             .reset();
 
         await loadOccurrences();
@@ -142,12 +238,14 @@ async function publishTicketListing(event) {
 
         console.error(error);
 
-        alert("Unable to publish ticket listing.");
+        alert(
+            error.message ||
+            "Unable to publish ticket listing."
+        );
 
     }
 
 }
-
 /* ==========================================================
    LOAD TICKET LISTINGS
 ========================================================== */

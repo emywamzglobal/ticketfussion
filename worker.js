@@ -1505,7 +1505,8 @@ async function createTicketListing(request, env) {
         seats,
         quantity,
         price,
-        delivery_method
+        delivery_method,
+        venue_layout
     } = request;
 
     const result = await env.DB
@@ -1519,11 +1520,12 @@ async function createTicketListing(request, env) {
                 seats,
                 quantity,
                 price,
-                delivery_method
+                delivery_method,
+                venue_layout
 
             )
 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `)
         .bind(
 
@@ -1534,7 +1536,8 @@ async function createTicketListing(request, env) {
             seats,
             quantity,
             price,
-            delivery_method
+            delivery_method,
+            venue_layout
 
         )
         .run();
@@ -1595,7 +1598,8 @@ async function updateTicketListing(id, request, env) {
         seats,
         quantity,
         price,
-        delivery_method
+        delivery_method,
+        venue_layout
     } = request;
 
     const result = await env.DB
@@ -1611,7 +1615,8 @@ async function updateTicketListing(id, request, env) {
                 seats = ?,
                 quantity = ?,
                 price = ?,
-                delivery_method = ?
+                delivery_method = ?,
+                venue_layout = ?
 
             WHERE id = ?
         `)
@@ -1625,6 +1630,7 @@ async function updateTicketListing(id, request, env) {
             quantity,
             price,
             delivery_method,
+            venue_layout,
             id
 
         )

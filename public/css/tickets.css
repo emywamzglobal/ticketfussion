@@ -201,6 +201,55 @@ p[id^="seat-count-"] {
     color: #475569;
 }
 
+.venue-layout {
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+.venue-layout img {
+    display: block;
+    width: 100%;
+    max-height: 600px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 16px;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.venue-layout:hover img {
+    transform: scale(1.02);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.venue-layout img {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 380px;
+    object-fit: contain;
+    margin: 0 auto;
+}
+
+.seat-button {
+    cursor: pointer;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.seat-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.seat-button.selected {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
 /* ==========================================================
    MOBILE
 ========================================================== */
