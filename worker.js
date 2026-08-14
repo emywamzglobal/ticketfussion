@@ -13,31 +13,31 @@ if (url.pathname === "/sitemap.xml") {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
-<loc>https://ticketfussion.com/</loc>
+<loc>https://www.ticketfussion.com/</loc>
 <changefreq>daily</changefreq>
 <priority>1.0</priority>
 </url>
 
 <url>
-<loc>https://ticketfussion.com/about.html</loc>
+<loc>https://www.ticketfussion.com/about.html</loc>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://ticketfussion.com/contact.html</loc>
+<loc>https://www.ticketfussion.com/contact.html</loc>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://ticketfussion.com/faq.html</loc>
+<loc>https://www.ticketfussion.com/faq.html</loc>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://ticketfussion.com/event.html</loc>
+<loc>https://www.ticketfussion.com/event.html</loc>
 <changefreq>daily</changefreq>
 <priority>0.9</priority>
 </url>
