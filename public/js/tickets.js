@@ -171,6 +171,22 @@ function renderPage(
         ${occurrence.country}
     </p>
 
+    ${
+    listings.some(ticket => ticket.venue_layout)
+        ? `
+        <div class="venue-layout">
+            <img
+                src="${escapeHtml(
+                    listings.find(ticket => ticket.venue_layout).venue_layout
+                )}"
+                alt="Venue Layout"
+                loading="lazy"
+            >
+        </div>
+        `
+        : ""
+}
+
 </section>
 
 <section class="ticket-list container">
@@ -214,20 +230,6 @@ function renderListings(listings) {
 <div class="ticket-card">
 
     <div>
-
-        ${
-            ticket.venue_layout
-                ? `
-                <div class="venue-layout">
-                    <img
-                        src="${escapeHtml(ticket.venue_layout)}"
-                        alt="Venue Layout"
-                        loading="lazy"
-                    >
-                </div>
-                `
-                : ""
-        }
 
         <h3>
             ${ticket.ticket_type}
