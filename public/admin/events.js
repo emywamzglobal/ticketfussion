@@ -2,6 +2,14 @@
    EVENTS
 ========================================================== */
 
+let editingEventId = null;
+let existingBannerImage = "";
+
+
+/* ==========================================================
+   FORM
+========================================================== */
+
 const form =
     document.getElementById("event-form");
 
@@ -9,10 +17,32 @@ if (form) {
 
     form.addEventListener(
         "submit",
-        createEvent
+        handleEventSubmit
     );
 
 }
+
+
+/* ==========================================================
+   SUBMIT EVENT
+========================================================== */
+
+async function handleEventSubmit(e) {
+
+    e.preventDefault();
+
+    if (editingEventId) {
+
+        await updateEventRecord();
+
+    } else {
+
+        await createEvent(e);
+
+    }
+
+}
+
 
 /* ==========================================================
    CREATE EVENT
@@ -23,76 +53,118 @@ async function createEvent(e) {
     e.preventDefault();
 
     const title =
-        document.getElementById("title").value.trim();
+        document
+            .getElementById("title")
+            .value
+            .trim();
 
     const category =
-        document.getElementById("category").value.trim();
+        document
+            .getElementById("category")
+            .value
+            .trim();
 
     const description =
-        document.getElementById("description").value.trim();
+        document
+            .getElementById("description")
+            .value
+            .trim();
 
     const file =
-        document.getElementById("banner_image").files[0];
+        document
+            .getElementById("banner_image")
+            .files[0];
+
 
     if (!file) {
 
-        alert("Please select a banner image.");
+        alert(
+            "Please select a banner image."
+        );
 
         return;
 
     }
 
+
     try {
 
-        // Upload image to R2
-        const formData = new FormData();
+        /* ==========================================
+           UPLOAD IMAGE
+        ========================================== */
 
-        formData.append("file", file);
+        const formData =
+            new FormData();
 
-        const uploadResponse = await fetch(
-            "/api/upload",
-            {
-                method: "POST",
-                body: formData
-            }
+        formData.append(
+            "file",
+            file
         );
+
+
+        const uploadResponse =
+            await fetch(
+                "/api/upload",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
 
         if (!uploadResponse.ok) {
 
-            throw new Error("Image upload failed.");
+            throw new Error(
+                "Image upload failed."
+            );
 
         }
+
 
         const uploadResult =
             await uploadResponse.json();
 
-        // Save event
+
+        /* ==========================================
+           CREATE EVENT
+        ========================================== */
+
         const payload = {
 
             title,
+
             category,
+
             description,
-            banner_image: uploadResult.url
+
+            banner_image:
+                uploadResult.url
 
         };
 
-        const response = await fetch(
-            "/api/events",
-            {
 
-                method: "POST",
+        const response =
+            await fetch(
+                "/api/events",
+                {
 
-                headers: {
+                    method: "POST",
 
-                    "Content-Type":
-                        "application/json"
+                    headers: {
 
-                },
+                        "Content-Type":
+                            "application/json"
 
-                body: JSON.stringify(payload)
+                    },
 
-            }
-        );
+                    body:
+                        JSON.stringify(
+                            payload
+                        )
+
+                }
+            );
+
 
         if (!response.ok) {
 
@@ -102,9 +174,15 @@ async function createEvent(e) {
 
         }
 
-        alert("Event published successfully.");
+
+        alert(
+            "Event published successfully."
+        );
+
 
         form.reset();
+
+        await loadEventsList();
 
     }
 
@@ -112,11 +190,401 @@ async function createEvent(e) {
 
         console.error(error);
 
-        alert(error.message);
+        alert(
+            error.message ||
+            "Unable to create event."
+        );
 
     }
 
 }
+
+
+/* ==========================================================
+   EDIT EVENT
+========================================================== */
+
+async function editEvent(id) {
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/events/${id}`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load event."
+            );
+
+        }
+
+
+        const event =
+            await response.json();
+
+
+        if (!event) {
+
+            throw new Error(
+                "Event not found."
+            );
+
+        }
+
+
+        /* ==========================================
+           STORE EDIT STATE
+        ========================================== */
+
+        editingEventId =
+            id;
+
+        existingBannerImage =
+            event.banner_image || "";
+
+
+        /* ==========================================
+           FILL FORM
+        ========================================== */
+
+        document
+            .getElementById("title")
+            .value =
+                event.title || "";
+
+
+        document
+            .getElementById("category")
+            .value =
+                event.category || "";
+
+
+        document
+            .getElementById("description")
+            .value =
+                event.description || "";
+
+
+        /* ==========================================
+           CHANGE BUTTON
+        ========================================== */
+
+        const submitButton =
+            form.querySelector(
+                'button[type="submit"]'
+            );
+
+
+        if (submitButton) {
+
+            submitButton.textContent =
+                "Update Event";
+
+        }
+
+
+        /* ==========================================
+           ADD CANCEL BUTTON
+        ========================================== */
+
+        addCancelEditButton();
+
+
+        /* ==========================================
+           SCROLL TO FORM
+        ========================================== */
+
+        form.scrollIntoView({
+
+            behavior: "smooth",
+
+            block: "start"
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            error.message ||
+            "Unable to load event."
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   UPDATE EVENT
+========================================================== */
+
+async function updateEventRecord() {
+
+    const title =
+        document
+            .getElementById("title")
+            .value
+            .trim();
+
+    const category =
+        document
+            .getElementById("category")
+            .value
+            .trim();
+
+    const description =
+        document
+            .getElementById("description")
+            .value
+            .trim();
+
+    const file =
+        document
+            .getElementById("banner_image")
+            .files[0];
+
+
+    try {
+
+        let bannerImage =
+            existingBannerImage;
+
+
+        /* ==========================================
+           UPLOAD NEW IMAGE ONLY IF SELECTED
+        ========================================== */
+
+        if (file) {
+
+            const formData =
+                new FormData();
+
+            formData.append(
+                "file",
+                file
+            );
+
+
+            const uploadResponse =
+                await fetch(
+                    "/api/upload",
+                    {
+
+                        method: "POST",
+
+                        body:
+                            formData
+
+                    }
+                );
+
+
+            if (!uploadResponse.ok) {
+
+                throw new Error(
+                    "Image upload failed."
+                );
+
+            }
+
+
+            const uploadResult =
+                await uploadResponse.json();
+
+
+            bannerImage =
+                uploadResult.url;
+
+        }
+
+
+        /* ==========================================
+           UPDATE EVENT
+        ========================================== */
+
+        const payload = {
+
+            title,
+
+            category,
+
+            description,
+
+            banner_image:
+                bannerImage
+
+        };
+
+
+        const response =
+            await fetch(
+                `/api/events/${editingEventId}`,
+                {
+
+                    method: "PUT",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify(
+                            payload
+                        )
+
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to update event."
+            );
+
+        }
+
+
+        alert(
+            "Event updated successfully."
+        );
+
+
+        resetEventForm();
+
+        await loadEventsList();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            error.message ||
+            "Unable to update event."
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   CANCEL EDIT
+========================================================== */
+
+function addCancelEditButton() {
+
+    if (
+        document.getElementById(
+            "cancel-event-edit"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const submitButton =
+        form.querySelector(
+            'button[type="submit"]'
+        );
+
+
+    if (!submitButton) return;
+
+
+    const cancelButton =
+        document.createElement(
+            "button"
+        );
+
+
+    cancelButton.type =
+        "button";
+
+    cancelButton.id =
+        "cancel-event-edit";
+
+    cancelButton.className =
+        "btn btn-outline";
+
+    cancelButton.textContent =
+        "Cancel Edit";
+
+
+    cancelButton.addEventListener(
+        "click",
+        resetEventForm
+    );
+
+
+    submitButton.parentElement
+        .insertBefore(
+            cancelButton,
+            submitButton
+        );
+
+}
+
+
+/* ==========================================================
+   RESET FORM
+========================================================== */
+
+function resetEventForm() {
+
+    editingEventId =
+        null;
+
+    existingBannerImage =
+        "";
+
+
+    form.reset();
+
+
+    const submitButton =
+        form.querySelector(
+            'button[type="submit"]'
+        );
+
+
+    if (submitButton) {
+
+        submitButton.textContent =
+            "Publish Event";
+
+    }
+
+
+    const cancelButton =
+        document.getElementById(
+            "cancel-event-edit"
+        );
+
+
+    if (cancelButton) {
+
+        cancelButton.remove();
+
+    }
+
+}
+
 
 /* ==========================================================
    LOAD EVENTS
@@ -127,6 +595,7 @@ document.addEventListener(
     loadEventsList
 );
 
+
 async function loadEventsList() {
 
     const container =
@@ -134,15 +603,30 @@ async function loadEventsList() {
             "events-list"
         );
 
+
     if (!container) return;
+
 
     try {
 
         const response =
-            await fetch("/api/events");
+            await fetch(
+                "/api/events"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load events."
+            );
+
+        }
+
 
         const events =
             await response.json();
+
 
         if (!events.length) {
 
@@ -153,45 +637,51 @@ async function loadEventsList() {
 
         }
 
+
         container.innerHTML =
-            events.map(event => `
-                        <div class="admin-record">
+            events.map(
+                event => `
 
-            <div class="record-info">
+                <div class="admin-record">
 
-                <strong>
-                    ${event.title}
-                </strong>
+                    <div class="record-info">
 
-                <br>
+                        <strong>
+                            ${event.title}
+                        </strong>
 
-                ${event.category}
+                        <br>
 
-            </div>
+                        ${event.category}
 
-            <div class="record-actions">
+                    </div>
 
-                <button
-                    class="btn btn-outline"
-                    onclick="editEvent(${event.id})">
 
-                    Edit
+                    <div class="record-actions">
 
-                </button>
+                        <button
+                            class="btn btn-outline"
+                            onclick="editEvent(${event.id})">
 
-                <button
-                    class="btn btn-danger"
-                    onclick="deleteEventRecord(${event.id})">
+                            Edit
 
-                    Delete
+                        </button>
 
-                </button>
 
-            </div>
+                        <button
+                            class="btn btn-danger"
+                            onclick="deleteEventRecord(${event.id})">
 
-        </div>
+                            Delete
 
-    `).join("");
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `
+            ).join("");
 
     }
 
@@ -206,6 +696,7 @@ async function loadEventsList() {
 
 }
 
+
 /* ==========================================================
    DELETE EVENT
 ========================================================== */
@@ -217,8 +708,11 @@ async function deleteEventRecord(id) {
             "Delete this event?"
         )
     ) {
+
         return;
+
     }
+
 
     try {
 
@@ -226,9 +720,12 @@ async function deleteEventRecord(id) {
             await fetch(
                 `/api/events/${id}`,
                 {
+
                     method: "DELETE"
+
                 }
             );
+
 
         if (!response.ok) {
 
@@ -236,7 +733,8 @@ async function deleteEventRecord(id) {
 
         }
 
-        loadEventsList();
+
+        await loadEventsList();
 
     }
 

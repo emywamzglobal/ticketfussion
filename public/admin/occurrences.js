@@ -2,26 +2,56 @@
    OCCURRENCES
 ========================================================== */
 
+let editingOccurrenceId = null;
+let existingVenueLayout = "";
+let existingEventGallery = "";
+
+
 const form =
     document.getElementById("occurrence-form");
+
 
 document.addEventListener(
     "DOMContentLoaded",
     () => {
 
         loadEvents();
+        loadOccurrencesList();
 
     }
 );
+
 
 if (form) {
 
     form.addEventListener(
         "submit",
-        createOccurrence
+        handleOccurrenceSubmit
     );
 
 }
+
+
+/* ==========================================================
+   SUBMIT OCCURRENCE
+========================================================== */
+
+async function handleOccurrenceSubmit(e) {
+
+    e.preventDefault();
+
+    if (editingOccurrenceId) {
+
+        await updateOccurrence();
+
+    } else {
+
+        await createOccurrence(e);
+
+    }
+
+}
+
 
 /* ==========================================================
    LOAD EVENTS
@@ -71,6 +101,7 @@ async function loadEvents() {
 
 }
 
+
 /* ==========================================================
    LOAD IANA TIMEZONES
 ========================================================== */
@@ -78,13 +109,16 @@ async function loadEvents() {
 const timezones =
     Intl.supportedValuesOf("timeZone");
 
+
 const timezoneInput =
     document.getElementById("timezone");
+
 
 const timezoneSuggestions =
     document.getElementById(
         "timezone-suggestions"
     );
+
 
 if (
     timezoneInput &&
@@ -125,7 +159,9 @@ if (
             matches.length
                 ? "block"
                 : "none";
+
     }
+
 
     timezoneInput.addEventListener(
         "focus",
@@ -138,6 +174,7 @@ if (
         }
     );
 
+
     timezoneInput.addEventListener(
         "input",
         () => {
@@ -148,6 +185,7 @@ if (
 
         }
     );
+
 
     timezoneSuggestions.addEventListener(
         "click",
@@ -169,6 +207,7 @@ if (
         }
     );
 
+
     document.addEventListener(
         "click",
         event => {
@@ -188,6 +227,8 @@ if (
     );
 
 }
+
+
 /* ==========================================================
    CREATE OCCURRENCE
 ========================================================== */
@@ -199,7 +240,10 @@ async function createOccurrence(e) {
     let venueLayoutUrl = "";
 
     const venueLayoutFile =
-        document.getElementById("venue_layout").files[0];
+        document
+            .getElementById("venue_layout")
+            .files[0];
+
 
     if (venueLayoutFile) {
 
@@ -211,6 +255,7 @@ async function createOccurrence(e) {
             venueLayoutFile
         );
 
+
         const uploadResponse =
             await fetch(
                 "/api/upload",
@@ -220,18 +265,23 @@ async function createOccurrence(e) {
                 }
             );
 
+
         const uploadResult =
             await uploadResponse.json();
+
 
         venueLayoutUrl =
             uploadResult.url;
 
     }
 
+
     const payload = {
 
         event_id:
-            document.getElementById("event_id").value,
+            document
+                .getElementById("event_id")
+                .value,
 
         about_event:
             document
@@ -292,12 +342,14 @@ async function createOccurrence(e) {
 
     };
 
+
     try {
 
         const response =
             await fetch(
                 "/api/occurrences",
                 {
+
                     method: "POST",
 
                     headers: {
@@ -306,9 +358,13 @@ async function createOccurrence(e) {
                     },
 
                     body:
-                        JSON.stringify(payload)
+                        JSON.stringify(
+                            payload
+                        )
+
                 }
             );
+
 
         if (!response.ok) {
 
@@ -318,13 +374,17 @@ async function createOccurrence(e) {
 
         }
 
+
         alert(
             "Occurrence created successfully."
         );
 
-        form.reset();
 
-        loadEvents();
+        resetOccurrenceForm();
+
+        await loadEvents();
+
+        await loadOccurrencesList();
 
     }
 
@@ -332,20 +392,498 @@ async function createOccurrence(e) {
 
         console.error(error);
 
-        alert(error.message);
+        alert(
+            error.message
+        );
 
     }
 
 }
 
+
+/* ==========================================================
+   EDIT OCCURRENCE
+========================================================== */
+
+async function editOccurrence(id) {
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/occurrences/${id}`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load occurrence."
+            );
+
+        }
+
+
+        const occurrence =
+            await response.json();
+
+
+        if (!occurrence) {
+
+            throw new Error(
+                "Occurrence not found."
+            );
+
+        }
+
+
+        /* ==========================================
+           STORE EDIT STATE
+        ========================================== */
+
+        editingOccurrenceId =
+            id;
+
+        existingVenueLayout =
+            occurrence.venue_layout || "";
+
+        existingEventGallery =
+            occurrence.event_gallery || "";
+
+
+        /* ==========================================
+           FILL FORM
+        ========================================== */
+
+        document
+            .getElementById("event_id")
+            .value =
+                occurrence.event_id || "";
+
+
+        document
+            .getElementById("venue")
+            .value =
+                occurrence.venue || "";
+
+
+        document
+            .getElementById("city")
+            .value =
+                occurrence.city || "";
+
+
+        document
+            .getElementById("country")
+            .value =
+                occurrence.country || "";
+
+
+        document
+            .getElementById("event_date")
+            .value =
+                occurrence.event_date || "";
+
+
+        document
+            .getElementById("event_time")
+            .value =
+                occurrence.event_time || "";
+
+
+        document
+            .getElementById("timezone")
+            .value =
+                occurrence.timezone || "";
+
+
+        document
+            .getElementById("about_event")
+            .value =
+                occurrence.about_event || "";
+
+
+        document
+            .getElementById("event_information")
+            .value =
+                occurrence.event_information || "";
+
+
+        document
+            .getElementById("venue_information")
+            .value =
+                occurrence.venue_information || "";
+
+
+        /* ==========================================
+           CHANGE BUTTON
+        ========================================== */
+
+        const submitButton =
+            form.querySelector(
+                'button[type="submit"]'
+            );
+
+
+        if (submitButton) {
+
+            submitButton.textContent =
+                "Update Occurrence";
+
+        }
+
+
+        /* ==========================================
+           ADD CANCEL BUTTON
+        ========================================== */
+
+        addCancelOccurrenceButton();
+
+
+        /* ==========================================
+           SCROLL TO FORM
+        ========================================== */
+
+        form.scrollIntoView({
+
+            behavior: "smooth",
+
+            block: "start"
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            error.message ||
+            "Unable to load occurrence."
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   UPDATE OCCURRENCE
+========================================================== */
+
+async function updateOccurrence() {
+
+    try {
+
+        let venueLayoutUrl =
+            existingVenueLayout;
+
+
+        const venueLayoutFile =
+            document
+                .getElementById("venue_layout")
+                .files[0];
+
+
+        /* ==========================================
+           UPLOAD NEW VENUE LAYOUT IF SELECTED
+        ========================================== */
+
+        if (venueLayoutFile) {
+
+            const uploadFormData =
+                new FormData();
+
+            uploadFormData.append(
+                "file",
+                venueLayoutFile
+            );
+
+
+            const uploadResponse =
+                await fetch(
+                    "/api/upload",
+                    {
+
+                        method: "POST",
+
+                        body:
+                            uploadFormData
+
+                    }
+                );
+
+
+            if (!uploadResponse.ok) {
+
+                throw new Error(
+                    "Venue layout upload failed."
+                );
+
+            }
+
+
+            const uploadResult =
+                await uploadResponse.json();
+
+
+            venueLayoutUrl =
+                uploadResult.url;
+
+        }
+
+
+        /* ==========================================
+           UPDATE PAYLOAD
+        ========================================== */
+
+        const payload = {
+
+            event_id:
+                document
+                    .getElementById("event_id")
+                    .value,
+
+            about_event:
+                document
+                    .getElementById("about_event")
+                    .value
+                    .trim(),
+
+            event_gallery:
+                existingEventGallery,
+
+            event_information:
+                document
+                    .getElementById("event_information")
+                    .value
+                    .trim(),
+
+            venue:
+                document
+                    .getElementById("venue")
+                    .value
+                    .trim(),
+
+            venue_information:
+                document
+                    .getElementById("venue_information")
+                    .value
+                    .trim(),
+
+            venue_layout:
+                venueLayoutUrl,
+
+            city:
+                document
+                    .getElementById("city")
+                    .value
+                    .trim(),
+
+            country:
+                document
+                    .getElementById("country")
+                    .value
+                    .trim(),
+
+            event_date:
+                document
+                    .getElementById("event_date")
+                    .value,
+
+            event_time:
+                document
+                    .getElementById("event_time")
+                    .value,
+
+            timezone:
+                document
+                    .getElementById("timezone")
+                    .value
+
+        };
+
+
+        /* ==========================================
+           SEND UPDATE
+        ========================================== */
+
+        const response =
+            await fetch(
+                `/api/occurrences/${editingOccurrenceId}`,
+                {
+
+                    method: "PUT",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify(
+                            payload
+                        )
+
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to update occurrence."
+            );
+
+        }
+
+
+        alert(
+            "Occurrence updated successfully."
+        );
+
+
+        /* ==========================================
+           RESET
+        ========================================== */
+
+        resetOccurrenceForm();
+
+
+        await loadEvents();
+
+        await loadOccurrencesList();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            error.message ||
+            "Unable to update occurrence."
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   CANCEL EDIT
+========================================================== */
+
+function addCancelOccurrenceButton() {
+
+    if (
+        document.getElementById(
+            "cancel-occurrence-edit"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const submitButton =
+        form.querySelector(
+            'button[type="submit"]'
+        );
+
+
+    if (!submitButton) return;
+
+
+    const cancelButton =
+        document.createElement(
+            "button"
+        );
+
+
+    cancelButton.type =
+        "button";
+
+    cancelButton.id =
+        "cancel-occurrence-edit";
+
+    cancelButton.className =
+        "btn btn-outline";
+
+    cancelButton.textContent =
+        "Cancel Edit";
+
+
+    cancelButton.addEventListener(
+        "click",
+        resetOccurrenceForm
+    );
+
+
+    submitButton.parentElement
+        .insertBefore(
+            cancelButton,
+            submitButton
+        );
+
+}
+
+
+/* ==========================================================
+   RESET FORM
+========================================================== */
+
+function resetOccurrenceForm() {
+
+    editingOccurrenceId =
+        null;
+
+    existingVenueLayout =
+        "";
+
+    existingEventGallery =
+        "";
+
+
+    form.reset();
+
+
+    const submitButton =
+        form.querySelector(
+            'button[type="submit"]'
+        );
+
+
+    if (submitButton) {
+
+        submitButton.textContent =
+            "Publish Occurrence";
+
+    }
+
+
+    const cancelButton =
+        document.getElementById(
+            "cancel-occurrence-edit"
+        );
+
+
+    if (cancelButton) {
+
+        cancelButton.remove();
+
+    }
+
+}
+
+
 /* ==========================================================
    LOAD OCCURRENCES LIST
 ========================================================== */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    loadOccurrencesList
-);
 
 async function loadOccurrencesList() {
 
@@ -354,7 +892,9 @@ async function loadOccurrencesList() {
             "occurrences-list"
         );
 
+
     if (!container) return;
+
 
     try {
 
@@ -363,8 +903,10 @@ async function loadOccurrencesList() {
                 "/api/occurrences"
             );
 
+
         const occurrences =
             await response.json();
+
 
         if (!occurrences.length) {
 
@@ -374,6 +916,7 @@ async function loadOccurrencesList() {
             return;
 
         }
+
 
         container.innerHTML =
             occurrences.map(
@@ -403,6 +946,7 @@ async function loadOccurrencesList() {
 
                     </div>
 
+
                     <div class="record-actions">
 
                         <button
@@ -412,6 +956,7 @@ async function loadOccurrencesList() {
                             Edit
 
                         </button>
+
 
                         <button
                             class="btn btn-danger"
@@ -441,6 +986,7 @@ async function loadOccurrencesList() {
 
 }
 
+
 /* ==========================================================
    DELETE OCCURRENCE
 ========================================================== */
@@ -452,8 +998,11 @@ async function deleteOccurrenceRecord(id) {
             "Delete this occurrence?"
         )
     ) {
+
         return;
+
     }
+
 
     try {
 
@@ -465,11 +1014,13 @@ async function deleteOccurrenceRecord(id) {
                 }
             );
 
+
         if (!response.ok) {
 
             throw new Error();
 
         }
+
 
         await loadOccurrencesList();
 
